@@ -2127,17 +2127,77 @@
     {
       "id": "sk1",
       "name": "Manager Dave",
-      "store_name": "Axis Mall,Sector V, Ground Floor"
+      "store_name": "Axis Mall, Sector V, Ground Floor"
     },
     {
       "id": "sk2",
       "name": "Manager Eve",
-      "store_name": "Zudio , Ground Floor"
+      "store_name": "Zudio, Ground Floor"
     },
     {
       "id": "sk3",
       "name": "Manager Harry",
       "store_name": "Zudio Park Street, Ground Floor"
+    },
+    {
+      "id": "sk4",
+      "name": "Manager Sophia",
+      "store_name": "ABFRL Store South City"
+    },
+    {
+      "id": "sk5",
+      "name": "Manager Rahul",
+      "store_name": "City Centre Salt Lake, First Floor"
+    },
+    {
+      "id": "sk6",
+      "name": "Manager Priya",
+      "store_name": "Quest Mall, Second Floor"
+    },
+    {
+      "id": "sk7",
+      "name": "Manager Arjun",
+      "store_name": "Acropolis Mall, Ground Floor"
+    },
+    {
+      "id": "sk8",
+      "name": "Manager Neha",
+      "store_name": "South City Mall, Third Floor"
+    },
+    {
+      "id": "sk9",
+      "name": "Manager Vikram",
+      "store_name": "Forum Courtyard, Second Floor"
+    },
+    {
+      "id": "sk10",
+      "name": "Manager Anjali",
+      "store_name": "Mani Square Mall, First Floor"
+    },
+    {
+      "id": "sk11",
+      "name": "Manager Kunal",
+      "store_name": "Diamond Plaza, Ground Floor"
+    },
+    {
+      "id": "sk12",
+      "name": "Manager Meera",
+      "store_name": "Avani Riverside Mall, Second Floor"
+    },
+    {
+      "id": "sk13",
+      "name": "Manager Aditya",
+      "store_name": "Lake Mall, First Floor"
+    },
+    {
+      "id": "sk14",
+      "name": "Manager Kavya",
+      "store_name": "Hiland Park, Ground Floor"
+    },
+    {
+      "id": "sk15",
+      "name": "Manager Rohan",
+      "store_name": "Eden Pavilion Mall, Third Floor"
     }
   ],
   "transactions": [
@@ -2162,7 +2222,7 @@
       "mode": "Offline",
       "amount": 699,
       "orderStatus": "Complete",
-      "storeId": "sk1"
+      "storeId": "sk14"
     },
     {
       "id": "10003",
@@ -2174,7 +2234,7 @@
       "mode": "Offline",
       "amount": 2499,
       "orderStatus": "Complete",
-      "storeId": "sk1"
+      "storeId": "sk12"
     },
     {
       "id": "10004",
@@ -2208,7 +2268,7 @@
       "mode": "Offline",
       "amount": 3799,
       "orderStatus": "In Progress",
-      "storeId": "sk3"
+      "storeId": "sk9"
     },
     {
       "id": "10007",
@@ -2220,7 +2280,7 @@
       "mode": "Offline",
       "amount": 2499,
       "orderStatus": "New",
-      "storeId": "sk3"
+      "storeId": "sk12"
     },
     {
       "id": "10008",
@@ -2254,7 +2314,7 @@
       "mode": "Offline",
       "amount": 2999,
       "orderStatus": "In Progress",
-      "storeId": "sk3"
+      "storeId": "sk2"
     },
     {
       "id": "10011",
@@ -2266,7 +2326,7 @@
       "mode": "Offline",
       "amount": 2499,
       "orderStatus": "In Progress",
-      "storeId": "sk3"
+      "storeId": "sk4"
     },
     {
       "id": "10012",
@@ -2300,7 +2360,7 @@
       "mode": "Offline",
       "amount": 1899,
       "orderStatus": "Complete",
-      "storeId": "sk2"
+      "storeId": "sk11"
     },
     {
       "id": "10015",
@@ -2323,7 +2383,7 @@
       "mode": "Offline",
       "amount": 1899,
       "orderStatus": "In Progress",
-      "storeId": "sk2"
+      "storeId": "sk11"
     },
     {
       "id": "10017",
@@ -2346,7 +2406,7 @@
       "mode": "Offline",
       "amount": 1499,
       "orderStatus": "New",
-      "storeId": "sk2"
+      "storeId": "sk6"
     },
     {
       "id": "10019",
@@ -2358,7 +2418,7 @@
       "mode": "Offline",
       "amount": 1499,
       "orderStatus": "Complete",
-      "storeId": "sk3"
+      "storeId": "sk2"
     },
     {
       "id": "10020",
@@ -2370,7 +2430,7 @@
       "mode": "Offline",
       "amount": 1899,
       "orderStatus": "New",
-      "storeId": "sk2"
+      "storeId": "sk15"
     },
     {
       "id": "10021",
@@ -2393,7 +2453,7 @@
       "mode": "Offline",
       "amount": 4499,
       "orderStatus": "New",
-      "storeId": "sk3"
+      "storeId": "sk1"
     },
     {
       "id": "10023",
@@ -2449,7 +2509,7 @@
       "mode": "Offline",
       "amount": 3499,
       "orderStatus": "In Progress",
-      "storeId": "sk1"
+      "storeId": "sk11"
     },
     {
       "id": "10028",
@@ -2461,7 +2521,7 @@
       "mode": "Offline",
       "amount": 3499,
       "orderStatus": "Complete",
-      "storeId": "sk2"
+      "storeId": "sk7"
     },
     {
       "id": "10029",
@@ -2473,7 +2533,7 @@
       "mode": "Offline",
       "amount": 3499,
       "orderStatus": "New",
-      "storeId": "sk2"
+      "storeId": "sk14"
     },
     {
       "id": "10030",
@@ -2485,7 +2545,7 @@
       "mode": "Offline",
       "amount": 2999,
       "orderStatus": "Complete",
-      "storeId": "sk2"
+      "storeId": "sk4"
     },
     {
       "id": "10031",
@@ -2519,7 +2579,7 @@
       "mode": "Offline",
       "amount": 1789,
       "orderStatus": "In Progress",
-      "storeId": "sk1"
+      "storeId": "sk15"
     },
     {
       "id": "10034",
@@ -2531,7 +2591,7 @@
       "mode": "Offline",
       "amount": 2499,
       "orderStatus": "In Progress",
-      "storeId": "sk1"
+      "storeId": "sk13"
     },
     {
       "id": "10035",
@@ -2543,7 +2603,7 @@
       "mode": "Offline",
       "amount": 699,
       "orderStatus": "In Progress",
-      "storeId": "sk2"
+      "storeId": "sk8"
     },
     {
       "id": "10036",
@@ -2555,7 +2615,7 @@
       "mode": "Offline",
       "amount": 2499,
       "orderStatus": "In Progress",
-      "storeId": "sk2"
+      "storeId": "sk1"
     },
     {
       "id": "10037",
@@ -2611,7 +2671,7 @@
       "mode": "Offline",
       "amount": 899,
       "orderStatus": "Complete",
-      "storeId": "sk2"
+      "storeId": "sk12"
     },
     {
       "id": "10042",
@@ -2634,7 +2694,7 @@
       "mode": "Offline",
       "amount": 2999,
       "orderStatus": "Complete",
-      "storeId": "sk3"
+      "storeId": "sk8"
     },
     {
       "id": "10044",
@@ -2646,7 +2706,7 @@
       "mode": "Offline",
       "amount": 2999,
       "orderStatus": "In Progress",
-      "storeId": "sk2"
+      "storeId": "sk5"
     },
     {
       "id": "10045",
@@ -2669,7 +2729,7 @@
       "mode": "Offline",
       "amount": 3799,
       "orderStatus": "New",
-      "storeId": "sk3"
+      "storeId": "sk10"
     },
     {
       "id": "10047",
@@ -2681,7 +2741,7 @@
       "mode": "Offline",
       "amount": 1399,
       "orderStatus": "New",
-      "storeId": "sk3"
+      "storeId": "sk2"
     },
     {
       "id": "10048",
@@ -2693,7 +2753,7 @@
       "mode": "Offline",
       "amount": 1399,
       "orderStatus": "New",
-      "storeId": "sk1"
+      "storeId": "sk4"
     },
     {
       "id": "10049",
@@ -2716,7 +2776,7 @@
       "mode": "Offline",
       "amount": 1899,
       "orderStatus": "Complete",
-      "storeId": "sk2"
+      "storeId": "sk8"
     },
     {
       "id": "10051",
@@ -2728,7 +2788,7 @@
       "mode": "Offline",
       "amount": 1899,
       "orderStatus": "Complete",
-      "storeId": "sk2"
+      "storeId": "sk4"
     },
     {
       "id": "10052",
@@ -2740,7 +2800,7 @@
       "mode": "Offline",
       "amount": 1299,
       "orderStatus": "In Progress",
-      "storeId": "sk2"
+      "storeId": "sk14"
     },
     {
       "id": "10053",
@@ -2774,7 +2834,7 @@
       "mode": "Offline",
       "amount": 1789,
       "orderStatus": "Complete",
-      "storeId": "sk1"
+      "storeId": "sk2"
     },
     {
       "id": "10056",
@@ -2786,7 +2846,7 @@
       "mode": "Offline",
       "amount": 899,
       "orderStatus": "Complete",
-      "storeId": "sk1"
+      "storeId": "sk10"
     },
     {
       "id": "10057",
@@ -2798,7 +2858,7 @@
       "mode": "Offline",
       "amount": 1299,
       "orderStatus": "In Progress",
-      "storeId": "sk1"
+      "storeId": "sk10"
     },
     {
       "id": "10058",
@@ -2810,7 +2870,7 @@
       "mode": "Offline",
       "amount": 1599,
       "orderStatus": "New",
-      "storeId": "sk2"
+      "storeId": "sk13"
     },
     {
       "id": "10059",
@@ -2833,7 +2893,7 @@
       "mode": "Offline",
       "amount": 1899,
       "orderStatus": "New",
-      "storeId": "sk3"
+      "storeId": "sk10"
     },
     {
       "id": "10061",
@@ -2845,7 +2905,7 @@
       "mode": "Offline",
       "amount": 2999,
       "orderStatus": "New",
-      "storeId": "sk3"
+      "storeId": "sk14"
     },
     {
       "id": "10062",
@@ -2879,7 +2939,7 @@
       "mode": "Offline",
       "amount": 1899,
       "orderStatus": "In Progress",
-      "storeId": "sk2"
+      "storeId": "sk14"
     },
     {
       "id": "10065",
@@ -2913,7 +2973,7 @@
       "mode": "Offline",
       "amount": 2499,
       "orderStatus": "Complete",
-      "storeId": "sk2"
+      "storeId": "sk3"
     },
     {
       "id": "10068",
@@ -2925,7 +2985,7 @@
       "mode": "Offline",
       "amount": 4999,
       "orderStatus": "New",
-      "storeId": "sk3"
+      "storeId": "sk9"
     },
     {
       "id": "10069",
@@ -2959,7 +3019,7 @@
       "mode": "Offline",
       "amount": 899,
       "orderStatus": "New",
-      "storeId": "sk1"
+      "storeId": "sk15"
     },
     {
       "id": "10072",
@@ -2971,7 +3031,7 @@
       "mode": "Offline",
       "amount": 2999,
       "orderStatus": "Complete",
-      "storeId": "sk2"
+      "storeId": "sk10"
     },
     {
       "id": "10073",
@@ -2983,7 +3043,7 @@
       "mode": "Offline",
       "amount": 899,
       "orderStatus": "New",
-      "storeId": "sk1"
+      "storeId": "sk7"
     },
     {
       "id": "10074",
@@ -3050,7 +3110,7 @@
       "mode": "Offline",
       "amount": 2999,
       "orderStatus": "In Progress",
-      "storeId": "sk2"
+      "storeId": "sk3"
     },
     {
       "id": "10080",
@@ -3062,7 +3122,7 @@
       "mode": "Offline",
       "amount": 899,
       "orderStatus": "New",
-      "storeId": "sk3"
+      "storeId": "sk9"
     },
     {
       "id": "10081",
@@ -3074,7 +3134,7 @@
       "mode": "Offline",
       "amount": 899,
       "orderStatus": "In Progress",
-      "storeId": "sk3"
+      "storeId": "sk13"
     },
     {
       "id": "10082",
@@ -3130,7 +3190,7 @@
       "mode": "Offline",
       "amount": 2999,
       "orderStatus": "Complete",
-      "storeId": "sk2"
+      "storeId": "sk4"
     },
     {
       "id": "10087",
@@ -3142,7 +3202,7 @@
       "mode": "Offline",
       "amount": 2499,
       "orderStatus": "Complete",
-      "storeId": "sk3"
+      "storeId": "sk1"
     },
     {
       "id": "10088",
@@ -3165,7 +3225,7 @@
       "mode": "Offline",
       "amount": 1599,
       "orderStatus": "New",
-      "storeId": "sk3"
+      "storeId": "sk4"
     },
     {
       "id": "10090",
@@ -3177,7 +3237,7 @@
       "mode": "Offline",
       "amount": 1599,
       "orderStatus": "Complete",
-      "storeId": "sk1"
+      "storeId": "sk14"
     },
     {
       "id": "10091",
@@ -3223,7 +3283,7 @@
       "mode": "Offline",
       "amount": 1799,
       "orderStatus": "Complete",
-      "storeId": "sk3"
+      "storeId": "sk7"
     },
     {
       "id": "10095",
@@ -3246,7 +3306,7 @@
       "mode": "Offline",
       "amount": 699,
       "orderStatus": "New",
-      "storeId": "sk3"
+      "storeId": "sk14"
     },
     {
       "id": "10097",
@@ -3258,7 +3318,7 @@
       "mode": "Offline",
       "amount": 999,
       "orderStatus": "Complete",
-      "storeId": "sk1"
+      "storeId": "sk14"
     },
     {
       "id": "10098",
@@ -3270,7 +3330,7 @@
       "mode": "Offline",
       "amount": 999,
       "orderStatus": "Complete",
-      "storeId": "sk1"
+      "storeId": "sk10"
     },
     {
       "id": "10099",
@@ -3282,7 +3342,7 @@
       "mode": "Offline",
       "amount": 2999,
       "orderStatus": "In Progress",
-      "storeId": "sk2"
+      "storeId": "sk11"
     },
     {
       "id": "10100",
@@ -3294,7 +3354,7 @@
       "mode": "Offline",
       "amount": 1499,
       "orderStatus": "Complete",
-      "storeId": "sk2"
+      "storeId": "sk13"
     },
     {
       "id": "10101",
@@ -3306,7 +3366,7 @@
       "mode": "Offline",
       "amount": 1599,
       "orderStatus": "In Progress",
-      "storeId": "sk1"
+      "storeId": "sk6"
     },
     {
       "id": "10102",
@@ -3318,7 +3378,7 @@
       "mode": "Offline",
       "amount": 4499,
       "orderStatus": "New",
-      "storeId": "sk1"
+      "storeId": "sk4"
     },
     {
       "id": "10103",
@@ -3341,7 +3401,7 @@
       "mode": "Offline",
       "amount": 1499,
       "orderStatus": "New",
-      "storeId": "sk3"
+      "storeId": "sk6"
     },
     {
       "id": "10105",
@@ -3353,7 +3413,7 @@
       "mode": "Offline",
       "amount": 1599,
       "orderStatus": "New",
-      "storeId": "sk1"
+      "storeId": "sk2"
     },
     {
       "id": "10106",
@@ -3365,7 +3425,7 @@
       "mode": "Offline",
       "amount": 3799,
       "orderStatus": "New",
-      "storeId": "sk1"
+      "storeId": "sk7"
     },
     {
       "id": "10107",
@@ -3400,7 +3460,7 @@
       "mode": "Offline",
       "amount": 2499,
       "orderStatus": "Complete",
-      "storeId": "sk2"
+      "storeId": "sk15"
     },
     {
       "id": "10110",
@@ -3412,7 +3472,7 @@
       "mode": "Offline",
       "amount": 1789,
       "orderStatus": "In Progress",
-      "storeId": "sk1"
+      "storeId": "sk4"
     },
     {
       "id": "10111",
@@ -3457,7 +3517,7 @@
       "mode": "Offline",
       "amount": 1999,
       "orderStatus": "New",
-      "storeId": "sk3"
+      "storeId": "sk5"
     },
     {
       "id": "10115",
@@ -3480,7 +3540,7 @@
       "mode": "Offline",
       "amount": 1499,
       "orderStatus": "New",
-      "storeId": "sk1"
+      "storeId": "sk10"
     },
     {
       "id": "10117",
@@ -3492,7 +3552,7 @@
       "mode": "Offline",
       "amount": 1799,
       "orderStatus": "Complete",
-      "storeId": "sk1"
+      "storeId": "sk5"
     },
     {
       "id": "10118",
@@ -3515,7 +3575,7 @@
       "mode": "Offline",
       "amount": 2199,
       "orderStatus": "New",
-      "storeId": "sk1"
+      "storeId": "sk14"
     },
     {
       "id": "10120",
@@ -3527,7 +3587,7 @@
       "mode": "Offline",
       "amount": 5999,
       "orderStatus": "Complete",
-      "storeId": "sk2"
+      "storeId": "sk4"
     },
     {
       "id": "10121",
@@ -3562,7 +3622,7 @@
       "mode": "Offline",
       "amount": 1999,
       "orderStatus": "Complete",
-      "storeId": "sk3"
+      "storeId": "sk1"
     },
     {
       "id": "10124",
@@ -3585,7 +3645,7 @@
       "mode": "Offline",
       "amount": 899,
       "orderStatus": "New",
-      "storeId": "sk1"
+      "storeId": "sk3"
     },
     {
       "id": "10126",
@@ -3608,7 +3668,7 @@
       "mode": "Offline",
       "amount": 1899,
       "orderStatus": "In Progress",
-      "storeId": "sk1"
+      "storeId": "sk8"
     },
     {
       "id": "10128",
@@ -3642,7 +3702,7 @@
       "mode": "Offline",
       "amount": 1899,
       "orderStatus": "New",
-      "storeId": "sk3"
+      "storeId": "sk7"
     },
     {
       "id": "10131",
@@ -3687,7 +3747,7 @@
       "mode": "Offline",
       "amount": 3499,
       "orderStatus": "In Progress",
-      "storeId": "sk2"
+      "storeId": "sk14"
     },
     {
       "id": "10135",
@@ -3710,7 +3770,7 @@
       "mode": "Offline",
       "amount": 899,
       "orderStatus": "Complete",
-      "storeId": "sk3"
+      "storeId": "sk11"
     },
     {
       "id": "10137",
@@ -3722,7 +3782,7 @@
       "mode": "Offline",
       "amount": 2999,
       "orderStatus": "In Progress",
-      "storeId": "sk2"
+      "storeId": "sk6"
     },
     {
       "id": "10138",
@@ -3756,7 +3816,7 @@
       "mode": "Offline",
       "amount": 1789,
       "orderStatus": "In Progress",
-      "storeId": "sk1"
+      "storeId": "sk6"
     },
     {
       "id": "10141",
@@ -3768,7 +3828,7 @@
       "mode": "Offline",
       "amount": 2499,
       "orderStatus": "In Progress",
-      "storeId": "sk1"
+      "storeId": "sk15"
     },
     {
       "id": "10142",
@@ -3835,7 +3895,7 @@
       "mode": "Offline",
       "amount": 1789,
       "orderStatus": "In Progress",
-      "storeId": "sk2"
+      "storeId": "sk15"
     },
     {
       "id": "10148",
@@ -3858,7 +3918,7 @@
       "mode": "Offline",
       "amount": 1299,
       "orderStatus": "Complete",
-      "storeId": "sk3"
+      "storeId": "sk7"
     },
     {
       "id": "10150",
@@ -3870,7 +3930,7 @@
       "mode": "Offline",
       "amount": 1299,
       "orderStatus": "Complete",
-      "storeId": "sk3"
+      "storeId": "sk2"
     },
     {
       "id": "10151",
@@ -3882,7 +3942,7 @@
       "mode": "Offline",
       "amount": 2999,
       "orderStatus": "New",
-      "storeId": "sk1"
+      "storeId": "sk13"
     },
     {
       "id": "10152",
@@ -3894,7 +3954,7 @@
       "mode": "Offline",
       "amount": 3499,
       "orderStatus": "In Progress",
-      "storeId": "sk2"
+      "storeId": "sk3"
     },
     {
       "id": "10153",
@@ -3906,7 +3966,7 @@
       "mode": "Offline",
       "amount": 3499,
       "orderStatus": "In Progress",
-      "storeId": "sk1"
+      "storeId": "sk6"
     },
     {
       "id": "10154",
@@ -3918,7 +3978,7 @@
       "mode": "Offline",
       "amount": 1599,
       "orderStatus": "In Progress",
-      "storeId": "sk3"
+      "storeId": "sk2"
     },
     {
       "id": "10155",
@@ -3941,7 +4001,7 @@
       "mode": "Offline",
       "amount": 1599,
       "orderStatus": "Complete",
-      "storeId": "sk1"
+      "storeId": "sk7"
     },
     {
       "id": "10157",
@@ -3953,7 +4013,7 @@
       "mode": "Offline",
       "amount": 899,
       "orderStatus": "In Progress",
-      "storeId": "sk3"
+      "storeId": "sk14"
     },
     {
       "id": "10158",
@@ -3976,7 +4036,7 @@
       "mode": "Offline",
       "amount": 1899,
       "orderStatus": "New",
-      "storeId": "sk2"
+      "storeId": "sk13"
     },
     {
       "id": "10160",
@@ -3988,7 +4048,7 @@
       "mode": "Offline",
       "amount": 2199,
       "orderStatus": "Complete",
-      "storeId": "sk1"
+      "storeId": "sk8"
     },
     {
       "id": "10161",
@@ -4011,7 +4071,7 @@
       "mode": "Offline",
       "amount": 1399,
       "orderStatus": "In Progress",
-      "storeId": "sk1"
+      "storeId": "sk6"
     },
     {
       "id": "10163",
@@ -4034,7 +4094,7 @@
       "mode": "Offline",
       "amount": 1899,
       "orderStatus": "Complete",
-      "storeId": "sk3"
+      "storeId": "sk2"
     },
     {
       "id": "10165",
@@ -4079,7 +4139,7 @@
       "mode": "Offline",
       "amount": 3799,
       "orderStatus": "In Progress",
-      "storeId": "sk2"
+      "storeId": "sk8"
     },
     {
       "id": "10169",
@@ -4091,7 +4151,7 @@
       "mode": "Offline",
       "amount": 3799,
       "orderStatus": "In Progress",
-      "storeId": "sk1"
+      "storeId": "sk15"
     },
     {
       "id": "10170",
@@ -4103,7 +4163,7 @@
       "mode": "Offline",
       "amount": 1899,
       "orderStatus": "In Progress",
-      "storeId": "sk1"
+      "storeId": "sk7"
     },
     {
       "id": "10171",
@@ -4181,7 +4241,7 @@
       "mode": "Offline",
       "amount": 5999,
       "orderStatus": "New",
-      "storeId": "sk3"
+      "storeId": "sk12"
     },
     {
       "id": "10178",
@@ -4193,7 +4253,7 @@
       "mode": "Offline",
       "amount": 1299,
       "orderStatus": "In Progress",
-      "storeId": "sk1"
+      "storeId": "sk13"
     },
     {
       "id": "10179",
@@ -4205,7 +4265,7 @@
       "mode": "Offline",
       "amount": 3799,
       "orderStatus": "New",
-      "storeId": "sk1"
+      "storeId": "sk5"
     },
     {
       "id": "10180",
@@ -4262,7 +4322,7 @@
       "mode": "Offline",
       "amount": 1199,
       "orderStatus": "In Progress",
-      "storeId": "sk1"
+      "storeId": "sk4"
     },
     {
       "id": "10185",
@@ -4274,7 +4334,7 @@
       "mode": "Offline",
       "amount": 1789,
       "orderStatus": "In Progress",
-      "storeId": "sk1"
+      "storeId": "sk6"
     },
     {
       "id": "10186",
@@ -4286,7 +4346,7 @@
       "mode": "Offline",
       "amount": 1899,
       "orderStatus": "New",
-      "storeId": "sk2"
+      "storeId": "sk14"
     },
     {
       "id": "10187",
@@ -4298,7 +4358,7 @@
       "mode": "Offline",
       "amount": 1789,
       "orderStatus": "Complete",
-      "storeId": "sk1"
+      "storeId": "sk5"
     },
     {
       "id": "10188",
@@ -4321,7 +4381,7 @@
       "mode": "Offline",
       "amount": 1199,
       "orderStatus": "New",
-      "storeId": "sk2"
+      "storeId": "sk5"
     },
     {
       "id": "10190",
@@ -4333,7 +4393,7 @@
       "mode": "Offline",
       "amount": 1199,
       "orderStatus": "In Progress",
-      "storeId": "sk2"
+      "storeId": "sk9"
     },
     {
       "id": "10191",
@@ -4345,7 +4405,7 @@
       "mode": "Offline",
       "amount": 1789,
       "orderStatus": "In Progress",
-      "storeId": "sk2"
+      "storeId": "sk11"
     },
     {
       "id": "10192",
@@ -4368,7 +4428,7 @@
       "mode": "Offline",
       "amount": 1899,
       "orderStatus": "New",
-      "storeId": "sk2"
+      "storeId": "sk3"
     },
     {
       "id": "10194",
@@ -4402,7 +4462,7 @@
       "mode": "Offline",
       "amount": 1899,
       "orderStatus": "Complete",
-      "storeId": "sk1"
+      "storeId": "sk6"
     },
     {
       "id": "10197",
@@ -4425,7 +4485,7 @@
       "mode": "Offline",
       "amount": 5999,
       "orderStatus": "In Progress",
-      "storeId": "sk3"
+      "storeId": "sk2"
     },
     {
       "id": "10199",
@@ -4448,7 +4508,7 @@
       "mode": "Offline",
       "amount": 999,
       "orderStatus": "New",
-      "storeId": "sk1"
+      "storeId": "sk14"
     },
     {
       "id": "10201",
@@ -4471,7 +4531,7 @@
       "mode": "Offline",
       "amount": 5999,
       "orderStatus": "Complete",
-      "storeId": "sk3"
+      "storeId": "sk10"
     },
     {
       "id": "10203",
@@ -4483,7 +4543,7 @@
       "mode": "Offline",
       "amount": 5999,
       "orderStatus": "In Progress",
-      "storeId": "sk2"
+      "storeId": "sk3"
     },
     {
       "id": "10204",
@@ -4495,7 +4555,7 @@
       "mode": "Offline",
       "amount": 1699,
       "orderStatus": "New",
-      "storeId": "sk2"
+      "storeId": "sk12"
     },
     {
       "id": "10205",
@@ -4551,7 +4611,7 @@
       "mode": "Offline",
       "amount": 3499,
       "orderStatus": "Complete",
-      "storeId": "sk1"
+      "storeId": "sk14"
     },
     {
       "id": "10210",
@@ -4585,7 +4645,7 @@
       "mode": "Offline",
       "amount": 999,
       "orderStatus": "In Progress",
-      "storeId": "sk3"
+      "storeId": "sk6"
     },
     {
       "id": "10213",
@@ -4597,7 +4657,7 @@
       "mode": "Offline",
       "amount": 1199,
       "orderStatus": "Complete",
-      "storeId": "sk2"
+      "storeId": "sk8"
     },
     {
       "id": "10214",
@@ -4620,7 +4680,7 @@
       "mode": "Offline",
       "amount": 1599,
       "orderStatus": "New",
-      "storeId": "sk1"
+      "storeId": "sk2"
     },
     {
       "id": "10216",
@@ -4632,7 +4692,7 @@
       "mode": "Offline",
       "amount": 2199,
       "orderStatus": "In Progress",
-      "storeId": "sk1"
+      "storeId": "sk5"
     },
     {
       "id": "10217",
@@ -4655,7 +4715,7 @@
       "mode": "Offline",
       "amount": 2499,
       "orderStatus": "Complete",
-      "storeId": "sk1"
+      "storeId": "sk14"
     },
     {
       "id": "10219",
@@ -4667,7 +4727,7 @@
       "mode": "Offline",
       "amount": 1899,
       "orderStatus": "In Progress",
-      "storeId": "sk3"
+      "storeId": "sk12"
     },
     {
       "id": "10220",
@@ -4679,7 +4739,7 @@
       "mode": "Offline",
       "amount": 4499,
       "orderStatus": "In Progress",
-      "storeId": "sk3"
+      "storeId": "sk8"
     },
     {
       "id": "10221",
@@ -4713,7 +4773,7 @@
       "mode": "Offline",
       "amount": 1599,
       "orderStatus": "In Progress",
-      "storeId": "sk3"
+      "storeId": "sk7"
     },
     {
       "id": "10224",
@@ -4725,7 +4785,7 @@
       "mode": "Offline",
       "amount": 1299,
       "orderStatus": "In Progress",
-      "storeId": "sk3"
+      "storeId": "sk6"
     },
     {
       "id": "10225",
@@ -4737,7 +4797,7 @@
       "mode": "Offline",
       "amount": 3499,
       "orderStatus": "Complete",
-      "storeId": "sk2"
+      "storeId": "sk6"
     },
     {
       "id": "10226",
@@ -4749,7 +4809,7 @@
       "mode": "Offline",
       "amount": 899,
       "orderStatus": "New",
-      "storeId": "sk1"
+      "storeId": "sk7"
     },
     {
       "id": "10227",
@@ -4761,7 +4821,7 @@
       "mode": "Offline",
       "amount": 1899,
       "orderStatus": "Complete",
-      "storeId": "sk1"
+      "storeId": "sk4"
     },
     {
       "id": "10228",
@@ -4773,7 +4833,7 @@
       "mode": "Offline",
       "amount": 1899,
       "orderStatus": "New",
-      "storeId": "sk2"
+      "storeId": "sk4"
     },
     {
       "id": "10229",
@@ -4785,7 +4845,7 @@
       "mode": "Offline",
       "amount": 1999,
       "orderStatus": "In Progress",
-      "storeId": "sk3"
+      "storeId": "sk12"
     },
     {
       "id": "10230",
@@ -4830,7 +4890,7 @@
       "mode": "Offline",
       "amount": 1999,
       "orderStatus": "New",
-      "storeId": "sk1"
+      "storeId": "sk3"
     },
     {
       "id": "10234",
@@ -4842,7 +4902,7 @@
       "mode": "Offline",
       "amount": 1599,
       "orderStatus": "New",
-      "storeId": "sk3"
+      "storeId": "sk8"
     },
     {
       "id": "10235",
@@ -4876,7 +4936,7 @@
       "mode": "Offline",
       "amount": 4499,
       "orderStatus": "In Progress",
-      "storeId": "sk2"
+      "storeId": "sk14"
     },
     {
       "id": "10238",
@@ -4910,7 +4970,7 @@
       "mode": "Offline",
       "amount": 1699,
       "orderStatus": "In Progress",
-      "storeId": "sk1"
+      "storeId": "sk10"
     },
     {
       "id": "10241",
@@ -4977,7 +5037,7 @@
       "mode": "Offline",
       "amount": 1789,
       "orderStatus": "Complete",
-      "storeId": "sk1"
+      "storeId": "sk7"
     },
     {
       "id": "10247",
@@ -4989,7 +5049,7 @@
       "mode": "Offline",
       "amount": 1789,
       "orderStatus": "New",
-      "storeId": "sk1"
+      "storeId": "sk15"
     },
     {
       "id": "10248",
@@ -5012,7 +5072,7 @@
       "mode": "Offline",
       "amount": 5999,
       "orderStatus": "Complete",
-      "storeId": "sk3"
+      "storeId": "sk10"
     },
     {
       "id": "10250",
@@ -5024,7 +5084,7 @@
       "mode": "Offline",
       "amount": 1999,
       "orderStatus": "In Progress",
-      "storeId": "sk1"
+      "storeId": "sk9"
     },
     {
       "id": "10251",
@@ -5069,7 +5129,7 @@
       "mode": "Offline",
       "amount": 1399,
       "orderStatus": "Complete",
-      "storeId": "sk2"
+      "storeId": "sk12"
     },
     {
       "id": "10255",
@@ -5125,7 +5185,7 @@
       "mode": "Offline",
       "amount": 1499,
       "orderStatus": "New",
-      "storeId": "sk3"
+      "storeId": "sk11"
     },
     {
       "id": "10260",
@@ -5171,7 +5231,7 @@
       "mode": "Offline",
       "amount": 1299,
       "orderStatus": "New",
-      "storeId": "sk1"
+      "storeId": "sk4"
     },
     {
       "id": "10264",
@@ -5183,7 +5243,7 @@
       "mode": "Offline",
       "amount": 2499,
       "orderStatus": "In Progress",
-      "storeId": "sk1"
+      "storeId": "sk10"
     },
     {
       "id": "10265",
@@ -5206,7 +5266,7 @@
       "mode": "Offline",
       "amount": 999,
       "orderStatus": "Complete",
-      "storeId": "sk1"
+      "storeId": "sk4"
     },
     {
       "id": "10267",
@@ -5218,7 +5278,7 @@
       "mode": "Offline",
       "amount": 4499,
       "orderStatus": "Complete",
-      "storeId": "sk2"
+      "storeId": "sk13"
     },
     {
       "id": "10268",
@@ -5252,7 +5312,7 @@
       "mode": "Offline",
       "amount": 1999,
       "orderStatus": "New",
-      "storeId": "sk3"
+      "storeId": "sk2"
     },
     {
       "id": "10271",
@@ -5275,7 +5335,7 @@
       "mode": "Offline",
       "amount": 1899,
       "orderStatus": "Complete",
-      "storeId": "sk1"
+      "storeId": "sk7"
     },
     {
       "id": "10273",
@@ -5287,7 +5347,7 @@
       "mode": "Offline",
       "amount": 3799,
       "orderStatus": "In Progress",
-      "storeId": "sk1"
+      "storeId": "sk7"
     },
     {
       "id": "10274",
@@ -5310,7 +5370,7 @@
       "mode": "Offline",
       "amount": 3799,
       "orderStatus": "New",
-      "storeId": "sk1"
+      "storeId": "sk7"
     },
     {
       "id": "10276",
@@ -5344,7 +5404,7 @@
       "mode": "Offline",
       "amount": 2999,
       "orderStatus": "In Progress",
-      "storeId": "sk2"
+      "storeId": "sk8"
     },
     {
       "id": "10279",
@@ -5367,7 +5427,7 @@
       "mode": "Offline",
       "amount": 5999,
       "orderStatus": "In Progress",
-      "storeId": "sk3"
+      "storeId": "sk7"
     },
     {
       "id": "10281",
@@ -5379,7 +5439,7 @@
       "mode": "Offline",
       "amount": 3499,
       "orderStatus": "Complete",
-      "storeId": "sk3"
+      "storeId": "sk8"
     },
     {
       "id": "10282",
@@ -5391,7 +5451,7 @@
       "mode": "Offline",
       "amount": 1899,
       "orderStatus": "New",
-      "storeId": "sk2"
+      "storeId": "sk9"
     },
     {
       "id": "10283",
@@ -5425,7 +5485,7 @@
       "mode": "Offline",
       "amount": 2999,
       "orderStatus": "New",
-      "storeId": "sk3"
+      "storeId": "sk15"
     },
     {
       "id": "10286",
@@ -5437,7 +5497,7 @@
       "mode": "Offline",
       "amount": 1699,
       "orderStatus": "In Progress",
-      "storeId": "sk1"
+      "storeId": "sk9"
     },
     {
       "id": "10287",
@@ -5504,7 +5564,7 @@
       "mode": "Offline",
       "amount": 1899,
       "orderStatus": "In Progress",
-      "storeId": "sk3"
+      "storeId": "sk1"
     },
     {
       "id": "10293",
@@ -5560,7 +5620,7 @@
       "mode": "Offline",
       "amount": 899,
       "orderStatus": "New",
-      "storeId": "sk3"
+      "storeId": "sk13"
     },
     {
       "id": "10298",
@@ -5595,7 +5655,7 @@
       "mode": "Offline",
       "amount": 5999,
       "orderStatus": "Complete",
-      "storeId": "sk2"
+      "storeId": "sk11"
     },
     {
       "id": "10301",
@@ -5607,7 +5667,7 @@
       "mode": "Offline",
       "amount": 1899,
       "orderStatus": "New",
-      "storeId": "sk3"
+      "storeId": "sk7"
     },
     {
       "id": "10302",
@@ -5663,7 +5723,7 @@
       "mode": "Offline",
       "amount": 1299,
       "orderStatus": "New",
-      "storeId": "sk2"
+      "storeId": "sk15"
     },
     {
       "id": "10307",
@@ -5686,7 +5746,7 @@
       "mode": "Offline",
       "amount": 1789,
       "orderStatus": "In Progress",
-      "storeId": "sk2"
+      "storeId": "sk3"
     },
     {
       "id": "10309",
@@ -5698,7 +5758,7 @@
       "mode": "Offline",
       "amount": 1599,
       "orderStatus": "In Progress",
-      "storeId": "sk2"
+      "storeId": "sk15"
     },
     {
       "id": "10310",
@@ -5732,7 +5792,7 @@
       "mode": "Offline",
       "amount": 1699,
       "orderStatus": "New",
-      "storeId": "sk2"
+      "storeId": "sk4"
     },
     {
       "id": "10313",
@@ -5768,7 +5828,7 @@
       "mode": "Offline",
       "amount": 1399,
       "orderStatus": "New",
-      "storeId": "sk1"
+      "storeId": "sk3"
     },
     {
       "id": "10316",
@@ -5780,7 +5840,7 @@
       "mode": "Offline",
       "amount": 1599,
       "orderStatus": "New",
-      "storeId": "sk1"
+      "storeId": "sk3"
     },
     {
       "id": "10317",
@@ -5792,7 +5852,7 @@
       "mode": "Offline",
       "amount": 1499,
       "orderStatus": "New",
-      "storeId": "sk1"
+      "storeId": "sk2"
     }
   ]
 }
