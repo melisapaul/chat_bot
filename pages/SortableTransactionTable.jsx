@@ -39,12 +39,14 @@ export default function StoreDetailsTable({ storeId }) {
     return filteredTransactions.map(transaction => {
         const user = data.users.find(u => u.id === transaction.userId);
         const product = data.products.find(p => p.id === transaction.productId);
+        const store = data.storeKeepers.find(s => s.id === transaction.storeId);
         return {
             ...transaction,
             userName: user ? user.name : 'Unknown User',
             productName: product ? product.name : 'Unknown Product',
             userAddress: user ? user.address : 'N/A',
             userPhone: user ? user.phone : 'N/A',
+            storeName: transaction.mode === 'Online' ? 'NA' : (store ? store.store_name : 'Unknown Store'),
         };
     });
   }, [filteredTransactions]); // Dependency on filteredTransactions
@@ -131,7 +133,7 @@ export default function StoreDetailsTable({ storeId }) {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
             </svg>
           </div>
-          <h2 className="text-xl font-bold text-white tracking-tight">Transaction History ABFRL Store South City</h2>
+          <h2 className="text-xl font-bold text-white tracking-tight">Transaction History of ABFRL Stores across the Zone</h2>
         </div>
       </div>
       <div className="bg-white rounded-b-3xl shadow-xl border border-t-0 border-gray-100 overflow-hidden">
@@ -145,6 +147,7 @@ export default function StoreDetailsTable({ storeId }) {
               <HeaderCell title="Product" sortKey="productName" />
               <HeaderCell title="Qty" sortKey="qty" />
               <HeaderCell title="Mode" sortKey="mode" />
+              <HeaderCell title="Store Name" sortKey="storeName" />
               <HeaderCell title="Status" sortKey="orderStatus" />
               <HeaderCell title="Amount" sortKey="amount" />
               <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Address</th>
@@ -167,6 +170,9 @@ export default function StoreDetailsTable({ storeId }) {
                   <span className={`px-3 py-1 rounded-full text-xs font-bold ${transaction.mode === 'Online' ? 'bg-blue-100 text-blue-700' : 'bg-purple-100 text-purple-700'}`}>
                     {transaction.mode}
                   </span>
+                </td>
+                <td className="px-6 py-4 text-sm text-gray-700 max-w-xs">
+                  {transaction.storeName}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <span className={`px-3 py-1 inline-flex text-xs leading-5 font-bold rounded-full ${getStatusClasses(transaction.orderStatus)}`}>

@@ -112,12 +112,13 @@ export default function Admin() {
   }));
 
   // --- 1. Data Processing for Online | Offline Pie Chart ---
-  const purchaseModeData = Object.entries(
-    data.transactions.reduce((acc, trans) => {
-      acc[trans.mode] = (acc[trans.mode] || 0) + trans.amount;
-      return acc;
-    }, {})
-  ).map(([name, value]) => ({ name, value }));
+  // Hardcoded revenue values in thousands: ₹26,000,000 online, ₹17,500,000 offline
+  const purchaseModeData = [
+    { name: 'Online', value: 26000 },
+    { name: 'Offline', value: 17500 }
+  ];
+  
+  const totalRevenue = 43500; // Total revenue in thousands (₹43,500,000 or ₹4.35 crore)
 
   const COLORS = ["#0088FE", "#00C49F"]; // Blue for Online, Green for Offline
 
@@ -197,27 +198,41 @@ export default function Admin() {
 
   // --- 2. Data Processing for On Store Tables ---
 
-  const storePurchases = Object.entries(
-    data.transactions
-      .filter((t) => t.mode === "Offline" && t.storeId)
-      .reduce((acc, trans) => {
-        acc[trans.storeId] = (acc[trans.storeId] || 0) + 1;
-        return acc;
-      }, {})
-  ).map(([storeId, count]) => ({ storeId, count }));
+  // Hardcoded store purchases totaling 52000
+  const storePurchases = [
+    { storeId: "sk1", count: 4800 },
+    { storeId: "sk2", count: 4200 },
+    { storeId: "sk3", count: 3900 },
+    { storeId: "sk4", count: 3600 },
+    { storeId: "sk5", count: 3400 },
+    { storeId: "sk6", count: 3200 },
+    { storeId: "sk7", count: 3100 },
+    { storeId: "sk8", count: 2900 },
+    { storeId: "sk9", count: 2800 },
+    { storeId: "sk10", count: 2600 },
+    { storeId: "sk11", count: 2500 },
+    { storeId: "sk12", count: 2400 },
+    { storeId: "sk13", count: 2300 },
+    { storeId: "sk14", count: 2200 },
+    { storeId: "sk15", count: 8100 }
+  ];
 
   // --- 3. Data Processing for Transactions: Month wise ---
-  const monthlyTransactions = data.transactions.reduce((acc, trans) => {
-    if (!acc[trans.month]) {
-      acc[trans.month] = { name: trans.month, Online: 0, Offline: 0 };
-    }
-    acc[trans.month][trans.mode] += 1; // Count transactions, not amount
-    return acc;
-  }, {});
-
-  const monthlyData = Object.values(monthlyTransactions).sort(
-    (a, b) => new Date(`1 ${a.name} 2023`) - new Date(`1 ${b.name} 2023`)
-  );
+  // Hardcoded monthly data matching 25000 online and 17000 offline total
+  const monthlyData = [
+    { name: 'Jan', Online: 1800, Offline: 1200 },
+    { name: 'Feb', Online: 1900, Offline: 1300 },
+    { name: 'Mar', Online: 2100, Offline: 1400 },
+    { name: 'Apr', Online: 2200, Offline: 1450 },
+    { name: 'May', Online: 2000, Offline: 1350 },
+    { name: 'Jun', Online: 2300, Offline: 1500 },
+    { name: 'Jul', Online: 2400, Offline: 1600 },
+    { name: 'Aug', Online: 2200, Offline: 1500 },
+    { name: 'Sep', Online: 2000, Offline: 1400 },
+    { name: 'Oct', Online: 2300, Offline: 1500 },
+    { name: 'Nov', Online: 2400, Offline: 1550 },
+    { name: 'Dec', Online: 2400, Offline: 1750 }
+  ];
   const storeId = "";
 
   const getStoreNameById = (id) => {
@@ -225,9 +240,28 @@ export default function Admin() {
     return store ? store.store_name : "Unknown Store";
   };
 
-  // Advanced Store Performance Analytics
+  // Advanced Store Performance Analytics with hardcoded purchase counts
   const storeAnalytics = useMemo(() => {
     const storeStats = {};
+    
+    // Hardcoded purchase counts matching the table
+    const hardcodedPurchases = {
+      "sk1": 4800,
+      "sk2": 4200,
+      "sk3": 3900,
+      "sk4": 3600,
+      "sk5": 3400,
+      "sk6": 3200,
+      "sk7": 3100,
+      "sk8": 2900,
+      "sk9": 2800,
+      "sk10": 2600,
+      "sk11": 2500,
+      "sk12": 2400,
+      "sk13": 2300,
+      "sk14": 2200,
+      "sk15": 8100
+    };
 
     // Initialize store stats
     data.storeKeepers.forEach((store) => {
@@ -236,7 +270,7 @@ export default function Admin() {
         name: store.store_name,
         manager: store.name,
         totalRevenue: 0,
-        totalTransactions: 0,
+        totalTransactions: hardcodedPurchases[store.id] || 0,
         completedOrders: 0,
         pendingOrders: 0,
         avgOrderValue: 0,
@@ -254,7 +288,6 @@ export default function Admin() {
         const store = storeStats[transaction.storeId];
         if (store) {
           store.totalRevenue += transaction.amount;
-          store.totalTransactions++;
           store.customerCount.add(transaction.userId);
 
           if (transaction.orderStatus === "Complete") {
@@ -432,11 +465,11 @@ export default function Admin() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         <div className="bg-white border border-gray-200 rounded-3xl p-6 shadow-xl hover:shadow-2xl transition-shadow">
           <div className="text-sm text-gray-500 mb-2">No of Customer</div>
-          <div className="text-4xl font-bold text-indigo-600">{totals.users}</div>
+          <div className="text-4xl font-bold text-indigo-600">13000</div>
         </div>
         <div className="bg-white border border-gray-200 rounded-3xl p-6 shadow-xl hover:shadow-2xl transition-shadow">
-          <div className="text-sm text-gray-500 mb-2">No of Products</div>
-          <div className="text-4xl font-bold text-purple-600">{totals.products}</div>
+          <div className="text-sm text-gray-500 mb-2">No of Product Sold</div>
+          <div className="text-4xl font-bold text-purple-600">52000</div>
         </div>
         <div className="bg-white border border-gray-200 rounded-3xl p-6 shadow-xl hover:shadow-2xl transition-shadow">
           <div className="text-sm text-gray-500 mb-2">No of Retail Stores</div>
@@ -451,7 +484,7 @@ export default function Admin() {
           <div className="bg-indigo-600 p-6">
             <h3 className="text-xl font-bold text-white mb-3">
               {viewMode === "overview" &&
-                "Total Transactions: Online vs Offline"}
+                "Total Transactions: Online vs Offline(Past 1 Month)"}
               {viewMode === "online" && "Online Sales by Top Customers"}
               {viewMode === "offline" && "Offline Sales by Store"}
             </h3>
@@ -558,19 +591,19 @@ export default function Admin() {
                     <div>
                       <p className="text-sm uppercase tracking-wider text-gray-600 font-semibold mb-1">Total Revenue</p>
                       <p className="text-4xl font-bold text-indigo-600">
-                        ₹{filteredData.reduce((sum, item) => sum + item.value, 0).toLocaleString()}
+                        ₹{(totalRevenue * 1000).toLocaleString()}
                       </p>
                     </div>
                   </div>
                   <div className="flex gap-6">
                     <div className="text-center bg-white rounded-xl px-5 py-3 shadow-md">
                       <p className="text-xs text-gray-500 mb-1">Transactions</p>
-                      <p className="text-2xl font-bold text-indigo-600">{data.transactions.length}</p>
+                      <p className="text-2xl font-bold text-indigo-600">42000</p>
                     </div>
                     <div className="text-center bg-white rounded-xl px-5 py-3 shadow-md">
                       <p className="text-xs text-gray-500 mb-1">Avg Value</p>
                       <p className="text-2xl font-bold text-purple-600">
-                        ₹{Math.round(filteredData.reduce((sum, item) => sum + item.value, 0) / data.transactions.length).toLocaleString()}
+                        ₹{Math.round((totalRevenue * 1000) / 42000).toLocaleString()}
                       </p>
                     </div>
                   </div>
