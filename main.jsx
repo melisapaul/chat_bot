@@ -5,16 +5,31 @@ import Pages from "./pages.jsx";
 import { BrowserRouter } from "react-router-dom";
 export default function ChatWidget() {
   const [open, setOpen] = useState(false);
+  const [showTooltip, setShowTooltip] = useState(false);
 
   return (
     <>
-      {/* Floating Icon */}
-      <button
-        onClick={() => setOpen(!open)}
-        className="fixed bottom-3 right-3 bg-blue-600 text-white w-14 h-14 rounded-full shadow-2xl flex items-center justify-center text-4xl hover:bg-blue-700 transition-all"
-      >
-        🤖
-      </button>
+      {/* Floating Icon with Tooltip */}
+      <div className="fixed bottom-3 right-3">
+        {/* Tooltip */}
+        {showTooltip && (
+          <div className="absolute bottom-16 right-0 bg-gray-800 text-white text-sm px-3 py-2 rounded-lg shadow-lg whitespace-nowrap animate-fade-in">
+            interact with me
+            {/* Arrow pointing down */}
+            <div className="absolute top-full right-4 w-0 h-0 border-l-4 border-r-4 border-t-4 border-l-transparent border-r-transparent border-t-gray-800"></div>
+          </div>
+        )}
+
+        {/* Button */}
+        <button
+          onClick={() => setOpen(!open)}
+          onMouseEnter={() => setShowTooltip(true)}
+          onMouseLeave={() => setShowTooltip(false)}
+          className="bg-blue-600 text-white w-14 h-14 rounded-full shadow-2xl flex items-center justify-center text-4xl hover:bg-blue-700 transition-all duration-300 hover:scale-110"
+        >
+          🤖
+        </button>
+      </div>
 
       {/* Chat Window */}
       {open && (
