@@ -33,18 +33,23 @@ export default function ChatbotInteraction() {
       setTimeout(() => {
         searchRef.current.value = "";
         setQuery("");
-        
+
         // Handle different flows based on purchase type
         const currentAgent = agents[step];
-        
-        if (purchaseType === 'offline' && (currentAgent.agentId === 'payment_agent' || currentAgent.agentId === 'loyalty_agent' || currentAgent.agentId === 'post_purchase_agent')) {
+
+        if (
+          purchaseType === "offline" &&
+          (currentAgent.agentId === "payment_agent" ||
+            currentAgent.agentId === "loyalty_agent" ||
+            currentAgent.agentId === "post_purchase_agent")
+        ) {
           // Skip these agents for offline purchases since fulfillment is handled in handleStoreSelection
           setStep(agents.length);
         } else {
           setLog((prev) => [...prev, currentAgent]);
           setStep((s) => s + 1);
         }
-        
+
         setIsLoading(false);
         setLoadingMessage("");
       }, 1500 + Math.random() * 1000); // 1.5-2.5 seconds
@@ -70,22 +75,22 @@ export default function ChatbotInteraction() {
       store: storeOverride || selectedStore,
       userId: "00001",
       userName: "Arjun Bose",
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     };
-    
+
     setPurchaseData(purchaseInfo);
-    
+
     // Save to sessionStorage for components to display (clears on refresh)
-    if (purchaseType === 'online') {
-      sessionStorage.setItem('newOnlinePurchase', JSON.stringify(purchaseInfo));
-    } else if (purchaseType === 'offline') {
-      sessionStorage.setItem('newOfflineOrder', JSON.stringify(purchaseInfo));
+    if (purchaseType === "online") {
+      sessionStorage.setItem("newOnlinePurchase", JSON.stringify(purchaseInfo));
+    } else if (purchaseType === "offline") {
+      sessionStorage.setItem("newOfflineOrder", JSON.stringify(purchaseInfo));
     }
   };
 
   const handlePurchaseTypeSelection = (type) => {
     setPurchaseType(type);
-    if (type === 'online') {
+    if (type === "online") {
       // For online purchases, continue with next agent (payment)
       nextAgent();
     } else {
@@ -111,25 +116,50 @@ export default function ChatbotInteraction() {
           customerId: "00001",
           storeName: store.store_name,
           storeLocation: store.location,
-          productName: selectedProduct?.name
-        }
+          productName: selectedProduct?.name,
+        },
       };
       setLog((prev) => [...prev, fulfillmentAgent]);
       setStep(agents.length);
       setIsLoading(false);
       setLoadingMessage("");
     }, 1500 + Math.random() * 1000);
-    
+
     setIsLoading(true);
     setLoadingMessage(`Processing with Fulfillment Agent...`);
   };
 
   // Hardcoded store data for offline purchases
   const availableStores = [
-    { id: "sk4", name: "Manager Sophia", store_name: "ABFRL Store South City", stock: "Available", location: "375 Prince Anwar Shah Road, South City Complex, Kolkata 700068" },
-    { id: "sk5", name: "Manager Rahul", store_name: "City Centre Salt Lake, First Floor", stock: "Available", location: "DC Block, Sector 1, Salt Lake City, Kolkata 700064" },
-    { id: "sk6", name: "Manager Priya", store_name: "Quest Mall, Second Floor", stock: "Limited", location: "33, Syed Amir Ali Ave, Park Circus, Kolkata 700017" },
-    { id: "sk8", name: "Manager Neha", store_name: "South City Mall, Third Floor", stock: "Available", location: "375 Prince Anwar Shah Road, Jadavpur, Kolkata 700068" }
+    {
+      id: "sk4",
+      name: "Manager Sophia",
+      store_name: "ABFRL Store South City",
+      stock: "Available",
+      location:
+        "375 Prince Anwar Shah Road, South City Complex, Kolkata 700068",
+    },
+    {
+      id: "sk5",
+      name: "Manager Rahul",
+      store_name: "City Centre Salt Lake, First Floor",
+      stock: "Available",
+      location: "DC Block, Sector 1, Salt Lake City, Kolkata 700064",
+    },
+    {
+      id: "sk6",
+      name: "Manager Priya",
+      store_name: "Quest Mall, Second Floor",
+      stock: "Limited",
+      location: "33, Syed Amir Ali Ave, Park Circus, Kolkata 700017",
+    },
+    {
+      id: "sk8",
+      name: "Manager Neha",
+      store_name: "South City Mall, Third Floor",
+      stock: "Available",
+      location: "375 Prince Anwar Shah Road, Jadavpur, Kolkata 700068",
+    },
   ];
 
   return (
@@ -289,24 +319,36 @@ export default function ChatbotInteraction() {
                           </div>
                           <div className="grid grid-cols-2 gap-4 mb-4">
                             <button
-                              onClick={() => handlePurchaseTypeSelection('online')}
+                              onClick={() =>
+                                handlePurchaseTypeSelection("online")
+                              }
                               className="bg-green-700 hover:bg-green-600 text-white p-4 rounded border border-green-600 transition-colors duration-200 flex flex-col items-center gap-2"
                             >
                               <span className="text-2xl">🛒</span>
-                              <span className="font-bold text-[1.1vw]">Buy Online</span>
-                              <span className="text-[0.9vw] text-green-200">Home Delivery</span>
+                              <span className="font-bold text-[1.1vw]">
+                                Buy Online
+                              </span>
+                              <span className="text-[0.9vw] text-green-200">
+                                Home Delivery
+                              </span>
                             </button>
                             <button
-                              onClick={() => handlePurchaseTypeSelection('offline')}
+                              onClick={() =>
+                                handlePurchaseTypeSelection("offline")
+                              }
                               className="bg-blue-700 hover:bg-blue-600 text-white p-4 rounded border border-blue-600 transition-colors duration-200 flex flex-col items-center gap-2"
                             >
                               <span className="text-2xl">🏪</span>
-                              <span className="font-bold text-[1.1vw]">Nearest Store</span>
-                              <span className="text-[0.9vw] text-blue-200">Store Pickup</span>
+                              <span className="font-bold text-[1.1vw]">
+                                Nearest Store
+                              </span>
+                              <span className="text-[0.9vw] text-blue-200">
+                                Store Pickup
+                              </span>
                             </button>
                           </div>
                         </div>
-                      ) : purchaseType === 'offline' && !selectedStore ? (
+                      ) : purchaseType === "offline" && !selectedStore ? (
                         <div>
                           <div className="text-blue-400 font-bold mb-4 text-[1.1vw] flex items-center">
                             🏪 Select Store for Pickup
@@ -319,8 +361,12 @@ export default function ChatbotInteraction() {
                                   className="w-full flex justify-between items-center bg-[#0f0f0f] hover:bg-[#1a1a1a] p-3 rounded border border-gray-700 transition-colors duration-200"
                                 >
                                   <div className="text-left">
-                                    <div className="text-[1vw] font-semibold text-white">{store.store_name}</div>
-                                    <div className="text-[0.8vw] text-gray-400">{store.name}</div>
+                                    <div className="text-[1vw] font-semibold text-white">
+                                      {store.store_name}
+                                    </div>
+                                    <div className="text-[0.8vw] text-gray-400">
+                                      {store.name}
+                                    </div>
                                   </div>
                                   <span
                                     className={`px-3 py-1 text-[0.9vw] rounded font-bold ${
@@ -336,7 +382,7 @@ export default function ChatbotInteraction() {
                             ))}
                           </ul>
                         </div>
-                      ) : purchaseType === 'online' ? (
+                      ) : purchaseType === "online" ? (
                         <div className="text-green-500 font-bold mb-2 text-[1.1vw] flex items-center">
                           ✔ Online Purchase - Proceeding to Payment
                         </div>
@@ -368,29 +414,47 @@ export default function ChatbotInteraction() {
                       <div className="grid grid-cols-2 gap-4 text-[1vw]">
                         <div>
                           <span className="text-gray-400">Order ID:</span>
-                          <div className="font-mono font-bold text-green-400">{agent.output?.orderId}</div>
+                          <div className="font-mono font-bold text-green-400">
+                            {agent.output?.orderId}
+                          </div>
                         </div>
                         <div>
                           <span className="text-gray-400">Customer:</span>
-                          <div className="font-bold text-white">{agent.output?.customerName}</div>
+                          <div className="font-bold text-white">
+                            {agent.output?.customerName}
+                          </div>
                         </div>
                         <div>
                           <span className="text-gray-400">User ID:</span>
-                          <div className="font-mono font-bold text-blue-400">{agent.output?.customerId}</div>
+                          <div className="font-mono font-bold text-blue-400">
+                            {agent.output?.customerId}
+                          </div>
                         </div>
                         <div>
                           <span className="text-gray-400">Product:</span>
-                          <div className="font-bold text-white">{agent.output?.productName}</div>
+                          <div className="font-bold text-white">
+                            {agent.output?.productName}
+                          </div>
                         </div>
                       </div>
                       <div className="pt-3 border-t border-gray-600">
-                        <div className="text-gray-400 text-[0.9vw] mb-2">Pickup Location:</div>
-                        <div className="font-bold text-yellow-400 text-[1.1vw] mb-1">{agent.output?.storeName}</div>
+                        <div className="text-gray-400 text-[0.9vw] mb-2">
+                          Pickup Location:
+                        </div>
+                        <div className="font-bold text-yellow-400 text-[1.1vw] mb-1">
+                          {agent.output?.storeName}
+                        </div>
                         {agent.output?.storeLocation && (
-                          <div className="text-gray-300 text-[0.9vw] mb-3">{agent.output?.storeLocation}</div>
+                          <div className="text-gray-300 text-[0.9vw] mb-3">
+                            {agent.output?.storeLocation}
+                          </div>
                         )}
-                        <div className="text-gray-400 text-[0.9vw] mb-1">Pickup Hours:</div>
-                        <div className="font-bold text-white text-[1vw]">10:00 AM - 9:00 PM</div>
+                        <div className="text-gray-400 text-[0.9vw] mb-1">
+                          Pickup Hours:
+                        </div>
+                        <div className="font-bold text-white text-[1vw]">
+                          10:00 AM - 9:00 PM
+                        </div>
                       </div>
                     </div>
                     <div className="mt-4 p-3 bg-green-900/30 rounded border border-green-700">
@@ -436,7 +500,7 @@ export default function ChatbotInteraction() {
                         placeholder="username@upi"
                         className="w-full p-2 bg-[#0f0f0f] border border-gray-700 rounded-l outline-none"
                       />
-                      <button 
+                      <button
                         className="bg-green-700 px-4 rounded-r hover:bg-green-600 transition-colors"
                         onClick={() => {
                           if (upi.trim()) {
