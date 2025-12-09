@@ -14,8 +14,8 @@
           "products": [
 
              {"id": "p1", "name": "Raymond Shirt","image": "/images/mobile.png","price": 1789,"reason": "Best Cotton Shirts"},
-    {"id": "p2", "name": "Peter England Shirt","image": "/images/mobile.png","price": 3000,"reason": "Best Cotton Shirts , with history"},
-    {"id": "p3", "name": "Raymond Pant","image": "/images/mobile.png","price": 13000,"reason": "Best Cotton Pant"}
+    {"id": "p2", "name": "Peter England Shirt","image": "/images/mobile.png","price": 2850,"reason": "Best Cotton Shirts , with history"},
+    {"id": "p3", "name": "Raymond Pant","image": "/images/mobile.png","price": 2950,"reason": "Best Cotton Pant"}
              
           ],
           "message": "Here are some products curated for you."

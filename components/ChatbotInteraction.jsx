@@ -14,6 +14,9 @@ export default function ChatbotInteraction() {
   const [query, setQuery] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [loadingMessage, setLoadingMessage] = useState("");
+  const [purchaseType, setPurchaseType] = useState(null); // 'online' or 'offline'
+  const [selectedStore, setSelectedStore] = useState(null);
+  const [purchaseData, setPurchaseData] = useState(null);
   const chatEndRef = useRef(null);
   const searchRef = useRef("");
 
@@ -30,18 +33,104 @@ export default function ChatbotInteraction() {
       setTimeout(() => {
         searchRef.current.value = "";
         setQuery("");
-        setLog((prev) => [...prev, agents[step]]);
-        setStep((s) => s + 1);
+        
+        // Handle different flows based on purchase type
+        const currentAgent = agents[step];
+        
+        if (purchaseType === 'offline' && (currentAgent.agentId === 'payment_agent' || currentAgent.agentId === 'loyalty_agent' || currentAgent.agentId === 'post_purchase_agent')) {
+          // Skip these agents for offline purchases since fulfillment is handled in handleStoreSelection
+          setStep(agents.length);
+        } else {
+          setLog((prev) => [...prev, currentAgent]);
+          setStep((s) => s + 1);
+        }
+        
         setIsLoading(false);
         setLoadingMessage("");
       }, 1500 + Math.random() * 1000); // 1.5-2.5 seconds
     } else {
+      // Reset everything
       setStep(0);
       setLog([]);
+      setPurchaseType(null);
+      setSelectedStore(null);
+      setPurchaseData(null);
+      setSelectedProduct(null);
     }
   };
 
   const isJourneyComplete = step >= agents.length;
+
+  const updateProfiles = (storeOverride = null) => {
+    // This would normally update the backend data
+    // For demo purposes, we'll save to localStorage for the user profile to pick up
+    const purchaseInfo = {
+      type: purchaseType,
+      product: selectedProduct,
+      store: storeOverride || selectedStore,
+      userId: "00001",
+      userName: "Arjun Bose",
+      timestamp: new Date().toISOString()
+    };
+    
+    setPurchaseData(purchaseInfo);
+    
+    // Save to sessionStorage for components to display (clears on refresh)
+    if (purchaseType === 'online') {
+      sessionStorage.setItem('newOnlinePurchase', JSON.stringify(purchaseInfo));
+    } else if (purchaseType === 'offline') {
+      sessionStorage.setItem('newOfflineOrder', JSON.stringify(purchaseInfo));
+    }
+  };
+
+  const handlePurchaseTypeSelection = (type) => {
+    setPurchaseType(type);
+    if (type === 'online') {
+      // For online purchases, continue with next agent (payment)
+      nextAgent();
+    } else {
+      // For offline, show store selection but don't advance agent yet
+      // The inventory display will handle this
+    }
+  };
+
+  const handleStoreSelection = (store) => {
+    setSelectedStore(store);
+    // Update profiles for offline purchase, passing the store since state hasn't updated yet
+    updateProfiles(store);
+    // Now advance to fulfillment agent for offline purchase with store info
+    setTimeout(() => {
+      const fulfillmentAgent = {
+        agentId: "fulfillment_agent_offline",
+        title: "Fulfillment Agent",
+        status: "completed",
+        action: "Processing offline purchase...",
+        output: {
+          orderId: `ORD${Date.now().toString().slice(-6)}`,
+          customerName: "Arjun Bose",
+          customerId: "00001",
+          storeName: store.store_name,
+          storeLocation: store.location,
+          productName: selectedProduct?.name
+        }
+      };
+      setLog((prev) => [...prev, fulfillmentAgent]);
+      setStep(agents.length);
+      setIsLoading(false);
+      setLoadingMessage("");
+    }, 1500 + Math.random() * 1000);
+    
+    setIsLoading(true);
+    setLoadingMessage(`Processing with Fulfillment Agent...`);
+  };
+
+  // Hardcoded store data for offline purchases
+  const availableStores = [
+    { id: "sk4", name: "Manager Sophia", store_name: "ABFRL Store South City", stock: "Available", location: "375 Prince Anwar Shah Road, South City Complex, Kolkata 700068" },
+    { id: "sk5", name: "Manager Rahul", store_name: "City Centre Salt Lake, First Floor", stock: "Available", location: "DC Block, Sector 1, Salt Lake City, Kolkata 700064" },
+    { id: "sk6", name: "Manager Priya", store_name: "Quest Mall, Second Floor", stock: "Limited", location: "33, Syed Amir Ali Ave, Park Circus, Kolkata 700017" },
+    { id: "sk8", name: "Manager Neha", store_name: "South City Mall, Third Floor", stock: "Available", location: "375 Prince Anwar Shah Road, Jadavpur, Kolkata 700068" }
+  ];
 
   return (
     <div className="h-screen top_section flex bg-[#0d0d0d] text-gray-200 font-sans text-[1.4vw] leading-[1.8vh]">
@@ -193,43 +282,125 @@ export default function ChatbotInteraction() {
                 {agent.agentId === "inventory_agent" &&
                   agent.output?.availability && (
                     <div className="bg-[#111] p-4 rounded border border-gray-700">
-                      <div className="text-green-500 font-bold mb-2 text-[1.1vw] flex items-center">
-                        ✔ In Stock Online
-                      </div>
-                      <ul>
-                        {agent.output.availability.stores.map((store, idx) => (
-                          <li
-                            key={idx}
-                            className="flex justify-between items-center bg-[#0f0f0f] p-2 rounded border border-gray-700 mb-2"
-                          >
-                            <span className="text-[1vw]">{store.location}</span>
-                            <span
-                              className={`px-2 py-1 text-[0.9vw] rounded font-bold cursor-pointer ${
-                                store.stock === "Available"
-                                  ? "bg-green-900 text-green-300"
-                                  : "bg-orange-900 text-orange-300"
-                              }`}
-                              onClick={() => nextAgent()}
+                      {!purchaseType ? (
+                        <div>
+                          <div className="text-blue-400 font-bold mb-4 text-[1.2vw] flex items-center">
+                            📦 Choose Purchase Method
+                          </div>
+                          <div className="grid grid-cols-2 gap-4 mb-4">
+                            <button
+                              onClick={() => handlePurchaseTypeSelection('online')}
+                              className="bg-green-700 hover:bg-green-600 text-white p-4 rounded border border-green-600 transition-colors duration-200 flex flex-col items-center gap-2"
                             >
-                              {store.stock}
-                            </span>
-                          </li>
-                        ))}
-                      </ul>
+                              <span className="text-2xl">🛒</span>
+                              <span className="font-bold text-[1.1vw]">Buy Online</span>
+                              <span className="text-[0.9vw] text-green-200">Home Delivery</span>
+                            </button>
+                            <button
+                              onClick={() => handlePurchaseTypeSelection('offline')}
+                              className="bg-blue-700 hover:bg-blue-600 text-white p-4 rounded border border-blue-600 transition-colors duration-200 flex flex-col items-center gap-2"
+                            >
+                              <span className="text-2xl">🏪</span>
+                              <span className="font-bold text-[1.1vw]">Nearest Store</span>
+                              <span className="text-[0.9vw] text-blue-200">Store Pickup</span>
+                            </button>
+                          </div>
+                        </div>
+                      ) : purchaseType === 'offline' && !selectedStore ? (
+                        <div>
+                          <div className="text-blue-400 font-bold mb-4 text-[1.1vw] flex items-center">
+                            🏪 Select Store for Pickup
+                          </div>
+                          <ul className="space-y-2">
+                            {availableStores.map((store, idx) => (
+                              <li key={idx}>
+                                <button
+                                  onClick={() => handleStoreSelection(store)}
+                                  className="w-full flex justify-between items-center bg-[#0f0f0f] hover:bg-[#1a1a1a] p-3 rounded border border-gray-700 transition-colors duration-200"
+                                >
+                                  <div className="text-left">
+                                    <div className="text-[1vw] font-semibold text-white">{store.store_name}</div>
+                                    <div className="text-[0.8vw] text-gray-400">{store.name}</div>
+                                  </div>
+                                  <span
+                                    className={`px-3 py-1 text-[0.9vw] rounded font-bold ${
+                                      store.stock === "Available"
+                                        ? "bg-green-900 text-green-300"
+                                        : "bg-orange-900 text-orange-300"
+                                    }`}
+                                  >
+                                    {store.stock}
+                                  </span>
+                                </button>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      ) : purchaseType === 'online' ? (
+                        <div className="text-green-500 font-bold mb-2 text-[1.1vw] flex items-center">
+                          ✔ Online Purchase - Proceeding to Payment
+                        </div>
+                      ) : (
+                        <div className="text-blue-500 font-bold mb-2 text-[1.1vw] flex items-center">
+                          ✔ Store Selected: {selectedStore?.store_name}
+                        </div>
+                      )}
                     </div>
                   )}
-                {/* DELIVERY */}{" "}
+                {/* DELIVERY */}
                 {agent.agentId === "fulfillment_agent" && (
                   <div className="bg-green-50 border-l-4 border-green-500 p-5 rounded-xl shadow">
-                    {" "}
                     <h4 className="text-green-800 font-bold text-lg mb-2">
-                      {" "}
-                      Delivery Scheduled{" "}
-                    </h4>{" "}
+                      Delivery Scheduled
+                    </h4>
                     <p className="text-green-700 font-medium">
-                      {" "}
-                      Arrival: {agent.output.delivery.date}{" "}
-                    </p>{" "}
+                      Arrival: {agent.output.delivery.date}
+                    </p>
+                  </div>
+                )}
+                {/* OFFLINE FULFILLMENT */}
+                {agent.agentId === "fulfillment_agent_offline" && (
+                  <div className="bg-[#111] p-6 rounded border border-green-700">
+                    <div className="text-green-400 font-bold text-[1.3vw] mb-4 flex items-center">
+                      ✅ Order Confirmed - Store Pickup
+                    </div>
+                    <div className="bg-[#0f0f0f] p-4 rounded border border-gray-700 space-y-3">
+                      <div className="grid grid-cols-2 gap-4 text-[1vw]">
+                        <div>
+                          <span className="text-gray-400">Order ID:</span>
+                          <div className="font-mono font-bold text-green-400">{agent.output?.orderId}</div>
+                        </div>
+                        <div>
+                          <span className="text-gray-400">Customer:</span>
+                          <div className="font-bold text-white">{agent.output?.customerName}</div>
+                        </div>
+                        <div>
+                          <span className="text-gray-400">User ID:</span>
+                          <div className="font-mono font-bold text-blue-400">{agent.output?.customerId}</div>
+                        </div>
+                        <div>
+                          <span className="text-gray-400">Product:</span>
+                          <div className="font-bold text-white">{agent.output?.productName}</div>
+                        </div>
+                      </div>
+                      <div className="pt-3 border-t border-gray-600">
+                        <div className="text-gray-400 text-[0.9vw] mb-2">Pickup Location:</div>
+                        <div className="font-bold text-yellow-400 text-[1.1vw] mb-1">{agent.output?.storeName}</div>
+                        {agent.output?.storeLocation && (
+                          <div className="text-gray-300 text-[0.9vw] mb-3">{agent.output?.storeLocation}</div>
+                        )}
+                        <div className="text-gray-400 text-[0.9vw] mb-1">Pickup Hours:</div>
+                        <div className="font-bold text-white text-[1vw]">10:00 AM - 9:00 PM</div>
+                      </div>
+                    </div>
+                    <div className="mt-4 p-3 bg-green-900/30 rounded border border-green-700">
+                      <div className="text-green-300 font-bold text-center text-[1.1vw]">
+                        🙏 Thank you for purchasing from ABFRL!
+                      </div>
+                      <div className="text-green-400 text-center text-[0.9vw] mt-1">
+                        Your order is ready for pickup at the selected store.
+                      </div>
+                    </div>
                   </div>
                 )}
                 {/* LOYALTY */}
@@ -265,7 +436,16 @@ export default function ChatbotInteraction() {
                         placeholder="username@upi"
                         className="w-full p-2 bg-[#0f0f0f] border border-gray-700 rounded-l outline-none"
                       />
-                      <button className="bg-green-700 px-4 rounded-r">
+                      <button 
+                        className="bg-green-700 px-4 rounded-r hover:bg-green-600 transition-colors"
+                        onClick={() => {
+                          if (upi.trim()) {
+                            // For online purchases, update profiles and continue to next agent
+                            updateProfiles();
+                            nextAgent();
+                          }
+                        }}
+                      >
                         Pay
                       </button>
                     </div>

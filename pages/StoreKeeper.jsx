@@ -1,9 +1,41 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import data from '../data/admin.json'
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend, CartesianGrid } from 'recharts'
 import SortableTransactionTable from './SortableTransactionTable'; // Import the new component
 
 export default function StoreKeeper() {
+  const [newOfflineOrder, setNewOfflineOrder] = useState(null);
+
+  // Check for new offline orders - clear on page refresh using window events
+  useEffect(() => {
+    const checkForNewOrder = () => {
+      const orderData = sessionStorage.getItem('newOfflineOrder');
+      if (orderData) {
+        setNewOfflineOrder(JSON.parse(orderData));
+        // Keep the notification for 15 seconds but don't clear sessionStorage
+        setTimeout(() => {
+          setNewOfflineOrder(null);
+        }, 15000); // Hide notification after 15 seconds but keep data
+      }
+    };
+    
+    // Clear orders when page is about to unload (refresh/close)
+    const handleBeforeUnload = () => {
+      sessionStorage.removeItem('newOfflineOrder');
+    };
+    
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    
+    checkForNewOrder();
+    // Check every 2 seconds for new orders
+    const interval = setInterval(checkForNewOrder, 2000);
+    
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, []);
+
   const sold = data.storeStats.productsSold.map((item, index) => {
     const product = data.products.find(p => p.id === item.productId)
     return { 
@@ -77,6 +109,28 @@ export default function StoreKeeper() {
               <p className="text-sm text-gray-600 mt-1 font-medium">Real-time performance metrics and insights</p>
             </div>
           </div>
+          
+          {/* New Offline Order Notification */}
+          {newOfflineOrder && (
+            <div className="mb-6 bg-gradient-to-r from-orange-500 to-red-600 rounded-3xl p-6 text-white shadow-xl animate-pulse">
+              <div className="flex items-center gap-4">
+                <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center">
+                  <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+                <div>
+                  <h3 className="text-2xl font-bold mb-1">🔔 New Store Pickup Order!</h3>
+                  <p className="text-orange-100">
+                    Customer <span className="font-bold">{newOfflineOrder.userName}</span> selected your store for pickup
+                  </p>
+                  <p className="text-sm text-orange-200 mt-2">
+                    Product: <span className="font-bold">{newOfflineOrder.product?.name}</span> - Check pending orders below
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Charts Container */}

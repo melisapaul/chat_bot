@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 // Note: Assuming the file path is correct relative to this component.
 import data from '../data/admin.json'; 
 import { ChevronUpIcon, ChevronDownIcon } from '@heroicons/react/24/outline';
@@ -17,7 +17,62 @@ export default function StoreDetailsTable({ storeId }) {
   console.log("storeId",storeId.length==0 || storeId==undefined || storeId=="")
   const [sortConfig, setSortConfig] = useState({ key: 'date', direction: 'descending' });
   const [currentPage, setCurrentPage] = useState(1);
+  const [pendingOfflineOrders, setPendingOfflineOrders] = useState([]);
   const itemsPerPage = 10;
+
+  // Listen for new offline orders and clear on page unload
+  useEffect(() => {
+    // Clear orders when page is about to unload (refresh/close)
+    const handleBeforeUnload = () => {
+      sessionStorage.removeItem('newOfflineOrder');
+    };
+    
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    
+    const checkForPendingOrders = () => {
+      const orderData = sessionStorage.getItem('newOfflineOrder');
+      if (orderData) {
+        const order = JSON.parse(orderData);
+        const orderId = `PENDING_${order.timestamp || Date.now()}`;
+        
+        // Check if this order already exists in our pending orders
+        const existingOrder = pendingOfflineOrders.find(pending => pending.id === orderId);
+        
+        if (!existingOrder) {
+          // Create a transaction-like object for the pending order
+          const pendingTransaction = {
+            id: orderId,
+            date: new Date().toISOString().split('T')[0],
+            userId: order.userId,
+            productId: order.product?.id,
+            qty: 1,
+            mode: 'Offline',
+            storeId: order.store?.id,
+            orderStatus: 'In Progress',
+            amount: order.product?.price || 0,
+            userName: order.userName,
+            productName: order.product?.name,
+            userAddress: '29 Main Street, City 9', // Default address
+            userPhone: '555-1029', // Default phone
+            storeName: order.store?.store_name,
+            isPending: true // Flag to identify pending orders
+          };
+          
+          // Add to existing pending orders instead of replacing
+          setPendingOfflineOrders(prev => [pendingTransaction, ...prev]);
+        }
+      }
+    };
+    
+    checkForPendingOrders();
+    // Check every 2 seconds for new orders
+    const interval = setInterval(checkForPendingOrders, 2000);
+    
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, [pendingOfflineOrders]);
 
   // 1. Filter transactions based on the storeId prop
   const filteredTransactions = useMemo(() => {
@@ -34,9 +89,9 @@ export default function StoreDetailsTable({ storeId }) {
  
   }, [storeId]); // Dependency on storeId
 
-  // 2. Enrich the *filtered* data
+  // 2. Enrich the *filtered* data and combine with pending orders
   const enrichedTransactions = useMemo(() => {
-    return filteredTransactions.map(transaction => {
+    const regularTransactions = filteredTransactions.map(transaction => {
         const user = data.users.find(u => u.id === transaction.userId);
         const product = data.products.find(p => p.id === transaction.productId);
         const store = data.storeKeepers.find(s => s.id === transaction.storeId);
@@ -47,9 +102,13 @@ export default function StoreDetailsTable({ storeId }) {
             userAddress: user ? user.address : 'N/A',
             userPhone: user ? user.phone : 'N/A',
             storeName: transaction.mode === 'Online' ? 'NA' : (store ? store.store_name : 'Unknown Store'),
+            isPending: false
         };
     });
-  }, [filteredTransactions]); // Dependency on filteredTransactions
+    
+    // Combine pending orders with regular transactions, pending orders first
+    return [...pendingOfflineOrders, ...regularTransactions];
+  }, [filteredTransactions, pendingOfflineOrders]); // Updated dependencies
 
   // 3. Sort the *enriched* data
   const sortedTransactions = useMemo(() => {
@@ -156,9 +215,20 @@ export default function StoreDetailsTable({ storeId }) {
           </thead>
           <tbody className="bg-white divide-y divide-gray-100">
             {currentTransactions.map((transaction, idx) => (
-              <tr key={transaction.id} className={`hover:bg-indigo-50 transition-colors ${idx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}`}>
+              <tr key={transaction.id} className={`hover:bg-indigo-50 transition-colors ${
+                transaction.isPending 
+                  ? 'bg-yellow-50 border-l-4 border-yellow-400 animate-pulse' 
+                  : (idx % 2 === 0 ? 'bg-white' : 'bg-gray-50')
+              }`}>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <span className="text-sm font-bold text-indigo-600">{transaction.id}</span>
+                  <span className={`text-sm font-bold ${transaction.isPending ? 'text-orange-600 flex items-center gap-1' : 'text-indigo-600'}`}>
+                    {transaction.isPending && (
+                      <svg className="w-4 h-4 text-orange-500 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                      </svg>
+                    )}
+                    {transaction.id}
+                  </span>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-700">{new Date(transaction.date).toLocaleDateString()}</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-700">{transaction.userName}</td>

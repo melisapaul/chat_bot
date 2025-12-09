@@ -1,21 +1,64 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import data from '../data/admin.json'
 
 export default function UserJourney() {
+  const [newPurchase, setNewPurchase] = useState(null);
+  const [tempPurchases, setTempPurchases] = useState([]);
+  
   const user = data.users.find(u => u.id === "00001")
   
   if (!user) {
     return <div className="bg-[#0d0d0d] text-gray-200 p-6">User not found</div>
   }
 
+  // Check for new purchases from chatbot interaction and clear on page refresh
+  useEffect(() => {
+    // Clear temp purchases when page is about to unload (refresh/close)
+    const handleBeforeUnload = () => {
+      sessionStorage.removeItem('newOnlinePurchase');
+    };
+    
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    
+    const checkForNewPurchase = () => {
+      const purchaseData = sessionStorage.getItem('newOnlinePurchase');
+      if (purchaseData) {
+        const purchase = JSON.parse(purchaseData);
+        setNewPurchase(purchase);
+        
+        // Add to temporary purchases if not already added
+        const productId = purchase.product?.id;
+        if (productId && !tempPurchases.find(temp => temp.id === productId)) {
+          setTempPurchases(prev => [{ id: productId, timestamp: Date.now() }, ...prev]);
+        }
+        
+        // Clear notification after displaying
+        setTimeout(() => {
+          setNewPurchase(null);
+        }, 10000); // Hide notification after 10 seconds
+      }
+    };
+    
+    checkForNewPurchase();
+    // Check every 2 seconds for new purchases
+    const interval = setInterval(checkForNewPurchase, 2000);
+    
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, [tempPurchases]);
+
+  // Combine regular purchases with temporary purchases
+  const allPurchases = [...tempPurchases.map(temp => temp.id), ...user.purchases];
+  
   const productMap = {}
-  user.purchases.forEach(pid => {
+  allPurchases.forEach(pid => {
     if(productMap[pid]==undefined){
       productMap[pid]=1
     }else{
       productMap[pid]=productMap[pid]+1
     }
-     
   })
 
   return (
@@ -59,6 +102,28 @@ export default function UserJourney() {
           </div>
         </div>
 
+        {/* New Purchase Notification */}
+        {newPurchase && (
+          <div className="mb-8 bg-gradient-to-r from-green-500 to-emerald-600 rounded-3xl p-6 text-white shadow-xl animate-pulse">
+            <div className="flex items-center gap-4">
+              <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center">
+                <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <div>
+                <h3 className="text-2xl font-bold mb-1">New Purchase Completed!</h3>
+                <p className="text-green-100">
+                  🎉 You just bought <span className="font-bold">{newPurchase.product?.name}</span> online via the chatbot!
+                </p>
+                <p className="text-sm text-green-200 mt-2">
+                  Order will be processed and delivered soon. This will be added to your purchase history.
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Order History Section */}
         <div className="mb-6">
           <div className="flex items-center gap-3">
@@ -75,8 +140,12 @@ export default function UserJourney() {
           {Object.keys(productMap).map(pid => {
             const prod = data.products.find(p => p.id === pid)
             if (!prod) return null
+            
+            // Check if this is a new temporary purchase
+            const isNewPurchase = tempPurchases.some(temp => temp.id === pid);
+            
             return (
-              <div key={pid} className="group bg-white rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500 hover:-translate-y-3 border-2 border-gray-100">
+              <div key={pid} className={`group bg-white rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500 hover:-translate-y-3 border-2 ${isNewPurchase ? 'border-green-300 ring-2 ring-green-200 bg-green-50' : 'border-gray-100'}`}>
                 <div className="relative overflow-hidden bg-gray-100">
                   <img 
                     src={prod.image} 
@@ -84,7 +153,7 @@ export default function UserJourney() {
                     className="w-full h-72 object-contain group-hover:scale-105 transition-transform duration-700 p-6" 
                     onError={(e) => {e.target.src='/images/mobile.png'}} 
                   />
-                  <div className="absolute top-5 right-5 bg-indigo-600 text-white rounded-2xl px-5 py-2.5 shadow-xl">
+                  <div className={`absolute top-5 right-5 ${isNewPurchase ? 'bg-green-600' : 'bg-indigo-600'} text-white rounded-2xl px-5 py-2.5 shadow-xl`}>
                     <div className="flex items-center gap-2">
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
@@ -92,6 +161,11 @@ export default function UserJourney() {
                       <span className="text-sm font-bold">x{productMap[pid]}</span>
                     </div>
                   </div>
+                  {isNewPurchase && (
+                    <div className="absolute top-5 left-5 bg-green-500 text-white rounded-2xl px-3 py-1.5 shadow-xl text-xs font-bold">
+                      NEW!
+                    </div>
+                  )}
                 </div>
                 <div className="p-7 bg-white">
                   <h3 className="font-bold text-xl text-gray-900 mb-4 line-clamp-2 min-h-[3.5rem]">{prod.name}</h3>
