@@ -8,7 +8,7 @@ import Admin from "./pages/Admin";
 export default function Pages() {
   return (
     <div className="bg-gradient-to-br from-slate-50 to-blue-50 min-h-screen">
-      <header className="bg-white shadow-sm border-b border-slate-200">
+      <header className="sticky top-0 z-50 bg-white shadow-sm border-b border-slate-200">
         <div className="max-w-6xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <h1 className="text-3xl font-bold text-slate-800 tracking-tight">
