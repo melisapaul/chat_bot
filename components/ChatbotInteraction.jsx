@@ -2,9 +2,10 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Loader2 } from "lucide-react";
 import data from "../agents.json";
+import adminData from "../data/admin.json";
 import "../page.css";
 
-export default function ChatbotInteraction() {
+export default function ChatbotInteraction({ onClose }) {
   const agents = data.userJourney.agents;
   const [log, setLog] = useState([]);
   const [step, setStep] = useState(0);
@@ -17,12 +18,141 @@ export default function ChatbotInteraction() {
   const [purchaseType, setPurchaseType] = useState(null); // 'online' or 'offline'
   const [selectedStore, setSelectedStore] = useState(null);
   const [purchaseData, setPurchaseData] = useState(null);
+  const [isStorekeeperMode, setIsStorekeeperMode] = useState(false);
+  const [customerDetails, setCustomerDetails] = useState(null);
+
+  const [userSelectedMode, setUserSelectedMode] = useState("customer"); // 'customer' or 'storekeeper'
   const chatEndRef = useRef(null);
   const searchRef = useRef("");
+
+  // Define storekeeper workflow agents
+  const storekeeperAgents = [
+    {
+      agentId: "recommend_agent",
+      title: "Recommend Agent",
+      action: "Analyzing customer product details...",
+      output: { showProductDetails: true },
+    },
+    {
+      agentId: "payment_agent",
+      title: "Payment Agent",
+      action: "Processing payment confirmation...",
+      output: { message: "Payment has been confirmed for this order." },
+    },
+    {
+      agentId: "fulfillment_agent_store",
+      title: "Fulfillment Agent",
+      action: "Dispatching product from store...",
+      output: {
+        message:
+          "Your product is dispatched from the store and ready for pickup. Store pickup process completed successfully!",
+      },
+    },
+  ];
+
+  const handleBackButton = () => {
+    if (onClose) {
+      onClose();
+    }
+  };
+
+  const handleModeToggle = (mode) => {
+    setUserSelectedMode(mode);
+    // Reset states when switching modes
+    setLog([]);
+    setStep(0);
+    setIsStorekeeperMode(false);
+    setCustomerDetails(null);
+    setSelectedProduct(null);
+    setPurchaseType(null);
+    setSelectedStore(null);
+    setPurchaseData(null);
+    setQuery("");
+    if (searchRef.current) {
+      searchRef.current.value = "";
+    }
+  };
 
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [log, isLoading]);
+
+  // Admin data is imported at the top of the file
+
+  const searchByProductId = async (productId) => {
+    setIsLoading(true);
+    setLoadingMessage("Searching for product and customer details...");
+
+    setTimeout(() => {
+      // Find the product
+      const product = adminData.products.find((p) => p.id === productId.trim());
+
+      if (product) {
+        // Find customers who purchased this product
+        const customers = adminData.users.filter(
+          (user) => user.purchases && user.purchases.includes(productId.trim())
+        );
+
+        if (customers.length > 0) {
+          // For demo, take the first customer or a recent one
+          const customer = customers[0];
+
+          setCustomerDetails({
+            customer: customer,
+            product: product,
+            orderId: `ORD${Date.now().toString().slice(-6)}`,
+            orderDate: new Date().toLocaleDateString(),
+            status: "Ready for Pickup",
+          });
+
+          setSelectedProduct(product);
+          setIsStorekeeperMode(true);
+          setStep(0);
+          setLog([]);
+
+          // Start with first storekeeper agent automatically
+          setTimeout(() => {
+            const firstAgent = storekeeperAgents[0];
+            setLog((prev) => [...prev, firstAgent]);
+            setStep(1); // Move to next step after first agent
+            setIsLoading(false);
+            setLoadingMessage("");
+          }, 1500);
+        } else {
+          alert("No customer found who purchased this product.");
+        }
+      } else {
+        alert("Product not found. Please check the Product ID.");
+      }
+
+      setIsLoading(false);
+      setLoadingMessage("");
+      setQuery("");
+      searchRef.current.value = "";
+    }, 1500);
+  };
+
+  const nextStorekeeperAgent = () => {
+    if (step < storekeeperAgents.length) {
+      setIsLoading(true);
+      const currentAgent = storekeeperAgents[step];
+      setLoadingMessage(`Processing with ${currentAgent.title}...`);
+
+      setTimeout(() => {
+        setLog((prev) => [...prev, currentAgent]);
+        setStep((s) => s + 1);
+        setIsLoading(false);
+        setLoadingMessage("");
+      }, 1500 + Math.random() * 1000);
+    } else {
+      // Reset storekeeper workflow
+      setStep(0);
+      setLog([]);
+      setIsStorekeeperMode(false);
+      setCustomerDetails(null);
+      setSelectedProduct(null);
+    }
+  };
 
   const nextAgent = () => {
     if (step < agents.length) {
@@ -175,6 +305,25 @@ export default function ChatbotInteraction() {
               Live Orchestration Log
             </p>
           </div>
+          <button
+            onClick={handleBackButton}
+            className="bg-gradient-to-r from-red-800 to-amber-600 hover:from-red-900 hover:to-amber-700 text-white px-4 py-2 rounded-2xl font-bold transition-all duration-300 flex items-center gap-2"
+          >
+            <svg
+              className="w-4 h-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M10 19l-7-7m0 0l7-7m-7 7h18"
+              />
+            </svg>
+            Back
+          </button>
         </header>
         {log.length === 0 && !isLoading && (
           <div className="text-center p-4 bg-[#1a1a1a] rounded border border-gray-700 text-gray-500 text-[1vw]">
@@ -238,34 +387,76 @@ export default function ChatbotInteraction() {
         <header className="min-h-[20%] max-h-[20%] p-4 border-b border-gray-700 bg-[#111] flex justify-between items-center">
           <div>
             <h1 className="text-[2vw] font-bold flex items-center">
-              🤖 AI Orchestrator
+              {isStorekeeperMode ? "🏪" : "🤖"}{" "}
+              {isStorekeeperMode ? "Store Assistant" : "AI Orchestrator"}
             </h1>
             <p className="text-[1vw] text-gray-400 mt-6">
-              Multi-agent automation simulation
+              {isStorekeeperMode
+                ? "Store pickup order management"
+                : "Multi-agent automation simulation"}
             </p>
           </div>
-          <div className="text-[1vw] bg-[#1a1a1a] px-3 py-1 rounded border border-gray-700">
-            Status:{" "}
-            {isJourneyComplete ? (
-              <span className="text-green-500">Complete</span>
-            ) : (
-              <span className="text-blue-500">In Progress</span>
-            )}
+
+          <div className="flex items-center gap-4">
+            {/* Mode Toggle Buttons */}
+            <div className="flex bg-[#1a1a1a] rounded-lg p-1 border border-gray-700">
+              <button
+                onClick={() => handleModeToggle("customer")}
+                className={`px-4 py-2 rounded text-[0.9vw] transition-all ${
+                  userSelectedMode === "customer"
+                    ? "bg-blue-600 text-white shadow-sm"
+                    : "text-gray-400 hover:text-white hover:bg-gray-700"
+                }`}
+              >
+                👤 Customer
+              </button>
+              <button
+                onClick={() => handleModeToggle("storekeeper")}
+                className={`px-4 py-2 rounded text-[0.9vw] transition-all ${
+                  userSelectedMode === "storekeeper"
+                    ? "bg-blue-600 text-white shadow-sm"
+                    : "text-gray-400 hover:text-white hover:bg-gray-700"
+                }`}
+              >
+                🏪 Storekeeper
+              </button>
+            </div>
+
+            <div className="text-[1vw] bg-[#1a1a1a] px-3 py-1 rounded border border-gray-700">
+              Status:{" "}
+              {isJourneyComplete ||
+              (isStorekeeperMode && step >= storekeeperAgents.length) ? (
+                <span className="text-green-500">Complete</span>
+              ) : (
+                <span className="text-blue-500">In Progress</span>
+              )}
+            </div>
           </div>
         </header>
 
         <div className="flex-1 overflow-y-auto p-6 space-y-6">
           {log.length === 0 && !isLoading && (
             <div className="h-full flex flex-col justify-center items-center text-gray-600">
-              <span className="text-[8vw]">👋</span>
-              <p className="text-[1.5vw]">Click "Search" to begin!</p>
+              <span className="text-[8vw]">
+                {userSelectedMode === "storekeeper" ? "🏪" : "👋"}
+              </span>
+              <p className="text-[1.5vw] text-center">
+                {userSelectedMode === "storekeeper"
+                  ? "Enter a Product ID to look up customer orders"
+                  : 'Click "Search" to begin your shopping journey!'}
+              </p>
+              {userSelectedMode === "storekeeper" && (
+                <p className="text-[1vw] text-gray-500 mt-2 text-center">
+                  Example: p001, p002, p1, p2
+                </p>
+              )}
             </div>
           )}
 
           {log.map((agent, index) => (
             <div
               key={index}
-              className="bg-[#1a1a1a] p-4 rounded border border-gray-700"
+              className="bg-[#1a1a1a] p-4 rounded border border-gray-700 animate-fade-in"
             >
               <div className="flex items-center mb-3 border-b border-gray-700 pb-2">
                 <div className="h-10 w-10 rounded flex justify-center items-center bg-blue-900 mr-3">
@@ -275,12 +466,131 @@ export default function ChatbotInteraction() {
               </div>
 
               {agent.output?.message && (
-                <p className="text-gray-300 mb-4 text-[1.1vw] pl-12">
-                  {agent.output.message}
-                </p>
+                <div className="mb-4 pl-12">
+                  {isStorekeeperMode &&
+                  agent.agentId === "fulfillment_agent_store" ? (
+                    <div className="bg-gradient-to-r from-green-800 to-emerald-800 p-6 rounded-2xl border-2 border-green-600 shadow-xl">
+                      <div className="flex items-center mb-4">
+                        <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center mr-4 shadow-lg">
+                          <span className="text-2xl">✅</span>
+                        </div>
+                        <div>
+                          <h4 className="text-white font-bold text-[1.3vw] mb-1">
+                            Order Pickup Completed!
+                          </h4>
+                          <p className="text-green-200 text-[0.9vw]">
+                            Customer has successfully collected the product from
+                            the store.
+                          </p>
+                        </div>
+                      </div>
+                      <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20">
+                        <p className="text-white text-[1.1vw] leading-relaxed font-medium">
+                          Thank you for completing the pickup process.
+                          <br />
+                          <span className="text-green-200">
+                            The collection process is complete, and no further
+                            action is required.
+                          </span>
+                        </p>
+                      </div>
+                      <div className="mt-4 flex items-center justify-center">
+                        <div className="flex items-center bg-white/20 backdrop-blur-sm rounded-full px-4 py-2 border border-white/30">
+                          <span className="text-green-300 text-[0.9vw] font-semibold">
+                            ✨ Pickup Process Complete ✨
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  ) : (
+                    <p className="text-gray-300 mb-4 text-[1.1vw]">
+                      {agent.output.message}
+                    </p>
+                  )}
+                </div>
               )}
 
               <div className="pl-12 space-y-4">
+                {/* STOREKEEPER CUSTOMER DETAILS */}
+                {isStorekeeperMode &&
+                  agent.agentId === "recommend_agent" &&
+                  customerDetails && (
+                    <div className="bg-[#111] p-6 rounded border border-blue-500 animate-fade-in"
+                         style={{ animationDelay: "0.3s" }}>
+                      <h4 className="text-blue-400 font-bold text-[1.3vw] mb-4 flex items-center">
+                        📋 Customer Order Details
+                      </h4>
+                      <div className="bg-[#0f0f0f] p-4 rounded border border-gray-700 space-y-3">
+                        <div className="grid grid-cols-2 gap-4 text-[1vw]">
+                          <div>
+                            <span className="text-gray-400">
+                              Customer Name:
+                            </span>
+                            <div className="font-bold text-white">
+                              {customerDetails.customer.name}
+                            </div>
+                          </div>
+                          <div>
+                            <span className="text-gray-400">Customer ID:</span>
+                            <div className="font-mono font-bold text-blue-400">
+                              {customerDetails.customer.id}
+                            </div>
+                          </div>
+                          <div>
+                            <span className="text-gray-400">Product:</span>
+                            <div className="font-bold text-white">
+                              {customerDetails.product.name}
+                            </div>
+                          </div>
+                          <div>
+                            <span className="text-gray-400">Product ID:</span>
+                            <div className="font-mono font-bold text-green-400">
+                              {customerDetails.product.id}
+                            </div>
+                          </div>
+                          <div>
+                            <span className="text-gray-400">Price:</span>
+                            <div className="font-bold text-yellow-400">
+                              ₹{customerDetails.product.price?.toLocaleString()}
+                            </div>
+                          </div>
+                          <div>
+                            <span className="text-gray-400">Order ID:</span>
+                            <div className="font-mono font-bold text-green-400">
+                              {customerDetails.orderId}
+                            </div>
+                          </div>
+                          <div>
+                            <span className="text-gray-400">Order Date:</span>
+                            <div className="font-bold text-white">
+                              {customerDetails.orderDate}
+                            </div>
+                          </div>
+                          <div>
+                            <span className="text-gray-400">Status:</span>
+                            <div className="font-bold text-green-400">
+                              {customerDetails.status}
+                            </div>
+                          </div>
+                        </div>
+                        <div className="pt-3 border-t border-gray-600">
+                          <div className="text-gray-400 text-[0.9vw] mb-2">
+                            Customer Address:
+                          </div>
+                          <div className="text-white text-[1vw]">
+                            {customerDetails.customer.address}
+                          </div>
+                          <div className="text-gray-400 text-[0.9vw] mt-2 mb-1">
+                            Phone:
+                          </div>
+                          <div className="text-white text-[1vw]">
+                            {customerDetails.customer.phone}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
                 {/* PRODUCT */}
                 {agent.output?.products && (
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
@@ -491,7 +801,9 @@ export default function ChatbotInteraction() {
                 {agent.agentId === "payment_agent" && (
                   <div className="bg-[#111] p-4 rounded border border-gray-700 max-w-sm">
                     <label className="block text-gray-300 mb-2 text-[1vw]">
-                      Enter UPI ID
+                      {isStorekeeperMode
+                        ? "Enter your UPI ID to complete payment"
+                        : "Enter UPI ID"}
                     </label>
                     <div className="flex">
                       <input
@@ -504,9 +816,14 @@ export default function ChatbotInteraction() {
                         className="bg-green-700 px-4 rounded-r hover:bg-green-600 transition-colors"
                         onClick={() => {
                           if (upi.trim()) {
-                            // For online purchases, update profiles and continue to next agent
-                            updateProfiles();
-                            nextAgent();
+                            if (isStorekeeperMode) {
+                              // For storekeeper mode, just continue to next agent
+                              nextStorekeeperAgent();
+                            } else {
+                              // For online purchases, update profiles and continue to next agent
+                              updateProfiles();
+                              nextAgent();
+                            }
                           }
                         }}
                       >
@@ -570,23 +887,53 @@ export default function ChatbotInteraction() {
 
         <div className="p-4 min-h-[14%] border-t border-gray-700 bg-[#111] flex justify-between items-center">
           <span className="text-[1vw] text-gray-400">
-            {isJourneyComplete
+            {isJourneyComplete ||
+            (isStorekeeperMode && step >= storekeeperAgents.length)
               ? "All steps executed."
+              : isStorekeeperMode
+              ? `Step ${step} of ${storekeeperAgents.length}`
               : `Step ${step} of ${agents.length}`}
           </span>
 
-          {!isJourneyComplete && (
+          {!(
+            isJourneyComplete ||
+            (isStorekeeperMode && step >= storekeeperAgents.length)
+          ) && (
             <input
               ref={searchRef}
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="Enter Query..."
+              placeholder={
+                isStorekeeperMode
+                  ? "Click 'Search' to continue to next agent..."
+                  : userSelectedMode === "storekeeper"
+                  ? "Enter Product ID (e.g., p001, p002)..."
+                  : "Enter Query or Product ID (e.g., p001)..."
+              }
               className="p-2 bg-[#0f0f0f] border border-gray-700 rounded text-[1vw] min-w-[60%]"
             />
           )}
 
           <button
-            onClick={nextAgent}
+            onClick={() => {
+              if (isStorekeeperMode) {
+                nextStorekeeperAgent();
+              } else {
+                // Check mode and query type
+                if (userSelectedMode === "storekeeper") {
+                  // In storekeeper mode, expect product ID
+                  const productIdPattern = /^p\d+$/i;
+                  if (productIdPattern.test(query.trim())) {
+                    searchByProductId(query);
+                  } else {
+                    alert("Please enter a valid Product ID (e.g., p001, p002)");
+                  }
+                } else {
+                  // In customer mode, use regular flow
+                  nextAgent();
+                }
+              }
+            }}
             disabled={isLoading}
             className={`px-4 py-2 rounded text-[1vw] flex items-center gap-2 ${
               isLoading
@@ -597,7 +944,8 @@ export default function ChatbotInteraction() {
             {isLoading && <Loader2 className="w-4 h-4 animate-spin" />}
             {isLoading
               ? "Processing..."
-              : isJourneyComplete
+              : isJourneyComplete ||
+                (isStorekeeperMode && step >= storekeeperAgents.length)
               ? "Restart"
               : "Search"}
           </button>

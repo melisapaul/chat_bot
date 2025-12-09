@@ -34,7 +34,7 @@ export default function ChatWidget() {
       {/* Chat Window */}
       {open && (
         <div className="fixed bottom-20 right-3 w-[100%] h-[650px] bg-[#0d0d0d] text-gray-200 font-sans text-[1.4vw] rounded-2xl shadow-2xl border border-gray-300 overflow-hidden animate-fade-in">
-          <App />
+          <App onClose={() => setOpen(false)} />
         </div>
       )}
     </>
