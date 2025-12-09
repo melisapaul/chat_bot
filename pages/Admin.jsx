@@ -120,7 +120,7 @@ export default function Admin() {
   
   const totalRevenue = 43500; // Total revenue in thousands (₹43,500,000 or ₹4.35 crore)
 
-  const COLORS = ["#0088FE", "#00C49F"]; // Blue for Online, Green for Offline
+  const COLORS = ["#991b1b", "#f59e0b"]; // Red for Online, Amber for Offline
 
   // Enhanced data processing based on view mode
   const getFilteredData = () => {
@@ -168,29 +168,29 @@ export default function Admin() {
   const getColors = () => {
     if (viewMode === "online") {
       return [
-        "#0088FE",
-        "#0073D4",
-        "#005EB8",
-        "#004999",
-        "#003D7A",
-        "#00326B",
-        "#00275C",
-        "#001C4D",
-        "#00123E",
-        "#00072F",
+        "#7f1d1d",
+        "#991b1b",
+        "#b91c1c",
+        "#dc2626",
+        "#ef4444",
+        "#f87171",
+        "#fb923c",
+        "#c2410c",
+        "#9a3412",
+        "#7c2d12",
       ];
     } else if (viewMode === "offline") {
       return [
-        "#00C49F",
-        "#00B08F",
-        "#009C7F",
-        "#00886F",
-        "#00745F",
-        "#00604F",
-        "#004C3F",
-        "#00382F",
-        "#00241F",
-        "#00100F",
+        "#d97706",
+        "#f59e0b",
+        "#fbbf24",
+        "#fcd34d",
+        "#fb923c",
+        "#ea580c",
+        "#c2410c",
+        "#92400e",
+        "#78350f",
+        "#451a03",
       ];
     }
     return COLORS;
@@ -448,13 +448,13 @@ export default function Admin() {
       <div className="max-w-[1600px] mx-auto">
         {/* Header */}
         <div className="mb-8 flex items-center gap-4">
-          <div className="w-14 h-14 rounded-2xl bg-indigo-600 flex items-center justify-center shadow-lg">
+          <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-red-800 to-amber-600 flex items-center justify-center shadow-lg">
             <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
             </svg>
           </div>
           <div>
-            <h1 className="text-4xl font-bold text-indigo-600">
+            <h1 className="text-4xl font-bold bg-gradient-to-r from-red-800 to-amber-600 bg-clip-text text-transparent">
               Admin Dashboard
             </h1>
             <p className="text-gray-600 mt-1">Complete analytics and performance metrics</p>
@@ -465,15 +465,15 @@ export default function Admin() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         <div className="bg-white border border-gray-200 rounded-3xl p-6 shadow-xl hover:shadow-2xl transition-shadow">
           <div className="text-sm text-gray-500 mb-2">No of Customer</div>
-          <div className="text-4xl font-bold text-indigo-600">13000</div>
+          <div className="text-4xl font-bold text-red-800">13000</div>
         </div>
         <div className="bg-white border border-gray-200 rounded-3xl p-6 shadow-xl hover:shadow-2xl transition-shadow">
           <div className="text-sm text-gray-500 mb-2">No of Product Sold</div>
-          <div className="text-4xl font-bold text-purple-600">52000</div>
+          <div className="text-4xl font-bold text-amber-600">52000</div>
         </div>
         <div className="bg-white border border-gray-200 rounded-3xl p-6 shadow-xl hover:shadow-2xl transition-shadow">
           <div className="text-sm text-gray-500 mb-2">No of Retail Stores</div>
-          <div className="text-4xl font-bold text-cyan-600">{totals.storeKeepers}</div>
+          <div className="text-4xl font-bold text-orange-600">{totals.storeKeepers}</div>
         </div>
       </div>
 
@@ -481,7 +481,7 @@ export default function Admin() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
         {/* 1. Enhanced Pie Chart with View Options */}
         <div className="bg-white border border-gray-200 rounded-3xl shadow-xl overflow-hidden">
-          <div className="bg-indigo-600 p-6">
+          <div className="bg-gradient-to-r from-red-800 to-amber-600 p-6">
             <h3 className="text-xl font-bold text-white mb-3">
               {viewMode === "overview" &&
                 "Total Transactions: Online vs Offline(Past 1 Month)"}
@@ -493,7 +493,7 @@ export default function Admin() {
                 onClick={() => setViewMode("overview")}
                 className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
                   viewMode === "overview"
-                    ? "bg-white text-indigo-600 shadow-lg"
+                    ? "bg-white text-red-800 shadow-lg"
                     : "text-white hover:bg-white/10"
                 }`}
               >
@@ -503,7 +503,7 @@ export default function Admin() {
                 onClick={() => setViewMode("online")}
                 className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
                   viewMode === "online"
-                    ? "bg-white text-indigo-600 shadow-lg"
+                    ? "bg-white text-red-800 shadow-lg"
                     : "text-white hover:bg-white/10"
                 }`}
               >
@@ -513,7 +513,7 @@ export default function Admin() {
                 onClick={() => setViewMode("offline")}
                 className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
                   viewMode === "offline"
-                    ? "bg-white text-indigo-600 shadow-lg"
+                    ? "bg-white text-red-800 shadow-lg"
                     : "text-white hover:bg-white/10"
                 }`}
               >
@@ -580,17 +580,17 @@ export default function Admin() {
             
             {/* Total Revenue Stats Below Chart */}
             <div className="mt-6 space-y-4">
-              <div className="bg-indigo-50 rounded-2xl p-6 border-2 border-indigo-200">
+              <div className="bg-gradient-to-br from-red-50 to-amber-50 rounded-2xl p-6 border-2 border-amber-200">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-4">
-                    <div className="w-14 h-14 rounded-2xl bg-indigo-600 flex items-center justify-center shadow-lg">
+                    <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-red-800 to-amber-600 flex items-center justify-center shadow-lg">
                       <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                       </svg>
                     </div>
                     <div>
                       <p className="text-sm uppercase tracking-wider text-gray-600 font-semibold mb-1">Total Revenue</p>
-                      <p className="text-4xl font-bold text-indigo-600">
+                      <p className="text-4xl font-bold bg-gradient-to-r from-red-800 to-amber-600 bg-clip-text text-transparent">
                         ₹{(totalRevenue * 1000).toLocaleString()}
                       </p>
                     </div>
@@ -598,11 +598,11 @@ export default function Admin() {
                   <div className="flex gap-6">
                     <div className="text-center bg-white rounded-xl px-5 py-3 shadow-md">
                       <p className="text-xs text-gray-500 mb-1">Transactions</p>
-                      <p className="text-2xl font-bold text-indigo-600">42000</p>
+                      <p className="text-2xl font-bold text-red-800">42000</p>
                     </div>
                     <div className="text-center bg-white rounded-xl px-5 py-3 shadow-md">
                       <p className="text-xs text-gray-500 mb-1">Avg Value</p>
-                      <p className="text-2xl font-bold text-purple-600">
+                      <p className="text-2xl font-bold text-amber-600">
                         ₹{Math.round((totalRevenue * 1000) / 42000).toLocaleString()}
                       </p>
                     </div>
@@ -616,18 +616,18 @@ export default function Admin() {
                   const percentage = ((item.value / filteredData.reduce((sum, d) => sum + d.value, 0)) * 100).toFixed(1);
                   const isOnline = item.name === 'Online';
                   return (
-                    <div key={index} className="bg-white rounded-xl p-4 border-2 border-gray-200 hover:border-indigo-300 transition-all">
+                    <div key={index} className="bg-white rounded-xl p-4 border-2 border-gray-200 hover:border-amber-300 transition-all">
                       <div className="flex items-center justify-between mb-3">
                         <div className="flex items-center gap-2">
-                          <div className={`w-3 h-3 rounded-full ${isOnline ? 'bg-blue-500' : 'bg-cyan-500'}`}></div>
+                          <div className={`w-3 h-3 rounded-full ${isOnline ? 'bg-red-800' : 'bg-amber-500'}`}></div>
                           <span className="font-semibold text-gray-900">{item.name}</span>
                         </div>
-                        <span className="text-sm font-bold text-indigo-600">{percentage}%</span>
+                        <span className="text-sm font-bold text-red-800">{percentage}%</span>
                       </div>
                       <p className="text-2xl font-bold text-gray-900 mb-1">₹{item.value.toLocaleString()}</p>
                       <div className="w-full bg-gray-200 rounded-full h-2">
                         <div 
-                          className={`h-2 rounded-full ${isOnline ? 'bg-blue-500' : 'bg-cyan-500'}`} 
+                          className={`h-2 rounded-full ${isOnline ? 'bg-gradient-to-r from-red-800 to-red-600' : 'bg-gradient-to-r from-amber-500 to-yellow-400'}`} 
                           style={{width: `${percentage}%`}}
                         ></div>
                       </div>
@@ -641,7 +641,7 @@ export default function Admin() {
 
         {/* 2. Store Purchases Table */}
         <div className="bg-white border border-gray-200 rounded-3xl shadow-xl overflow-hidden">
-          <div className="bg-indigo-600 p-6">
+          <div className="bg-gradient-to-r from-red-800 to-amber-600 p-6">
             <h3 className="text-xl font-bold text-white">Offline Purchases per Store</h3>
           </div>
           <div className="p-6">
@@ -655,10 +655,10 @@ export default function Admin() {
                 </thead>
                 <tbody>
                   {storePurchases.map((store, i) => (
-                    <tr key={i} className={`border-b border-gray-100 ${i % 2 === 0 ? 'bg-white' : 'bg-gray-50'} hover:bg-indigo-50 transition-colors`}>
+                    <tr key={i} className={`border-b border-gray-100 ${i % 2 === 0 ? 'bg-white' : 'bg-gray-50'} hover:bg-amber-50 transition-colors`}>
                       <td className="py-4 text-gray-900">{getStoreNameById(store.storeId)}</td>
                       <td className="py-4">
-                        <span className="inline-flex items-center bg-indigo-100 text-indigo-800 px-3 py-1 rounded-lg font-semibold">
+                        <span className="inline-flex items-center bg-amber-100 text-red-800 px-3 py-1 rounded-lg font-semibold">
                           {store.count}
                         </span>
                       </td>
@@ -673,7 +673,7 @@ export default function Admin() {
 
       {/* Monthly Transactions Chart */}
       <div className="bg-white border border-gray-200 rounded-3xl shadow-xl overflow-hidden mb-8">
-        <div className="bg-indigo-600 p-6">
+        <div className="bg-gradient-to-r from-red-800 to-amber-600 p-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center">
@@ -698,12 +698,14 @@ export default function Admin() {
               >
                 <defs>
                   <linearGradient id="colorOnline" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.9}/>
-                    <stop offset="95%" stopColor="#1d4ed8" stopOpacity={0.9}/>
+                    <stop offset="0%" stopColor="#b91c1c" stopOpacity={0.98}/>
+                    <stop offset="50%" stopColor="#991b1b" stopOpacity={0.95}/>
+                    <stop offset="100%" stopColor="#7f1d1d" stopOpacity={0.92}/>
                   </linearGradient>
                   <linearGradient id="colorOffline" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#06b6d4" stopOpacity={0.9}/>
-                    <stop offset="95%" stopColor="#0891b2" stopOpacity={0.9}/>
+                    <stop offset="0%" stopColor="#fbbf24" stopOpacity={0.98}/>
+                    <stop offset="50%" stopColor="#f59e0b" stopOpacity={0.95}/>
+                    <stop offset="100%" stopColor="#d97706" stopOpacity={0.92}/>
                   </linearGradient>
                 </defs>
                 <XAxis 
@@ -729,7 +731,7 @@ export default function Admin() {
                     padding: '12px'
                   }}
                   labelStyle={{ fontWeight: 'bold', color: '#1f2937', marginBottom: '8px' }}
-                  cursor={{ fill: 'rgba(99, 102, 241, 0.1)' }}
+                  cursor={{ fill: 'rgba(153, 27, 27, 0.1)' }}
                 />
                 <Legend 
                   wrapperStyle={{ paddingTop: '20px', fontWeight: '600', fontSize: '14px' }}
@@ -753,21 +755,21 @@ export default function Admin() {
           
           {/* Summary Stats */}
           <div className="mt-8 grid grid-cols-2 gap-6">
-            <div className="bg-blue-50 rounded-2xl p-6 border-2 border-blue-200">
+            <div className="bg-red-50 rounded-2xl p-6 border-2 border-red-200">
               <div className="flex items-center gap-3 mb-2">
-                <div className="w-4 h-4 rounded-full bg-blue-500"></div>
+                <div className="w-4 h-4 rounded-full bg-red-800"></div>
                 <p className="text-sm font-semibold text-gray-600 uppercase tracking-wide">Online Transactions</p>
               </div>
-              <p className="text-4xl font-bold text-blue-600">
+              <p className="text-4xl font-bold text-red-800">
                 {monthlyData.reduce((sum, item) => sum + (item.Online || 0), 0)}
               </p>
             </div>
-            <div className="bg-cyan-50 rounded-2xl p-6 border-2 border-cyan-200">
+            <div className="bg-amber-50 rounded-2xl p-6 border-2 border-amber-200">
               <div className="flex items-center gap-3 mb-2">
-                <div className="w-4 h-4 rounded-full bg-cyan-500"></div>
+                <div className="w-4 h-4 rounded-full bg-amber-600"></div>
                 <p className="text-sm font-semibold text-gray-600 uppercase tracking-wide">Offline Transactions</p>
               </div>
-              <p className="text-4xl font-bold text-cyan-600">
+              <p className="text-4xl font-bold text-amber-600">
                 {monthlyData.reduce((sum, item) => sum + (item.Offline || 0), 0)}
               </p>
             </div>
@@ -778,7 +780,7 @@ export default function Admin() {
       {/* Highlights and Recommendation Section */}
       <div className="mb-8">
         <div className="bg-white border border-gray-200 rounded-3xl shadow-xl overflow-hidden">
-          <div className="bg-indigo-600 p-6">
+          <div className="bg-gradient-to-r from-red-800 to-amber-600 p-6">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-4">
                 <div className="w-12 h-12 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center">
@@ -1254,9 +1256,16 @@ export default function Admin() {
       </div>
 
       {/* Transactions Section */}
-      <div className="bg-white border border-gray-200 rounded-3xl shadow-xl overflow-hidden">
-        <div className="bg-gradient-to-r from-indigo-600 to-purple-600 p-6">
-          <h3 className="text-xl font-bold text-white">Transactions</h3>
+      <div className="bg-gradient-to-br from-red-50 via-amber-50 to-yellow-50 border border-amber-200 rounded-3xl shadow-xl overflow-hidden">
+        <div className="bg-gradient-to-r from-red-800 to-amber-600 p-6">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
+              <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+              </svg>
+            </div>
+            <h3 className="text-xl font-bold text-white">All Transactions</h3>
+          </div>
         </div>
         <div className="p-6">
           <SortableTransactionTable storeId={storeId} />

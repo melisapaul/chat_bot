@@ -16,7 +16,7 @@ export default function Home() {
               className="h-24 w-auto object-contain"
             />
           </div>
-          <h1 className="text-5xl font-bold mb-4 text-indigo-600">
+          <h1 className="text-5xl font-bold mb-4 bg-gradient-to-r from-red-800 to-amber-600 bg-clip-text text-transparent">
             Welcome to ABFRL Dashboard
           </h1>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
@@ -30,9 +30,9 @@ export default function Home() {
           {/* User Journey Card */}
           <div
             onClick={() => nav("/user")}
-            className="group cursor-pointer bg-white rounded-3xl shadow-xl border-2 border-gray-200 overflow-hidden hover:shadow-2xl transition-all duration-500 hover:-translate-y-3 hover:border-indigo-300"
+            className="group cursor-pointer bg-white rounded-3xl shadow-xl border-2 border-gray-200 overflow-hidden hover:shadow-2xl transition-all duration-500 hover:-translate-y-3 hover:border-amber-300"
           >
-            <div className="bg-indigo-600 p-8">
+            <div className="bg-gradient-to-br from-red-800 to-amber-600 p-8">
               <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
                 <User className="w-8 h-8 text-white" />
               </div>
@@ -46,7 +46,7 @@ export default function Home() {
                 Track and analyze user interactions, behavior patterns, purchase
                 history, and loyalty points in one comprehensive dashboard
               </p>
-              <div className="flex items-center text-indigo-600 font-semibold group-hover:text-indigo-700 transition-colors">
+              <div className="flex items-center text-red-800 font-semibold group-hover:text-amber-600 transition-colors">
                 <span>Explore Journey</span>
                 <svg
                   className="w-5 h-5 ml-2 group-hover:translate-x-2 transition-transform"
@@ -68,9 +68,9 @@ export default function Home() {
           {/* Store Keeper Card */}
           <div
             onClick={() => nav("/store")}
-            className="group cursor-pointer bg-white rounded-3xl shadow-xl border-2 border-gray-200 overflow-hidden hover:shadow-2xl transition-all duration-500 hover:-translate-y-3 hover:border-purple-300"
+            className="group cursor-pointer bg-white rounded-3xl shadow-xl border-2 border-gray-200 overflow-hidden hover:shadow-2xl transition-all duration-500 hover:-translate-y-3 hover:border-amber-300"
           >
-            <div className="bg-purple-600 p-8">
+            <div className="bg-gradient-to-br from-amber-600 to-yellow-500 p-8">
               <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
                 <Building className="w-8 h-8 text-white" />
               </div>
@@ -84,7 +84,7 @@ export default function Home() {
                 Manage inventory levels, track orders, monitor store operations,
                 and analyze performance metrics efficiently
               </p>
-              <div className="flex items-center text-purple-600 font-semibold group-hover:text-purple-700 transition-colors">
+              <div className="flex items-center text-amber-700 font-semibold group-hover:text-amber-800 transition-colors">
                 <span>Manage Store</span>
                 <svg
                   className="w-5 h-5 ml-2 group-hover:translate-x-2 transition-transform"
@@ -106,9 +106,9 @@ export default function Home() {
           {/* Admin Panel Card */}
           <div
             onClick={() => nav("/admin")}
-            className="group cursor-pointer bg-white rounded-3xl shadow-xl border-2 border-gray-200 overflow-hidden hover:shadow-2xl transition-all duration-500 hover:-translate-y-3 hover:border-cyan-300"
+            className="group cursor-pointer bg-white rounded-3xl shadow-xl border-2 border-gray-200 overflow-hidden hover:shadow-2xl transition-all duration-500 hover:-translate-y-3 hover:border-red-300"
           >
-            <div className="bg-cyan-600 p-8">
+            <div className="bg-gradient-to-br from-red-900 to-red-700 p-8">
               <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
                 <Settings className="w-8 h-8 text-white" />
               </div>
@@ -122,7 +122,7 @@ export default function Home() {
                 Configure system settings, manage users, oversee operations, and
                 access comprehensive analytics and reports
               </p>
-              <div className="flex items-center text-cyan-600 font-semibold group-hover:text-cyan-700 transition-colors">
+              <div className="flex items-center text-red-800 font-semibold group-hover:text-red-900 transition-colors">
                 <span>Open Admin</span>
                 <svg
                   className="w-5 h-5 ml-2 group-hover:translate-x-2 transition-transform"
