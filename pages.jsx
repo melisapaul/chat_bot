@@ -11,9 +11,16 @@ export default function Pages() {
       <header className="sticky top-0 z-50 bg-white shadow-sm border-b border-slate-200">
         <div className="max-w-6xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
-            <h1 className="text-3xl font-bold text-slate-800 tracking-tight">
-              Agentic Dashboard
-            </h1>
+            <div className="flex items-center space-x-4">
+              <img
+                src="/images/abfrl-icon.png"
+                alt="ABFRL Logo"
+                className="h-10 w-auto object-contain"
+              />
+              <h1 className="text-3xl font-bold text-slate-800 tracking-tight">
+                Agentic Dashboard
+              </h1>
+            </div>
             <nav className="flex space-x-8">
               <Link
                 to="/"

@@ -9,14 +9,19 @@ export default function Home() {
       <div className="max-w-6xl mx-auto">
         {/* Hero Section */}
         <div className="text-center mb-12">
-          <div className="inline-flex items-center justify-center w-20 h-20 rounded-3xl bg-indigo-600 shadow-xl mb-6">
-            <Sparkles className="w-10 h-10 text-white" />
+          <div className="inline-flex items-center justify-center mb-6">
+            <img
+              src="/images/abfrl-icon.png"
+              alt="ABFRL Logo"
+              className="h-24 w-auto object-contain"
+            />
           </div>
           <h1 className="text-5xl font-bold mb-4 text-indigo-600">
             Welcome to ABFRL Dashboard
           </h1>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-            Navigate through different user journeys to explore and analyze your data insights with powerful analytics and reporting tools
+            Navigate through different user journeys to explore and analyze your
+            data insights with powerful analytics and reporting tools
           </p>
         </div>
 
@@ -38,12 +43,23 @@ export default function Home() {
             </div>
             <div className="p-8">
               <p className="text-gray-600 mb-6 leading-relaxed text-base">
-                Track and analyze user interactions, behavior patterns, purchase history, and loyalty points in one comprehensive dashboard
+                Track and analyze user interactions, behavior patterns, purchase
+                history, and loyalty points in one comprehensive dashboard
               </p>
               <div className="flex items-center text-indigo-600 font-semibold group-hover:text-indigo-700 transition-colors">
                 <span>Explore Journey</span>
-                <svg className="w-5 h-5 ml-2 group-hover:translate-x-2 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                <svg
+                  className="w-5 h-5 ml-2 group-hover:translate-x-2 transition-transform"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M13 7l5 5m0 0l-5 5m5-5H6"
+                  />
                 </svg>
               </div>
             </div>
@@ -65,12 +81,23 @@ export default function Home() {
             </div>
             <div className="p-8">
               <p className="text-gray-600 mb-6 leading-relaxed text-base">
-                Manage inventory levels, track orders, monitor store operations, and analyze performance metrics efficiently
+                Manage inventory levels, track orders, monitor store operations,
+                and analyze performance metrics efficiently
               </p>
               <div className="flex items-center text-purple-600 font-semibold group-hover:text-purple-700 transition-colors">
                 <span>Manage Store</span>
-                <svg className="w-5 h-5 ml-2 group-hover:translate-x-2 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                <svg
+                  className="w-5 h-5 ml-2 group-hover:translate-x-2 transition-transform"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M13 7l5 5m0 0l-5 5m5-5H6"
+                  />
                 </svg>
               </div>
             </div>
@@ -92,12 +119,23 @@ export default function Home() {
             </div>
             <div className="p-8">
               <p className="text-gray-600 mb-6 leading-relaxed text-base">
-                Configure system settings, manage users, oversee operations, and access comprehensive analytics and reports
+                Configure system settings, manage users, oversee operations, and
+                access comprehensive analytics and reports
               </p>
               <div className="flex items-center text-cyan-600 font-semibold group-hover:text-cyan-700 transition-colors">
                 <span>Open Admin</span>
-                <svg className="w-5 h-5 ml-2 group-hover:translate-x-2 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                <svg
+                  className="w-5 h-5 ml-2 group-hover:translate-x-2 transition-transform"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M13 7l5 5m0 0l-5 5m5-5H6"
+                  />
                 </svg>
               </div>
             </div>
@@ -108,7 +146,9 @@ export default function Home() {
         <div className="mt-12 text-center">
           <div className="inline-flex items-center gap-2 bg-white rounded-2xl px-6 py-3 shadow-lg border border-gray-200">
             <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
-            <span className="text-sm font-medium text-gray-600">System Status: All services operational</span>
+            <span className="text-sm font-medium text-gray-600">
+              System Status: All services operational
+            </span>
           </div>
         </div>
       </div>
