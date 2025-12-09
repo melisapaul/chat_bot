@@ -16,6 +16,8 @@ const getStatusClasses = (status) => {
 export default function StoreDetailsTable({ storeId }) { 
   console.log("storeId",storeId.length==0 || storeId==undefined || storeId=="")
   const [sortConfig, setSortConfig] = useState({ key: 'date', direction: 'descending' });
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
 
   // 1. Filter transactions based on the storeId prop
   const filteredTransactions = useMemo(() => {
@@ -70,6 +72,16 @@ export default function StoreDetailsTable({ storeId }) {
     });
     return sortableItems;
   }, [enrichedTransactions, sortConfig]); // Dependency on enrichedTransactions
+
+  // Pagination logic
+  const totalPages = Math.ceil(sortedTransactions.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const currentTransactions = sortedTransactions.slice(startIndex, endIndex);
+
+  const goToPage = (page) => {
+    setCurrentPage(Math.max(1, Math.min(page, totalPages)));
+  };
 
   const requestSort = (key) => {
     let direction = 'ascending';
@@ -140,7 +152,7 @@ export default function StoreDetailsTable({ storeId }) {
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-100">
-            {sortedTransactions.map((transaction, idx) => (
+            {currentTransactions.map((transaction, idx) => (
               <tr key={transaction.id} className={`hover:bg-indigo-50 transition-colors ${idx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}`}>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <span className="text-sm font-bold text-indigo-600">{transaction.id}</span>
@@ -171,6 +183,74 @@ export default function StoreDetailsTable({ storeId }) {
           </tbody>
         </table>
       </div>
+      
+      {/* Pagination */}
+      {totalPages > 1 && (
+        <div className="bg-gradient-to-r from-gray-50 to-indigo-50 px-6 py-4 border-t border-gray-200">
+          <div className="flex items-center justify-between">
+            <div className="text-sm text-gray-600">
+              Showing <span className="font-semibold text-gray-900">{startIndex + 1}</span> to <span className="font-semibold text-gray-900">{Math.min(endIndex, sortedTransactions.length)}</span> of <span className="font-semibold text-gray-900">{sortedTransactions.length}</span> transactions
+            </div>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => goToPage(currentPage - 1)}
+                disabled={currentPage === 1}
+                className={`px-4 py-2 rounded-lg font-semibold transition-all ${
+                  currentPage === 1
+                    ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                    : 'bg-white text-indigo-600 hover:bg-indigo-50 border border-indigo-200 shadow-sm'
+                }`}
+              >
+                Previous
+              </button>
+              
+              <div className="flex gap-1">
+                {[...Array(totalPages)].map((_, index) => {
+                  const page = index + 1;
+                  // Show first page, last page, current page, and pages around current
+                  if (
+                    page === 1 ||
+                    page === totalPages ||
+                    (page >= currentPage - 1 && page <= currentPage + 1)
+                  ) {
+                    return (
+                      <button
+                        key={page}
+                        onClick={() => goToPage(page)}
+                        className={`px-4 py-2 rounded-lg font-semibold transition-all ${
+                          currentPage === page
+                            ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg'
+                            : 'bg-white text-gray-700 hover:bg-indigo-50 border border-gray-200'
+                        }`}
+                      >
+                        {page}
+                      </button>
+                    );
+                  } else if (
+                    page === currentPage - 2 ||
+                    page === currentPage + 2
+                  ) {
+                    return <span key={page} className="px-2 py-2 text-gray-400">...</span>;
+                  }
+                  return null;
+                })}
+              </div>
+              
+              <button
+                onClick={() => goToPage(currentPage + 1)}
+                disabled={currentPage === totalPages}
+                className={`px-4 py-2 rounded-lg font-semibold transition-all ${
+                  currentPage === totalPages
+                    ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                    : 'bg-white text-indigo-600 hover:bg-indigo-50 border border-indigo-200 shadow-sm'
+                }`}
+              >
+                Next
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
     </div>
   );

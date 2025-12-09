@@ -114,7 +114,7 @@ export default function Admin() {
   // --- 1. Data Processing for Online | Offline Pie Chart ---
   const purchaseModeData = Object.entries(
     data.transactions.reduce((acc, trans) => {
-      acc[trans.mode] = (acc[trans.mode] || 0) + 1;
+      acc[trans.mode] = (acc[trans.mode] || 0) + trans.amount;
       return acc;
     }, {})
   ).map(([name, value]) => ({ name, value }));
@@ -411,63 +411,77 @@ export default function Admin() {
   ];
 
   return (
-    <div className="bg-gradient-to-br from-slate-50 to-blue-50 text-gray-800 font-sans text-[1.4vw] rounded-xl shadow p-6 w-full min-w-full">
-      <h2 className="text-lg font-semibold mb-4">Admin Dashboard</h2>
+    <div className="min-h-screen bg-gray-50 p-8">
+      <div className="max-w-[1600px] mx-auto">
+        {/* Header */}
+        <div className="mb-8 flex items-center gap-4">
+          <div className="w-14 h-14 rounded-2xl bg-indigo-600 flex items-center justify-center shadow-lg">
+            <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+            </svg>
+          </div>
+          <div>
+            <h1 className="text-4xl font-bold text-indigo-600">
+              Admin Dashboard
+            </h1>
+            <p className="text-gray-600 mt-1">Complete analytics and performance metrics</p>
+          </div>
+        </div>
 
-      {/* Totals Grid (Existing) */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-        <div className="p-4 border rounded">
-          <div className="text-sm text-gray-500">No of Customer</div>
-          <div className="text-2xl font-bold">{totals.users}</div>
+      {/* Totals Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div className="bg-white border border-gray-200 rounded-3xl p-6 shadow-xl hover:shadow-2xl transition-shadow">
+          <div className="text-sm text-gray-500 mb-2">No of Customer</div>
+          <div className="text-4xl font-bold text-indigo-600">{totals.users}</div>
         </div>
-        <div className="p-4 border rounded">
-          <div className="text-sm text-gray-500">No of Products</div>
-          <div className="text-2xl font-bold">{totals.products}</div>
+        <div className="bg-white border border-gray-200 rounded-3xl p-6 shadow-xl hover:shadow-2xl transition-shadow">
+          <div className="text-sm text-gray-500 mb-2">No of Products</div>
+          <div className="text-4xl font-bold text-purple-600">{totals.products}</div>
         </div>
-        <div className="p-4 border rounded">
-          <div className="text-sm text-gray-500">No of Retail Stores </div>
-          <div className="text-2xl font-bold">{totals.storeKeepers}</div>
+        <div className="bg-white border border-gray-200 rounded-3xl p-6 shadow-xl hover:shadow-2xl transition-shadow">
+          <div className="text-sm text-gray-500 mb-2">No of Retail Stores</div>
+          <div className="text-4xl font-bold text-cyan-600">{totals.storeKeepers}</div>
         </div>
       </div>
 
-      {/* New Row for Pie Chart and Store Table */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+      {/* Charts Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
         {/* 1. Enhanced Pie Chart with View Options */}
-        <div className="p-4 border rounded bg-white">
-          <div className="mb-4">
-            <h3 className="font-medium text-sm mb-3">
+        <div className="bg-white border border-gray-200 rounded-3xl shadow-xl overflow-hidden">
+          <div className="bg-indigo-600 p-6">
+            <h3 className="text-xl font-bold text-white mb-3">
               {viewMode === "overview" &&
-                "Total transactions in last 7 days: Online vs Offline"}
+                "Total Transactions: Online vs Offline"}
               {viewMode === "online" && "Online Sales by Top Customers"}
               {viewMode === "offline" && "Offline Sales by Store"}
             </h3>
-            <div className="flex bg-gray-100 rounded-lg p-1">
+            <div className="flex bg-white/20 backdrop-blur-sm rounded-xl p-1.5 gap-1">
               <button
                 onClick={() => setViewMode("overview")}
-                className={`px-3 py-1 rounded text-xs font-medium transition-colors ${
+                className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
                   viewMode === "overview"
-                    ? "bg-blue-500 text-white"
-                    : "text-gray-600 hover:text-gray-800"
+                    ? "bg-white text-indigo-600 shadow-lg"
+                    : "text-white hover:bg-white/10"
                 }`}
               >
                 Overview
               </button>
               <button
                 onClick={() => setViewMode("online")}
-                className={`px-3 py-1 rounded text-xs font-medium transition-colors ${
+                className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
                   viewMode === "online"
-                    ? "bg-blue-500 text-white"
-                    : "text-gray-600 hover:text-gray-800"
+                    ? "bg-white text-indigo-600 shadow-lg"
+                    : "text-white hover:bg-white/10"
                 }`}
               >
                 Online
               </button>
               <button
                 onClick={() => setViewMode("offline")}
-                className={`px-3 py-1 rounded text-xs font-medium transition-colors ${
+                className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
                   viewMode === "offline"
-                    ? "bg-emerald-500 text-white"
-                    : "text-gray-600 hover:text-gray-800"
+                    ? "bg-white text-indigo-600 shadow-lg"
+                    : "text-white hover:bg-white/10"
                 }`}
               >
                 Offline
@@ -476,16 +490,16 @@ export default function Admin() {
           </div>
 
           {/* Chart Container */}
-          <div className="relative">
-            <div style={{ height: 350, width: "100%" }}>
+          <div className="p-6 pb-0">
+            <div style={{ height: 400, width: "100%" }}>
               <ResponsiveContainer width="100%" height="100%">
-                <PieChart margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
+                <PieChart>
                   <Pie
                     data={filteredData}
                     cx="50%"
                     cy="45%"
                     labelLine={false}
-                    outerRadius={80}
+                    outerRadius={140}
                     fill="#8884d8"
                     dataKey="value"
                     label={false}
@@ -499,10 +513,8 @@ export default function Admin() {
                   </Pie>
                   <Tooltip
                     formatter={(value, name) => [
-                      viewMode === "overview"
-                        ? value
-                        : `₹${value.toLocaleString()}`,
-                      viewMode === "overview" ? "Transactions" : "Revenue",
+                      `₹${value.toLocaleString()}`,
+                      viewMode === "overview" ? "Total Amount" : "Revenue",
                     ]}
                     labelFormatter={(label) =>
                       viewMode === "online" ? "" : `${label}`
@@ -517,14 +529,14 @@ export default function Admin() {
                   {viewMode !== "online" && (
                     <Legend
                       verticalAlign="bottom"
-                      height={60}
+                      height={50}
                       wrapperStyle={{
                         paddingTop: "10px",
                         fontSize: "11px",
                       }}
                       formatter={(value) =>
-                        value.length > 25
-                          ? `${value.substring(0, 25)}...`
+                        value.length > 20
+                          ? `${value.substring(0, 20)}...`
                           : value
                       }
                     />
@@ -532,97 +544,236 @@ export default function Admin() {
                 </PieChart>
               </ResponsiveContainer>
             </div>
-          </div>
-
-          {/* Summary Stats */}
-          <div className="mt-4 grid grid-cols-1 gap-4">
-            <div className="bg-gray-50 p-3 rounded">
-              <p className="text-xs text-gray-600">
-                {viewMode === "overview"
-                  ? "Total Transactions"
-                  : "Total Revenue"}
-              </p>
-              <p className="text-lg font-bold text-gray-800">
-                {viewMode === "overview"
-                  ? filteredData.reduce((sum, item) => sum + item.value, 0)
-                  : `₹${filteredData
-                      .reduce((sum, item) => sum + item.value, 0)
-                      .toLocaleString()}`}
-              </p>
+            
+            {/* Total Revenue Stats Below Chart */}
+            <div className="mt-6 space-y-4">
+              <div className="bg-indigo-50 rounded-2xl p-6 border-2 border-indigo-200">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-4">
+                    <div className="w-14 h-14 rounded-2xl bg-indigo-600 flex items-center justify-center shadow-lg">
+                      <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                    </div>
+                    <div>
+                      <p className="text-sm uppercase tracking-wider text-gray-600 font-semibold mb-1">Total Revenue</p>
+                      <p className="text-4xl font-bold text-indigo-600">
+                        ₹{filteredData.reduce((sum, item) => sum + item.value, 0).toLocaleString()}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex gap-6">
+                    <div className="text-center bg-white rounded-xl px-5 py-3 shadow-md">
+                      <p className="text-xs text-gray-500 mb-1">Transactions</p>
+                      <p className="text-2xl font-bold text-indigo-600">{data.transactions.length}</p>
+                    </div>
+                    <div className="text-center bg-white rounded-xl px-5 py-3 shadow-md">
+                      <p className="text-xs text-gray-500 mb-1">Avg Value</p>
+                      <p className="text-2xl font-bold text-purple-600">
+                        ₹{Math.round(filteredData.reduce((sum, item) => sum + item.value, 0) / data.transactions.length).toLocaleString()}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Revenue Breakdown by Mode */}
+              <div className="grid grid-cols-2 gap-4">
+                {filteredData.map((item, index) => {
+                  const percentage = ((item.value / filteredData.reduce((sum, d) => sum + d.value, 0)) * 100).toFixed(1);
+                  const isOnline = item.name === 'Online';
+                  return (
+                    <div key={index} className="bg-white rounded-xl p-4 border-2 border-gray-200 hover:border-indigo-300 transition-all">
+                      <div className="flex items-center justify-between mb-3">
+                        <div className="flex items-center gap-2">
+                          <div className={`w-3 h-3 rounded-full ${isOnline ? 'bg-blue-500' : 'bg-cyan-500'}`}></div>
+                          <span className="font-semibold text-gray-900">{item.name}</span>
+                        </div>
+                        <span className="text-sm font-bold text-indigo-600">{percentage}%</span>
+                      </div>
+                      <p className="text-2xl font-bold text-gray-900 mb-1">₹{item.value.toLocaleString()}</p>
+                      <div className="w-full bg-gray-200 rounded-full h-2">
+                        <div 
+                          className={`h-2 rounded-full ${isOnline ? 'bg-blue-500' : 'bg-cyan-500'}`} 
+                          style={{width: `${percentage}%`}}
+                        ></div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
           </div>
         </div>
 
-        {/* 2. On Store Tables */}
-        <div className="p-4 border rounded">
-          <h3 className="font-medium mb-3">Offline Purchases per Store</h3>
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="text-left text-gray-600">
-                <th className="pb-2">Store Name</th>
-                <th className="pb-2">Purchases Count</th>
-              </tr>
-            </thead>
-            <tbody>
-              {storePurchases.map((store, i) => (
-                <tr key={i} className="border-t">
-                  <td className="py-2">{getStoreNameById(store.storeId)}</td>
-                  <td className="py-2">{store.count}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        {/* 2. Store Purchases Table */}
+        <div className="bg-white border border-gray-200 rounded-3xl shadow-xl overflow-hidden">
+          <div className="bg-indigo-600 p-6">
+            <h3 className="text-xl font-bold text-white">Offline Purchases per Store</h3>
+          </div>
+          <div className="p-6">
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead>
+                  <tr className="border-b-2 border-gray-200">
+                    <th className="pb-4 text-left text-sm font-bold text-gray-700">Store Name</th>
+                    <th className="pb-4 text-left text-sm font-bold text-gray-700">Purchases Count</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {storePurchases.map((store, i) => (
+                    <tr key={i} className={`border-b border-gray-100 ${i % 2 === 0 ? 'bg-white' : 'bg-gray-50'} hover:bg-indigo-50 transition-colors`}>
+                      <td className="py-4 text-gray-900">{getStoreNameById(store.storeId)}</td>
+                      <td className="py-4">
+                        <span className="inline-flex items-center bg-indigo-100 text-indigo-800 px-3 py-1 rounded-lg font-semibold">
+                          {store.count}
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* New Row for Monthly Transactions Chart */}
-      <div className="grid grid-cols-1 gap-6 mb-6">
-        {/* 3. Transactions : Month wise | Mode online or instore kyiosk */}
-        <div className="p-4 border rounded">
-          <h3 className="font-medium mb-3">Monthly Transaction Modes</h3>
-          <div style={{ height: 350 }}>
+      {/* Monthly Transactions Chart */}
+      <div className="bg-white border border-gray-200 rounded-3xl shadow-xl overflow-hidden mb-8">
+        <div className="bg-indigo-600 p-6">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center">
+                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                </svg>
+              </div>
+              <div>
+                <h3 className="text-2xl font-bold text-white">Monthly Transaction Trends</h3>
+                <p className="text-sm text-indigo-100 mt-1">Online vs Offline sales comparison</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="p-8">
+          <div style={{ height: 450 }}>
             <ResponsiveContainer width="100%" height="100%">
               <BarChart
                 data={monthlyData}
-                margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+                margin={{ top: 20, right: 30, left: 20, bottom: 60 }}
+                barGap={8}
               >
-                <XAxis dataKey="name" />
-                <YAxis allowDecimals={false} />
-                <Tooltip />
-                <Legend />
-                <Bar dataKey="Online" stackId="a" fill="#0088FE" />
-                <Bar dataKey="Offline" stackId="a" fill="#00C49F" />
+                <defs>
+                  <linearGradient id="colorOnline" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.9}/>
+                    <stop offset="95%" stopColor="#1d4ed8" stopOpacity={0.9}/>
+                  </linearGradient>
+                  <linearGradient id="colorOffline" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#06b6d4" stopOpacity={0.9}/>
+                    <stop offset="95%" stopColor="#0891b2" stopOpacity={0.9}/>
+                  </linearGradient>
+                </defs>
+                <XAxis 
+                  dataKey="name" 
+                  stroke="#6b7280"
+                  style={{ fontSize: '13px', fontWeight: '600' }}
+                  angle={-45}
+                  textAnchor="end"
+                  height={80}
+                />
+                <YAxis 
+                  allowDecimals={false}
+                  stroke="#6b7280"
+                  style={{ fontSize: '13px', fontWeight: '600' }}
+                  label={{ value: 'Number of Transactions', angle: -90, position: 'insideLeft', style: { fill: '#4b5563', fontWeight: '600' } }}
+                />
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: 'white',
+                    border: '2px solid #e5e7eb',
+                    borderRadius: '12px',
+                    boxShadow: '0 10px 25px rgba(0,0,0,0.1)',
+                    padding: '12px'
+                  }}
+                  labelStyle={{ fontWeight: 'bold', color: '#1f2937', marginBottom: '8px' }}
+                  cursor={{ fill: 'rgba(99, 102, 241, 0.1)' }}
+                />
+                <Legend 
+                  wrapperStyle={{ paddingTop: '20px', fontWeight: '600', fontSize: '14px' }}
+                  iconType="circle"
+                />
+                <Bar 
+                  dataKey="Online" 
+                  stackId="a" 
+                  fill="url(#colorOnline)"
+                  radius={[8, 8, 0, 0]}
+                />
+                <Bar 
+                  dataKey="Offline" 
+                  stackId="a" 
+                  fill="url(#colorOffline)"
+                  radius={[8, 8, 0, 0]}
+                />
               </BarChart>
             </ResponsiveContainer>
+          </div>
+          
+          {/* Summary Stats */}
+          <div className="mt-8 grid grid-cols-2 gap-6">
+            <div className="bg-blue-50 rounded-2xl p-6 border-2 border-blue-200">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="w-4 h-4 rounded-full bg-blue-500"></div>
+                <p className="text-sm font-semibold text-gray-600 uppercase tracking-wide">Online Transactions</p>
+              </div>
+              <p className="text-4xl font-bold text-blue-600">
+                {monthlyData.reduce((sum, item) => sum + (item.Online || 0), 0)}
+              </p>
+            </div>
+            <div className="bg-cyan-50 rounded-2xl p-6 border-2 border-cyan-200">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="w-4 h-4 rounded-full bg-cyan-500"></div>
+                <p className="text-sm font-semibold text-gray-600 uppercase tracking-wide">Offline Transactions</p>
+              </div>
+              <p className="text-4xl font-bold text-cyan-600">
+                {monthlyData.reduce((sum, item) => sum + (item.Offline || 0), 0)}
+              </p>
+            </div>
           </div>
         </div>
       </div>
 
       {/* Highlights and Recommendation Section */}
-      <div className="mb-6">
-        <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-4">
-          <h3 className="text-lg font-semibold text-slate-800 mb-4">
-            Highlights and Recommendation
-          </h3>
+      <div className="mb-8">
+        <div className="bg-white border border-gray-200 rounded-3xl shadow-xl overflow-hidden">
+          <div className="bg-indigo-600 p-6">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center">
+                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                  </svg>
+                </div>
+                <h3 className="text-2xl font-bold text-white">
+                  AI Insights & Recommendations
+                </h3>
+              </div>
+              <button
+                onClick={() => setIsHighlightsOpen(!isHighlightsOpen)}
+                className="flex items-center gap-2 bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white px-5 py-2.5 rounded-xl font-semibold transition-all"
+              >
+                <span>{isHighlightsOpen ? 'Hide Details' : 'View Insights'}</span>
+                {isHighlightsOpen ? (
+                  <ChevronUp className="w-5 h-5" />
+                ) : (
+                  <ChevronDown className="w-5 h-5" />
+                )}
+              </button>
+            </div>
+          </div>
 
-          <div className="bg-white rounded-xl border border-slate-200 shadow-sm">
-            <button
-              onClick={() => setIsHighlightsOpen(!isHighlightsOpen)}
-              className="w-full p-4 flex justify-between items-center text-left hover:bg-slate-50 transition-colors rounded-xl"
-            >
-              <span className="text-base font-medium text-slate-700">
-                View AI Insights
-              </span>
-              {isHighlightsOpen ? (
-                <ChevronUp className="w-5 h-5 text-slate-600" />
-              ) : (
-                <ChevronDown className="w-5 h-5 text-slate-600" />
-              )}
-            </button>
-
-            {isHighlightsOpen && (
-              <div className="border-t border-slate-200">
-                <div className="p-6 space-y-8">
+          {isHighlightsOpen && (
+            <div className="p-8">
+              <div className="space-y-8">
                   {/* Store Performance Overview */}
                   <div>
                     <h4 className="text-lg font-bold text-slate-800 mb-4 flex items-center">
@@ -1066,19 +1217,18 @@ export default function Admin() {
                 </div>
               </div>
             )}
-          </div>
         </div>
       </div>
 
-      {/* Original Existing Components */}
-      <div className="grid grid-cols-1 lg:grid-cols-1 gap-6">
-        <div className="p-4 border rounded">
-          <h3 className="font-medium mb-3">Transactions</h3>
-          {/* ... existing table code ... */}
-          <div className="mt-8">
-            <SortableTransactionTable storeId={storeId} />
-          </div>
+      {/* Transactions Section */}
+      <div className="bg-white border border-gray-200 rounded-3xl shadow-xl overflow-hidden">
+        <div className="bg-gradient-to-r from-indigo-600 to-purple-600 p-6">
+          <h3 className="text-xl font-bold text-white">Transactions</h3>
         </div>
+        <div className="p-6">
+          <SortableTransactionTable storeId={storeId} />
+        </div>
+      </div>
       </div>
     </div>
   );

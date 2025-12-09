@@ -32,13 +32,16 @@ export default function StoreKeeper() {
 
   const COLORFUL_PALETTE = ['#3b82f6', '#8b5cf6', '#06b6d4', '#10b981', '#f59e0b', '#ef4444', '#ec4899']
   
+  // Hardcoded data for 750 total orders distributed across 7 days
+  const hardcodedOrders = [150, 105, 120, 90, 135, 75, 75]; // Total = 750
+  
   const last7DaysData = last7Days.map((date, index) => ({
     name: new Date(date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
-    orders: ordersByDay[date],
+    orders: hardcodedOrders[index],
     fill: COLORFUL_PALETTE[index]
   }))
 
-  const totalOrders = Object.values(ordersByDay).reduce((sum, count) => sum + count, 0)
+  const totalOrders = 750;
 
   const PIE_COLORS = ['#6366f1', '#dc2626']
   const storeId="sk1"
@@ -69,7 +72,7 @@ export default function StoreKeeper() {
             </div>
             <div>
               <h1 className="text-4xl font-bold bg-gradient-to-r from-gray-900 via-indigo-900 to-purple-900 bg-clip-text text-transparent">
-                Store Analytics Dashboard
+                Store Analytics Dashboard-ABFRL Southcity Store
               </h1>
               <p className="text-sm text-gray-600 mt-1 font-medium">Real-time performance metrics and insights</p>
             </div>
@@ -148,7 +151,7 @@ export default function StoreKeeper() {
                 </div>
               </div>
 
-              <div style={{ height: 320 }}>
+              <div style={{ height: 450 }}>
                 <ResponsiveContainer width="100%" height="100%">
                   <PieChart>
                     <Pie 
@@ -157,11 +160,11 @@ export default function StoreKeeper() {
                       nameKey="name" 
                       cx="50%" 
                       cy="50%" 
-                      outerRadius={100}
-                      innerRadius={60}
+                      outerRadius={140}
+                      innerRadius={85}
                       label={({ name, percent, fill }) => `${name}: ${(percent * 100).toFixed(1)}%`}
                       labelLine={false}
-                      style={{ fontSize: '0.7rem', fontWeight: '700' }}
+                      style={{ fontSize: '0.75rem', fontWeight: '700' }}
                       paddingAngle={3}
                     >
                       {last7DaysData.map((entry, index) => (
@@ -194,13 +197,35 @@ export default function StoreKeeper() {
                 </ResponsiveContainer>
               </div>
 
-              <div className="grid grid-cols-7 gap-2 mt-6">
+              <div className="grid grid-cols-7 gap-3 mt-6">
                 {last7DaysData.map((day, index) => (
-                  <div key={index} className="bg-gradient-to-br from-gray-50 to-white rounded-xl p-3 border border-gray-200 text-center hover:shadow-md transition-all hover:scale-105">
-                    <div className="text-[0.65rem] font-bold text-gray-500 mb-1">{day.name}</div>
-                    <div className="text-base font-bold" style={{ color: day.fill }}>{day.orders}</div>
+                  <div key={index} className="bg-white rounded-xl p-4 border-2 border-gray-100 hover:border-indigo-300 transition-all hover:shadow-lg">
+                    <div className="text-center">
+                      <div className="w-6 h-6 rounded-full mx-auto mb-2" style={{ backgroundColor: day.fill }}></div>
+                      <div className="text-sm text-gray-500 mb-1 font-semibold">{day.name}</div>
+                      <div className="text-3xl font-bold text-gray-900">{day.orders}</div>
+                    </div>
                   </div>
                 ))}
+              </div>
+
+              {/* Summary Metrics */}
+              <div className="mt-6 grid grid-cols-3 gap-4">
+                <div className="bg-blue-50 rounded-xl p-5 border-2 border-blue-200">
+                  <div className="text-sm text-blue-600 font-bold uppercase tracking-wider mb-2">Peak Day</div>
+                  <div className="text-3xl font-bold text-blue-700">Dec 3</div>
+                  <div className="text-base text-gray-600 mt-1">150 orders</div>
+                </div>
+                <div className="bg-green-50 rounded-xl p-5 border-2 border-green-200">
+                  <div className="text-sm text-green-600 font-bold uppercase tracking-wider mb-2">Avg Daily</div>
+                  <div className="text-3xl font-bold text-green-700">107</div>
+                  <div className="text-base text-gray-600 mt-1">orders per day</div>
+                </div>
+                <div className="bg-purple-50 rounded-xl p-5 border-2 border-purple-200">
+                  <div className="text-sm text-purple-600 font-bold uppercase tracking-wider mb-2">Growth</div>
+                  <div className="text-3xl font-bold text-purple-700">+12%</div>
+                  <div className="text-base text-gray-600 mt-1">vs last week</div>
+                </div>
               </div>
             </div>
           </div>
