@@ -30,10 +30,12 @@ export default function StoreKeeper() {
     }
   })
 
+  const COLORFUL_PALETTE = ['#3b82f6', '#8b5cf6', '#06b6d4', '#10b981', '#f59e0b', '#ef4444', '#ec4899']
+  
   const last7DaysData = last7Days.map((date, index) => ({
     name: new Date(date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
     orders: ordersByDay[date],
-    fill: `hsl(${230 + index * 20}, 70%, ${55 + index * 3}%)`
+    fill: COLORFUL_PALETTE[index]
   }))
 
   const totalOrders = Object.values(ordersByDay).reduce((sum, count) => sum + count, 0)
@@ -55,112 +57,158 @@ export default function StoreKeeper() {
     return null
   }
   return (
-    <div className="bg-white text-gray-900 font-sans text-[1.4vw] rounded-2xl shadow-sm p-8 border border-gray-100">
-      <div className="mb-8 pb-6 border-b border-gray-200">
-        <h2 className="text-3xl font-light tracking-tight text-gray-900 mb-2">Store Analytics</h2>
-        <p className="text-sm text-gray-500 font-normal">Performance metrics and sales overview</p>
-      </div>
-      
-      <div className="grid grid-cols-1 lg:grid-cols-1 gap-8">
-        <div className="bg-gradient-to-br from-white to-gray-50 border border-gray-200 rounded-xl p-8 shadow-sm hover:shadow-md transition-all">
-          <div className="flex items-center mb-6">
-            <div className="h-10 w-1 bg-indigo-600 rounded-full mr-4"></div>
-            <h3 className="font-semibold text-xl text-gray-900 tracking-tight">Product Performance</h3>
-          </div>
-          <div style={{ height: 600 }}>
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={sold} margin={{ bottom: 100, left: 20, right: 20, top: 20 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" vertical={false} />
-                <XAxis 
-                  dataKey="name" 
-                  angle={-45} 
-                  textAnchor="end" 
-                  height={150} 
-                  interval={0} 
-                  style={{ fontSize: '0.65rem', fill: '#6b7280', fontWeight: '500' }}
-                  axisLine={{ stroke: '#d1d5db' }}
-                  tickLine={{ stroke: '#d1d5db' }}
-                />
-                <YAxis 
-                  allowDecimals={false} 
-                  style={{ fontSize: '0.75rem', fill: '#6b7280', fontWeight: '500' }}
-                  axisLine={{ stroke: '#d1d5db' }}
-                  tickLine={{ stroke: '#d1d5db' }}
-                />
-                <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }} />
-                <Bar dataKey="count" radius={[6, 6, 0, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-indigo-50 p-8">
+      <div className="max-w-[1600px] mx-auto">
+        {/* Header Section */}
+        <div className="mb-10">
+          <div className="flex items-center gap-4 mb-3">
+            <div className="h-12 w-12 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg">
+              <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+              </svg>
+            </div>
+            <div>
+              <h1 className="text-4xl font-bold bg-gradient-to-r from-gray-900 via-indigo-900 to-purple-900 bg-clip-text text-transparent">
+                Store Analytics Dashboard
+              </h1>
+              <p className="text-sm text-gray-600 mt-1 font-medium">Real-time performance metrics and insights</p>
+            </div>
           </div>
         </div>
 
-        <div className="bg-gradient-to-br from-white to-gray-50 border border-gray-200 rounded-xl p-8 shadow-sm hover:shadow-md transition-all">
-          <div className="flex items-center mb-6">
-            <div className="h-10 w-1 bg-indigo-600 rounded-full mr-4"></div>
-            <h3 className="font-semibold text-xl text-gray-900 tracking-tight">Last 7 Days Orders</h3>
-          </div>
-          
-          <div className="bg-white rounded-xl p-5 border border-gray-200 shadow-sm mb-8">
-            <div className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Total Orders</div>
-            <div className="text-3xl font-light text-indigo-600">{totalOrders}</div>
-            <div className="text-xs text-gray-400 mt-1">in the last 7 days</div>
-          </div>
-
-          <div style={{ height: 350 }}>
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie 
-                  data={last7DaysData} 
-                  dataKey="orders" 
-                  nameKey="name" 
-                  cx="50%" 
-                  cy="50%" 
-                  outerRadius={110}
-                  innerRadius={65}
-                  label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(1)}%`}
-                  labelLine={false}
-                  style={{ fontSize: '0.75rem', fill: '#374151', fontWeight: '600' }}
-                  paddingAngle={2}
-                >
-                  {last7DaysData.map((entry, index) => (
-                    <Cell 
-                      key={`cell-${index}`} 
-                      fill={entry.fill}
-                      stroke="white"
-                      strokeWidth={3}
-                    />
-                  ))}
-                </Pie>
-                <Legend 
-                  verticalAlign="bottom" 
-                  height={36}
-                  iconType="circle"
-                  wrapperStyle={{ fontSize: '0.875rem', paddingTop: '20px', fontWeight: '500', color: '#6b7280' }}
-                />
-                <Tooltip 
-                  contentStyle={{ 
-                    backgroundColor: 'white', 
-                    border: '1px solid #e5e7eb', 
-                    borderRadius: '10px',
-                    color: '#111827',
-                    boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
-                    padding: '12px'
-                  }} 
-                />
-              </PieChart>
-            </ResponsiveContainer>
-          </div>
-
-          <div className="grid grid-cols-7 gap-2 mt-6">
-            {last7DaysData.map((day, index) => (
-              <div key={index} className="bg-white rounded-lg p-3 border border-gray-200 text-center">
-                <div className="text-xs text-gray-500 mb-1">{day.name}</div>
-                <div className="text-lg font-semibold text-indigo-600">{day.orders}</div>
+        {/* Charts Container */}
+        <div className="space-y-8 mb-8">
+          {/* Product Performance Card */}
+          <div className="bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden hover:shadow-2xl transition-all duration-300">
+            <div className="bg-gradient-to-r from-indigo-600 to-purple-600 p-6">
+              <div className="flex items-center gap-3">
+                <div className="h-10 w-10 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
+                  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                  </svg>
+                </div>
+                <h3 className="text-xl font-bold text-white tracking-tight">Product Performance</h3>
               </div>
-            ))}
+            </div>
+            <div className="p-8">
+              <div style={{ height: 650 }}>
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={sold} margin={{ bottom: 120, left: 20, right: 20, top: 20 }}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" vertical={false} />
+                    <XAxis 
+                      dataKey="name" 
+                      angle={-45} 
+                      textAnchor="end" 
+                      height={150} 
+                      interval={0} 
+                      style={{ fontSize: '0.65rem', fill: '#6b7280', fontWeight: '600' }}
+                      axisLine={{ stroke: '#d1d5db' }}
+                      tickLine={{ stroke: '#d1d5db' }}
+                    />
+                    <YAxis 
+                      allowDecimals={false} 
+                      style={{ fontSize: '0.75rem', fill: '#6b7280', fontWeight: '600' }}
+                      axisLine={{ stroke: '#d1d5db' }}
+                      tickLine={{ stroke: '#d1d5db' }}
+                    />
+                    <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }} />
+                    <Bar dataKey="count" radius={[8, 8, 0, 0]} />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
           </div>
 
-          <div className="mt-8 pt-8 border-t border-gray-200">
+          {/* Last 7 Days Orders Card */}
+          <div className="bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden hover:shadow-2xl transition-all duration-300">
+            <div className="bg-gradient-to-r from-indigo-600 to-purple-600 p-6">
+              <div className="flex items-center gap-3">
+                <div className="h-10 w-10 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
+                  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                  </svg>
+                </div>
+                <h3 className="text-xl font-bold text-white tracking-tight">Last 7 Days Orders</h3>
+              </div>
+            </div>
+            <div className="p-8">
+              {/* Stats Card */}
+              <div className="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-2xl p-6 mb-6 border border-indigo-100">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <div className="text-xs font-bold text-indigo-600 uppercase tracking-wider mb-2">Total Orders</div>
+                    <div className="text-4xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">{totalOrders}</div>
+                    <div className="text-xs text-gray-500 mt-1 font-medium">in the last 7 days</div>
+                  </div>
+                  <div className="h-16 w-16 bg-white rounded-2xl flex items-center justify-center shadow-lg">
+                    <svg className="w-8 h-8 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+
+              <div style={{ height: 320 }}>
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie 
+                      data={last7DaysData} 
+                      dataKey="orders" 
+                      nameKey="name" 
+                      cx="50%" 
+                      cy="50%" 
+                      outerRadius={100}
+                      innerRadius={60}
+                      label={({ name, percent, fill }) => `${name}: ${(percent * 100).toFixed(1)}%`}
+                      labelLine={false}
+                      style={{ fontSize: '0.7rem', fontWeight: '700' }}
+                      paddingAngle={3}
+                    >
+                      {last7DaysData.map((entry, index) => (
+                        <Cell 
+                          key={`cell-${index}`} 
+                          fill={entry.fill}
+                          stroke="white"
+                          strokeWidth={4}
+                        />
+                      ))}
+                    </Pie>
+                    <Legend 
+                      verticalAlign="bottom" 
+                      height={32}
+                      iconType="circle"
+                      wrapperStyle={{ fontSize: '0.8rem', paddingTop: '15px', fontWeight: '600', color: '#6b7280' }}
+                    />
+                    <Tooltip 
+                      contentStyle={{ 
+                        backgroundColor: 'white', 
+                        border: '1px solid #e5e7eb', 
+                        borderRadius: '12px',
+                        color: '#111827',
+                        boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1)',
+                        padding: '14px',
+                        fontWeight: '600'
+                      }} 
+                    />
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
+
+              <div className="grid grid-cols-7 gap-2 mt-6">
+                {last7DaysData.map((day, index) => (
+                  <div key={index} className="bg-gradient-to-br from-gray-50 to-white rounded-xl p-3 border border-gray-200 text-center hover:shadow-md transition-all hover:scale-105">
+                    <div className="text-[0.65rem] font-bold text-gray-500 mb-1">{day.name}</div>
+                    <div className="text-base font-bold" style={{ color: day.fill }}>{day.orders}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Transaction Table */}
+        <div className="bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden">
+          <div className="p-8">
             <SortableTransactionTable storeId={storeId} />
           </div>
         </div>

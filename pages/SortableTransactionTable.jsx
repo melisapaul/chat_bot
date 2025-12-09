@@ -87,10 +87,12 @@ export default function StoreDetailsTable({ storeId }) {
   const HeaderCell = ({ title, sortKey }) => (
     <th 
       onClick={() => requestSort(sortKey)}
-      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+      className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider cursor-pointer hover:bg-indigo-50 transition-colors"
     >
-      {title}
-      <SortIcon columnKey={sortKey} />
+      <div className="flex items-center gap-2">
+        {title}
+        <SortIcon columnKey={sortKey} />
+      </div>
     </th>
   );
 
@@ -109,12 +111,22 @@ export default function StoreDetailsTable({ storeId }) {
   }, [storeId]);
 
   return (
-    <div className="bg-white rounded-xl shadow p-6">
-      <h2 className="text-lg font-semibold mb-4">Transaction History for: {storeName}</h2>
-      <div className="overflow-x-auto">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
-            <tr>
+    <div>
+      <div className="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-t-3xl p-6 mb-0">
+        <div className="flex items-center gap-3">
+          <div className="h-10 w-10 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
+            <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+            </svg>
+          </div>
+          <h2 className="text-xl font-bold text-white tracking-tight">Transaction History ABFRL Store South City</h2>
+        </div>
+      </div>
+      <div className="bg-white rounded-b-3xl shadow-xl border border-t-0 border-gray-100 overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="min-w-full">
+            <thead className="bg-gradient-to-r from-gray-50 to-indigo-50">
+              <tr className="border-b-2 border-indigo-200">
               <HeaderCell title="ID" sortKey="id" />
               <HeaderCell title="Date" sortKey="date" />
               <HeaderCell title="User Name" sortKey="userName" />
@@ -123,34 +135,43 @@ export default function StoreDetailsTable({ storeId }) {
               <HeaderCell title="Mode" sortKey="mode" />
               <HeaderCell title="Status" sortKey="orderStatus" />
               <HeaderCell title="Amount" sortKey="amount" />
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Address</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Phone</th>
+              <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Address</th>
+              <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Phone</th>
             </tr>
           </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
-            {sortedTransactions.map((transaction) => (
-              <tr key={transaction.id} className="hover:bg-gray-50">
-                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{transaction.id}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{new Date(transaction.date).toLocaleDateString()}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{transaction.userName}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{transaction.productName}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{transaction.qty}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{transaction.mode}</td>
+          <tbody className="bg-white divide-y divide-gray-100">
+            {sortedTransactions.map((transaction, idx) => (
+              <tr key={transaction.id} className={`hover:bg-indigo-50 transition-colors ${idx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}`}>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <span className={`px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusClasses(transaction.orderStatus)}`}>
+                  <span className="text-sm font-bold text-indigo-600">{transaction.id}</span>
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-700">{new Date(transaction.date).toLocaleDateString()}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-700">{transaction.userName}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{transaction.productName}</td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <span className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-xs font-bold">{transaction.qty}</span>
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <span className={`px-3 py-1 rounded-full text-xs font-bold ${transaction.mode === 'Online' ? 'bg-blue-100 text-blue-700' : 'bg-purple-100 text-purple-700'}`}>
+                    {transaction.mode}
+                  </span>
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <span className={`px-3 py-1 inline-flex text-xs leading-5 font-bold rounded-full ${getStatusClasses(transaction.orderStatus)}`}>
                     {transaction.orderStatus}
                   </span>
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-semibold">
-                  ₹{transaction.amount.toFixed(2)}
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <span className="text-sm font-bold text-gray-900">₹{transaction.amount.toFixed(2)}</span>
                 </td>
-                <td className="px-6 py-4 text-sm text-gray-500 max-w-xs truncate">{transaction.userAddress}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{transaction.userPhone}</td>
+                <td className="px-6 py-4 text-sm text-gray-600 max-w-xs truncate">{transaction.userAddress}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{transaction.userPhone}</td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
+    </div>
     </div>
   );
 }
