@@ -923,9 +923,9 @@ export default function ChatbotInteraction({ onClose }) {
             {isJourneyComplete ||
             (isStorekeeperMode && step >= storekeeperAgents.length)
               ? "All steps executed."
-              : isStorekeeperMode
-              ? `Step ${step} of ${storekeeperAgents.length}`
-              : `Step ${step} of ${agents.length}`}
+              : userSelectedMode === "storekeeper"
+              ? `Step ${step} of 3`
+              : `Step ${step} of 6`}
           </span>
 
           {!(
