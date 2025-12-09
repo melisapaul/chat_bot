@@ -98,7 +98,7 @@ import {
 
 export default function Admin() {
   const [isHighlightsOpen, setIsHighlightsOpen] = useState(false);
-  const [viewMode, setViewMode] = useState('overview'); // 'overview', 'online', 'offline'
+  const [viewMode, setViewMode] = useState("overview"); // 'overview', 'online', 'offline'
 
   // --- Data Processing for existing components ---
   const totals = {
@@ -123,44 +123,74 @@ export default function Admin() {
 
   // Enhanced data processing based on view mode
   const getFilteredData = () => {
-    if (viewMode === 'overview') {
+    if (viewMode === "overview") {
       return purchaseModeData;
-    } else if (viewMode === 'online') {
+    } else if (viewMode === "online") {
       // Group online transactions by user or product
-      const onlineTransactions = data.transactions.filter(t => t.mode === 'Online');
+      const onlineTransactions = data.transactions.filter(
+        (t) => t.mode === "Online"
+      );
       const onlineByUser = {};
-      onlineTransactions.forEach(trans => {
-        const user = data.users.find(u => u.id === trans.userId);
+      onlineTransactions.forEach((trans) => {
+        const user = data.users.find((u) => u.id === trans.userId);
         const userName = user ? user.name : `User ${trans.userId}`;
         onlineByUser[userName] = (onlineByUser[userName] || 0) + trans.amount;
       });
       return Object.entries(onlineByUser)
-        .sort(([,a], [,b]) => b - a)
+        .sort(([, a], [, b]) => b - a)
         .slice(0, 10) // Top 10 users
-        .map(([name, value], index) => ({ name: `Customer ${index + 1}`, value }));
-    } else if (viewMode === 'offline') {
+        .map(([name, value], index) => ({
+          name: `Customer ${index + 1}`,
+          value,
+        }));
+    } else if (viewMode === "offline") {
       // Group offline transactions by store
-      const offlineTransactions = data.transactions.filter(t => t.mode === 'Offline' && t.storeId);
+      const offlineTransactions = data.transactions.filter(
+        (t) => t.mode === "Offline" && t.storeId
+      );
       const offlineByStore = {};
-      offlineTransactions.forEach(trans => {
-        const store = data.storeKeepers.find(s => s.id === trans.storeId);
+      offlineTransactions.forEach((trans) => {
+        const store = data.storeKeepers.find((s) => s.id === trans.storeId);
         const storeName = store ? store.store_name : `Store ${trans.storeId}`;
-        offlineByStore[storeName] = (offlineByStore[storeName] || 0) + trans.amount;
+        offlineByStore[storeName] =
+          (offlineByStore[storeName] || 0) + trans.amount;
       });
       return Object.entries(offlineByStore)
-        .sort(([,a], [,b]) => b - a)
+        .sort(([, a], [, b]) => b - a)
         .map(([name, value]) => ({ name, value }));
     }
   };
 
   const filteredData = getFilteredData();
-  
+
   // Dynamic colors for different view modes
   const getColors = () => {
-    if (viewMode === 'online') {
-      return ["#0088FE", "#0073D4", "#005EB8", "#004999", "#003D7A", "#00326B", "#00275C", "#001C4D", "#00123E", "#00072F"];
-    } else if (viewMode === 'offline') {
-      return ["#00C49F", "#00B08F", "#009C7F", "#00886F", "#00745F", "#00604F", "#004C3F", "#00382F", "#00241F", "#00100F"];
+    if (viewMode === "online") {
+      return [
+        "#0088FE",
+        "#0073D4",
+        "#005EB8",
+        "#004999",
+        "#003D7A",
+        "#00326B",
+        "#00275C",
+        "#001C4D",
+        "#00123E",
+        "#00072F",
+      ];
+    } else if (viewMode === "offline") {
+      return [
+        "#00C49F",
+        "#00B08F",
+        "#009C7F",
+        "#00886F",
+        "#00745F",
+        "#00604F",
+        "#004C3F",
+        "#00382F",
+        "#00241F",
+        "#00100F",
+      ];
     }
     return COLORS;
   };
@@ -406,47 +436,48 @@ export default function Admin() {
         <div className="p-4 border rounded bg-white">
           <div className="mb-4">
             <h3 className="font-medium text-sm mb-3">
-              {viewMode === 'overview' && 'Total transactions in last 7 days: Online vs Offline'}
-              {viewMode === 'online' && 'Online Sales by Top Customers'}
-              {viewMode === 'offline' && 'Offline Sales by Store'}
+              {viewMode === "overview" &&
+                "Total transactions in last 7 days: Online vs Offline"}
+              {viewMode === "online" && "Online Sales by Top Customers"}
+              {viewMode === "offline" && "Offline Sales by Store"}
             </h3>
             <div className="flex bg-gray-100 rounded-lg p-1">
               <button
-                onClick={() => setViewMode('overview')}
+                onClick={() => setViewMode("overview")}
                 className={`px-3 py-1 rounded text-xs font-medium transition-colors ${
-                  viewMode === 'overview' 
-                    ? 'bg-blue-500 text-white' 
-                    : 'text-gray-600 hover:text-gray-800'
+                  viewMode === "overview"
+                    ? "bg-blue-500 text-white"
+                    : "text-gray-600 hover:text-gray-800"
                 }`}
               >
                 Overview
               </button>
               <button
-                onClick={() => setViewMode('online')}
+                onClick={() => setViewMode("online")}
                 className={`px-3 py-1 rounded text-xs font-medium transition-colors ${
-                  viewMode === 'online' 
-                    ? 'bg-blue-500 text-white' 
-                    : 'text-gray-600 hover:text-gray-800'
+                  viewMode === "online"
+                    ? "bg-blue-500 text-white"
+                    : "text-gray-600 hover:text-gray-800"
                 }`}
               >
                 Online
               </button>
               <button
-                onClick={() => setViewMode('offline')}
+                onClick={() => setViewMode("offline")}
                 className={`px-3 py-1 rounded text-xs font-medium transition-colors ${
-                  viewMode === 'offline' 
-                    ? 'bg-emerald-500 text-white' 
-                    : 'text-gray-600 hover:text-gray-800'
+                  viewMode === "offline"
+                    ? "bg-emerald-500 text-white"
+                    : "text-gray-600 hover:text-gray-800"
                 }`}
               >
                 Offline
               </button>
             </div>
           </div>
-          
+
           {/* Chart Container */}
           <div className="relative">
-            <div style={{ height: 350, width: '100%' }}>
+            <div style={{ height: 350, width: "100%" }}>
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
                   <Pie
@@ -466,46 +497,57 @@ export default function Admin() {
                       />
                     ))}
                   </Pie>
-                  <Tooltip 
+                  <Tooltip
                     formatter={(value, name) => [
-                      viewMode === 'overview' ? value : `₹${value.toLocaleString()}`,
-                      viewMode === 'overview' ? 'Transactions' : 'Revenue'
+                      viewMode === "overview"
+                        ? value
+                        : `₹${value.toLocaleString()}`,
+                      viewMode === "overview" ? "Transactions" : "Revenue",
                     ]}
-                    labelFormatter={(label) => viewMode === 'online' ? '' : `${label}`}
+                    labelFormatter={(label) =>
+                      viewMode === "online" ? "" : `${label}`
+                    }
                     contentStyle={{
-                      backgroundColor: 'white',
-                      border: '1px solid #ccc',
-                      borderRadius: '8px',
-                      fontSize: '12px'
+                      backgroundColor: "white",
+                      border: "1px solid #ccc",
+                      borderRadius: "8px",
+                      fontSize: "12px",
                     }}
                   />
-                  {viewMode !== 'online' && (
-                    <Legend 
-                      verticalAlign="bottom" 
+                  {viewMode !== "online" && (
+                    <Legend
+                      verticalAlign="bottom"
                       height={60}
                       wrapperStyle={{
-                        paddingTop: '10px',
-                        fontSize: '11px'
+                        paddingTop: "10px",
+                        fontSize: "11px",
                       }}
-                      formatter={(value) => value.length > 25 ? `${value.substring(0, 25)}...` : value}
+                      formatter={(value) =>
+                        value.length > 25
+                          ? `${value.substring(0, 25)}...`
+                          : value
+                      }
                     />
                   )}
                 </PieChart>
               </ResponsiveContainer>
             </div>
           </div>
-          
+
           {/* Summary Stats */}
           <div className="mt-4 grid grid-cols-1 gap-4">
             <div className="bg-gray-50 p-3 rounded">
               <p className="text-xs text-gray-600">
-                {viewMode === 'overview' ? 'Total Transactions' : 'Total Revenue'}
+                {viewMode === "overview"
+                  ? "Total Transactions"
+                  : "Total Revenue"}
               </p>
               <p className="text-lg font-bold text-gray-800">
-                {viewMode === 'overview' 
+                {viewMode === "overview"
                   ? filteredData.reduce((sum, item) => sum + item.value, 0)
-                  : `₹${filteredData.reduce((sum, item) => sum + item.value, 0).toLocaleString()}`
-                }
+                  : `₹${filteredData
+                      .reduce((sum, item) => sum + item.value, 0)
+                      .toLocaleString()}`}
               </p>
             </div>
           </div>
