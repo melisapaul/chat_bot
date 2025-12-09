@@ -101,7 +101,7 @@ export default function StoreDetailsTable({ storeId }) {
   const HeaderCell = ({ title, sortKey }) => (
     <th 
       onClick={() => requestSort(sortKey)}
-      className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider cursor-pointer hover:bg-indigo-50 transition-colors"
+      className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider cursor-pointer hover:bg-amber-50 transition-colors"
     >
       <div className="flex items-center gap-2">
         {title}
@@ -126,7 +126,7 @@ export default function StoreDetailsTable({ storeId }) {
 
   return (
     <div>
-      <div className="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-t-3xl p-6 mb-0">
+      <div className="bg-gradient-to-r from-red-800 to-amber-600 rounded-t-3xl p-6 mb-0">
         <div className="flex items-center gap-3">
           <div className="h-10 w-10 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
             <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -139,8 +139,8 @@ export default function StoreDetailsTable({ storeId }) {
       <div className="bg-white rounded-b-3xl shadow-xl border border-t-0 border-gray-100 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="min-w-full">
-            <thead className="bg-gradient-to-r from-gray-50 to-indigo-50">
-              <tr className="border-b-2 border-indigo-200">
+            <thead className="bg-gradient-to-r from-red-50 via-amber-50 to-yellow-50">
+              <tr className="border-b-2 border-amber-300">
               <HeaderCell title="ID" sortKey="id" />
               <HeaderCell title="Date" sortKey="date" />
               <HeaderCell title="User Name" sortKey="userName" />
@@ -156,9 +156,9 @@ export default function StoreDetailsTable({ storeId }) {
           </thead>
           <tbody className="bg-white divide-y divide-gray-100">
             {currentTransactions.map((transaction, idx) => (
-              <tr key={transaction.id} className={`hover:bg-indigo-50 transition-colors ${idx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}`}>
+              <tr key={transaction.id} className={`hover:bg-amber-50 transition-colors ${idx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}`}>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <span className="text-sm font-bold text-indigo-600">{transaction.id}</span>
+                  <span className="text-sm font-bold text-red-800">{transaction.id}</span>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-700">{new Date(transaction.date).toLocaleDateString()}</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-700">{transaction.userName}</td>
@@ -167,7 +167,7 @@ export default function StoreDetailsTable({ storeId }) {
                   <span className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-xs font-bold">{transaction.qty}</span>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <span className={`px-3 py-1 rounded-full text-xs font-bold ${transaction.mode === 'Online' ? 'bg-blue-100 text-blue-700' : 'bg-purple-100 text-purple-700'}`}>
+                  <span className={`px-3 py-1 rounded-full text-xs font-bold ${transaction.mode === 'Online' ? 'bg-red-100 text-red-800 border border-red-300' : 'bg-amber-100 text-amber-800 border border-amber-300'}`}>
                     {transaction.mode}
                   </span>
                 </td>
@@ -192,7 +192,7 @@ export default function StoreDetailsTable({ storeId }) {
       
       {/* Pagination */}
       {totalPages > 1 && (
-        <div className="bg-gradient-to-r from-gray-50 to-indigo-50 px-6 py-4 border-t border-gray-200">
+        <div className="bg-gradient-to-r from-gray-50 to-amber-50 px-6 py-4 border-t border-gray-200">
           <div className="flex items-center justify-between">
             <div className="text-sm text-gray-600">
               Showing <span className="font-semibold text-gray-900">{startIndex + 1}</span> to <span className="font-semibold text-gray-900">{Math.min(endIndex, sortedTransactions.length)}</span> of <span className="font-semibold text-gray-900">{sortedTransactions.length}</span> transactions
@@ -204,7 +204,7 @@ export default function StoreDetailsTable({ storeId }) {
                 className={`px-4 py-2 rounded-lg font-semibold transition-all ${
                   currentPage === 1
                     ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
-                    : 'bg-white text-indigo-600 hover:bg-indigo-50 border border-indigo-200 shadow-sm'
+                    : 'bg-white text-red-800 hover:bg-amber-50 border border-amber-200 shadow-sm'
                 }`}
               >
                 Previous
@@ -225,8 +225,8 @@ export default function StoreDetailsTable({ storeId }) {
                         onClick={() => goToPage(page)}
                         className={`px-4 py-2 rounded-lg font-semibold transition-all ${
                           currentPage === page
-                            ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg'
-                            : 'bg-white text-gray-700 hover:bg-indigo-50 border border-gray-200'
+                            ? 'bg-gradient-to-r from-red-800 to-amber-600 text-white shadow-lg'
+                            : 'bg-white text-gray-700 hover:bg-amber-50 border border-gray-200'
                         }`}
                       >
                         {page}
@@ -248,7 +248,7 @@ export default function StoreDetailsTable({ storeId }) {
                 className={`px-4 py-2 rounded-lg font-semibold transition-all ${
                   currentPage === totalPages
                     ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
-                    : 'bg-white text-indigo-600 hover:bg-indigo-50 border border-indigo-200 shadow-sm'
+                    : 'bg-white text-red-800 hover:bg-amber-50 border border-amber-200 shadow-sm'
                 }`}
               >
                 Next

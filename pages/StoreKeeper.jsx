@@ -9,7 +9,7 @@ export default function StoreKeeper() {
     return { 
       name: product ? product.name : `Product ${item.productId}`, 
       count: item.count,
-      fill: '#6366f1'
+      fill: 'url(#barGradient)'
     }
   })
 
@@ -30,7 +30,7 @@ export default function StoreKeeper() {
     }
   })
 
-  const COLORFUL_PALETTE = ['#3b82f6', '#8b5cf6', '#06b6d4', '#10b981', '#f59e0b', '#ef4444', '#ec4899']
+  const COLORFUL_PALETTE = ['#b91c1c', '#dc2626', '#f59e0b', '#fbbf24', '#fb923c', '#ea580c', '#d97706']
   
   // Hardcoded data for 750 total orders distributed across 7 days
   const hardcodedOrders = [150, 105, 120, 90, 135, 75, 75]; // Total = 750
@@ -51,7 +51,7 @@ export default function StoreKeeper() {
       return (
         <div className="bg-white border-2 border-gray-200 rounded-lg p-4 shadow-xl">
           <p className="text-gray-900 font-semibold text-sm mb-1">{payload[0].payload.name}</p>
-          <p className="text-indigo-600 text-sm">
+          <p className="text-red-800 text-sm">
             <span className="font-normal">Sales:</span> <span className="font-bold">{payload[0].value}</span>
           </p>
         </div>
@@ -60,18 +60,18 @@ export default function StoreKeeper() {
     return null
   }
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-indigo-50 p-8">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-amber-50 p-8">
       <div className="max-w-[1600px] mx-auto">
         {/* Header Section */}
         <div className="mb-10">
           <div className="flex items-center gap-4 mb-3">
-            <div className="h-12 w-12 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg">
+            <div className="h-12 w-12 bg-gradient-to-br from-red-800 to-amber-600 rounded-2xl flex items-center justify-center shadow-lg">
               <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
               </svg>
             </div>
             <div>
-              <h1 className="text-4xl font-bold bg-gradient-to-r from-gray-900 via-indigo-900 to-purple-900 bg-clip-text text-transparent">
+              <h1 className="text-4xl font-bold bg-gradient-to-r from-red-900 via-red-800 to-amber-700 bg-clip-text text-transparent">
                 Store Analytics Dashboard-ABFRL Southcity Store
               </h1>
               <p className="text-sm text-gray-600 mt-1 font-medium">Real-time performance metrics and insights</p>
@@ -83,7 +83,7 @@ export default function StoreKeeper() {
         <div className="space-y-8 mb-8">
           {/* Product Performance Card */}
           <div className="bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden hover:shadow-2xl transition-all duration-300">
-            <div className="bg-gradient-to-r from-indigo-600 to-purple-600 p-6">
+            <div className="bg-gradient-to-r from-red-800 to-amber-600 p-6">
               <div className="flex items-center gap-3">
                 <div className="h-10 w-10 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
                   <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -97,6 +97,13 @@ export default function StoreKeeper() {
               <div style={{ height: 650 }}>
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={sold} margin={{ bottom: 120, left: 20, right: 20, top: 20 }}>
+                    <defs>
+                      <linearGradient id="barGradient" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stopColor="#fb923c" stopOpacity={0.95}/>
+                        <stop offset="50%" stopColor="#f97316" stopOpacity={0.92}/>
+                        <stop offset="100%" stopColor="#ea580c" stopOpacity={0.9}/>
+                      </linearGradient>
+                    </defs>
                     <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" vertical={false} />
                     <XAxis 
                       dataKey="name" 
@@ -114,8 +121,8 @@ export default function StoreKeeper() {
                       axisLine={{ stroke: '#d1d5db' }}
                       tickLine={{ stroke: '#d1d5db' }}
                     />
-                    <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }} />
-                    <Bar dataKey="count" radius={[8, 8, 0, 0]} />
+                    <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(153, 27, 27, 0.08)' }} />
+                    <Bar dataKey="count" fill="url(#barGradient)" radius={[8, 8, 0, 0]} />
                   </BarChart>
                 </ResponsiveContainer>
               </div>
@@ -124,7 +131,7 @@ export default function StoreKeeper() {
 
           {/* Last 7 Days Orders Card */}
           <div className="bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden hover:shadow-2xl transition-all duration-300">
-            <div className="bg-gradient-to-r from-indigo-600 to-purple-600 p-6">
+            <div className="bg-gradient-to-r from-red-800 to-amber-600 p-6">
               <div className="flex items-center gap-3">
                 <div className="h-10 w-10 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
                   <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -136,15 +143,15 @@ export default function StoreKeeper() {
             </div>
             <div className="p-8">
               {/* Stats Card */}
-              <div className="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-2xl p-6 mb-6 border border-indigo-100">
+              <div className="bg-gradient-to-br from-amber-50 to-red-50 rounded-2xl p-6 mb-6 border border-amber-200">
                 <div className="flex items-center justify-between">
                   <div>
-                    <div className="text-xs font-bold text-indigo-600 uppercase tracking-wider mb-2">Total Orders</div>
-                    <div className="text-4xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">{totalOrders}</div>
+                    <div className="text-xs font-bold text-red-800 uppercase tracking-wider mb-2">Total Orders</div>
+                    <div className="text-4xl font-bold bg-gradient-to-r from-red-800 to-amber-600 bg-clip-text text-transparent">{totalOrders}</div>
                     <div className="text-xs text-gray-500 mt-1 font-medium">in the last 7 days</div>
                   </div>
                   <div className="h-16 w-16 bg-white rounded-2xl flex items-center justify-center shadow-lg">
-                    <svg className="w-8 h-8 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-8 h-8 text-red-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
                     </svg>
                   </div>
@@ -199,7 +206,7 @@ export default function StoreKeeper() {
 
               <div className="grid grid-cols-7 gap-3 mt-6">
                 {last7DaysData.map((day, index) => (
-                  <div key={index} className="bg-white rounded-xl p-4 border-2 border-gray-100 hover:border-indigo-300 transition-all hover:shadow-lg">
+                  <div key={index} className="bg-white rounded-xl p-4 border-2 border-gray-100 hover:border-amber-300 transition-all hover:shadow-lg">
                     <div className="text-center">
                       <div className="w-6 h-6 rounded-full mx-auto mb-2" style={{ backgroundColor: day.fill }}></div>
                       <div className="text-sm text-gray-500 mb-1 font-semibold">{day.name}</div>
@@ -211,19 +218,19 @@ export default function StoreKeeper() {
 
               {/* Summary Metrics */}
               <div className="mt-6 grid grid-cols-3 gap-4">
-                <div className="bg-blue-50 rounded-xl p-5 border-2 border-blue-200">
-                  <div className="text-sm text-blue-600 font-bold uppercase tracking-wider mb-2">Peak Day</div>
-                  <div className="text-3xl font-bold text-blue-700">Dec 3</div>
+                <div className="bg-red-50 rounded-xl p-5 border-2 border-red-200">
+                  <div className="text-sm text-red-800 font-bold uppercase tracking-wider mb-2">Peak Day</div>
+                  <div className="text-3xl font-bold text-red-800">Dec 3</div>
                   <div className="text-base text-gray-600 mt-1">150 orders</div>
                 </div>
-                <div className="bg-green-50 rounded-xl p-5 border-2 border-green-200">
-                  <div className="text-sm text-green-600 font-bold uppercase tracking-wider mb-2">Avg Daily</div>
-                  <div className="text-3xl font-bold text-green-700">107</div>
+                <div className="bg-amber-50 rounded-xl p-5 border-2 border-amber-200">
+                  <div className="text-sm text-amber-800 font-bold uppercase tracking-wider mb-2">Avg Daily</div>
+                  <div className="text-3xl font-bold text-amber-800">107</div>
                   <div className="text-base text-gray-600 mt-1">orders per day</div>
                 </div>
-                <div className="bg-purple-50 rounded-xl p-5 border-2 border-purple-200">
-                  <div className="text-sm text-purple-600 font-bold uppercase tracking-wider mb-2">Growth</div>
-                  <div className="text-3xl font-bold text-purple-700">+12%</div>
+                <div className="bg-orange-50 rounded-xl p-5 border-2 border-orange-200">
+                  <div className="text-sm text-orange-800 font-bold uppercase tracking-wider mb-2">Growth</div>
+                  <div className="text-3xl font-bold text-orange-800">+12%</div>
                   <div className="text-base text-gray-600 mt-1">vs last week</div>
                 </div>
               </div>
