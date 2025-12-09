@@ -44,7 +44,7 @@ export default function Pages() {
         </div>
       </header>
 
-      <main className="max-w-6xl mx-auto px-6 py-8">
+      <main className="w-full px-4 py-8">
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/user" element={<UserJourney />} />
