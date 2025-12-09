@@ -1,27 +1,27 @@
-.top_section{
-    position: relative; 
-    height: 90%;
-    left: 0%;
+.top_section {
+  position: relative;
+  height: 90%;
+  left: 0%;
 }
 
-.bottom_section{
-    position: relative;
-    top:14%;
+.bottom_section {
+  position: relative;
+  top: 14%;
 }
 
-.text-width{
- width: 100%;
-}
- 
-.left_scroll{
-position: sticky;
-top: 0px;
-z-index: 3;
+.text-width {
+  width: 100%;
 }
 
-.ds{
- position: relative;
- z-index: 1;
+.left_scroll {
+  position: sticky;
+  top: 0px;
+  z-index: 3;
+}
+
+.ds {
+  position: relative;
+  z-index: 1;
 }
 
 @keyframes fadeIn {
