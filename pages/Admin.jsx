@@ -98,6 +98,7 @@ import {
 
 export default function Admin() {
   const [isHighlightsOpen, setIsHighlightsOpen] = useState(false);
+  const [viewMode, setViewMode] = useState('overview'); // 'overview', 'online', 'offline'
 
   // --- Data Processing for existing components ---
   const totals = {
@@ -119,6 +120,50 @@ export default function Admin() {
   ).map(([name, value]) => ({ name, value }));
 
   const COLORS = ["#0088FE", "#00C49F"]; // Blue for Online, Green for Offline
+
+  // Enhanced data processing based on view mode
+  const getFilteredData = () => {
+    if (viewMode === 'overview') {
+      return purchaseModeData;
+    } else if (viewMode === 'online') {
+      // Group online transactions by user or product
+      const onlineTransactions = data.transactions.filter(t => t.mode === 'Online');
+      const onlineByUser = {};
+      onlineTransactions.forEach(trans => {
+        const user = data.users.find(u => u.id === trans.userId);
+        const userName = user ? user.name : `User ${trans.userId}`;
+        onlineByUser[userName] = (onlineByUser[userName] || 0) + trans.amount;
+      });
+      return Object.entries(onlineByUser)
+        .sort(([,a], [,b]) => b - a)
+        .slice(0, 10) // Top 10 users
+        .map(([name, value], index) => ({ name: `Customer ${index + 1}`, value }));
+    } else if (viewMode === 'offline') {
+      // Group offline transactions by store
+      const offlineTransactions = data.transactions.filter(t => t.mode === 'Offline' && t.storeId);
+      const offlineByStore = {};
+      offlineTransactions.forEach(trans => {
+        const store = data.storeKeepers.find(s => s.id === trans.storeId);
+        const storeName = store ? store.store_name : `Store ${trans.storeId}`;
+        offlineByStore[storeName] = (offlineByStore[storeName] || 0) + trans.amount;
+      });
+      return Object.entries(offlineByStore)
+        .sort(([,a], [,b]) => b - a)
+        .map(([name, value]) => ({ name, value }));
+    }
+  };
+
+  const filteredData = getFilteredData();
+  
+  // Dynamic colors for different view modes
+  const getColors = () => {
+    if (viewMode === 'online') {
+      return ["#0088FE", "#0073D4", "#005EB8", "#004999", "#003D7A", "#00326B", "#00275C", "#001C4D", "#00123E", "#00072F"];
+    } else if (viewMode === 'offline') {
+      return ["#00C49F", "#00B08F", "#009C7F", "#00886F", "#00745F", "#00604F", "#004C3F", "#00382F", "#00241F", "#00100F"];
+    }
+    return COLORS;
+  };
 
   // --- 2. Data Processing for On Store Tables ---
 
@@ -279,6 +324,62 @@ export default function Admin() {
     return recommendations;
   };
 
+  // Hardcoded poor performing stores for highlights
+  const poorPerformingStores = [
+    {
+      id: "poor1",
+      name: "Connaught Place Outlet",
+      manager: "Rajesh Kumar",
+      totalRevenue: 4500,
+      totalTransactions: 12,
+      completedOrders: 8,
+      pendingOrders: 4,
+      avgOrderValue: 375,
+      uniqueCustomers: 8,
+      completionRate: 66.7,
+      performance: "poor",
+    },
+    {
+      id: "poor2",
+      name: "Sector 18 Store",
+      manager: "Priya Sharma",
+      totalRevenue: 3200,
+      totalTransactions: 9,
+      completedOrders: 5,
+      pendingOrders: 4,
+      avgOrderValue: 356,
+      uniqueCustomers: 6,
+      completionRate: 55.6,
+      performance: "poor",
+    },
+    {
+      id: "poor3",
+      name: "Mall Road Branch",
+      manager: "Amit Singh",
+      totalRevenue: 2800,
+      totalTransactions: 8,
+      completedOrders: 4,
+      pendingOrders: 4,
+      avgOrderValue: 350,
+      uniqueCustomers: 5,
+      completionRate: 50.0,
+      performance: "poor",
+    },
+    {
+      id: "poor4",
+      name: "City Center Store",
+      manager: "Neha Gupta",
+      totalRevenue: 2100,
+      totalTransactions: 6,
+      completedOrders: 3,
+      pendingOrders: 3,
+      avgOrderValue: 350,
+      uniqueCustomers: 4,
+      completionRate: 50.0,
+      performance: "poor",
+    },
+  ];
+
   return (
     <div className="bg-gradient-to-br from-slate-50 to-blue-50 text-gray-800 font-sans text-[1.4vw] rounded-xl shadow p-6 w-full min-w-full">
       <h2 className="text-lg font-semibold mb-4">Admin Dashboard</h2>
@@ -286,47 +387,127 @@ export default function Admin() {
       {/* Totals Grid (Existing) */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
         <div className="p-4 border rounded">
-          <div className="text-sm text-gray-500">Users</div>
+          <div className="text-sm text-gray-500">No of Customer</div>
           <div className="text-2xl font-bold">{totals.users}</div>
         </div>
         <div className="p-4 border rounded">
-          <div className="text-sm text-gray-500">Products</div>
+          <div className="text-sm text-gray-500">No of Products</div>
           <div className="text-2xl font-bold">{totals.products}</div>
         </div>
         <div className="p-4 border rounded">
-          <div className="text-sm text-gray-500">Store Keepers</div>
+          <div className="text-sm text-gray-500">No of Retail Stores </div>
           <div className="text-2xl font-bold">{totals.storeKeepers}</div>
         </div>
       </div>
 
       {/* New Row for Pie Chart and Store Table */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-        {/* 1. Total Purchased Online | Offline Pie Chart */}
-        <div className="p-4 border rounded">
-          <h3 className="font-medium mb-3">Purchases: Online vs Offline</h3>
-          <div style={{ height: 300 }}>
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie
-                  data={purchaseModeData}
-                  cx="50%"
-                  cy="50%"
-                  labelLine={false}
-                  outerRadius={100}
-                  fill="#8884d8"
-                  dataKey="value"
-                >
-                  {purchaseModeData.map((entry, index) => (
-                    <Cell
-                      key={`cell-${index}`}
-                      fill={COLORS[index % COLORS.length]}
+        {/* 1. Enhanced Pie Chart with View Options */}
+        <div className="p-4 border rounded bg-white">
+          <div className="mb-4">
+            <h3 className="font-medium text-sm mb-3">
+              {viewMode === 'overview' && 'Total transactions in last 7 days: Online vs Offline'}
+              {viewMode === 'online' && 'Online Sales by Top Customers'}
+              {viewMode === 'offline' && 'Offline Sales by Store'}
+            </h3>
+            <div className="flex bg-gray-100 rounded-lg p-1">
+              <button
+                onClick={() => setViewMode('overview')}
+                className={`px-3 py-1 rounded text-xs font-medium transition-colors ${
+                  viewMode === 'overview' 
+                    ? 'bg-blue-500 text-white' 
+                    : 'text-gray-600 hover:text-gray-800'
+                }`}
+              >
+                Overview
+              </button>
+              <button
+                onClick={() => setViewMode('online')}
+                className={`px-3 py-1 rounded text-xs font-medium transition-colors ${
+                  viewMode === 'online' 
+                    ? 'bg-blue-500 text-white' 
+                    : 'text-gray-600 hover:text-gray-800'
+                }`}
+              >
+                Online
+              </button>
+              <button
+                onClick={() => setViewMode('offline')}
+                className={`px-3 py-1 rounded text-xs font-medium transition-colors ${
+                  viewMode === 'offline' 
+                    ? 'bg-emerald-500 text-white' 
+                    : 'text-gray-600 hover:text-gray-800'
+                }`}
+              >
+                Offline
+              </button>
+            </div>
+          </div>
+          
+          {/* Chart Container */}
+          <div className="relative">
+            <div style={{ height: 350, width: '100%' }}>
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
+                  <Pie
+                    data={filteredData}
+                    cx="50%"
+                    cy="45%"
+                    labelLine={false}
+                    outerRadius={80}
+                    fill="#8884d8"
+                    dataKey="value"
+                    label={false}
+                  >
+                    {filteredData.map((entry, index) => (
+                      <Cell
+                        key={`cell-${index}`}
+                        fill={getColors()[index % getColors().length]}
+                      />
+                    ))}
+                  </Pie>
+                  <Tooltip 
+                    formatter={(value, name) => [
+                      viewMode === 'overview' ? value : `₹${value.toLocaleString()}`,
+                      viewMode === 'overview' ? 'Transactions' : 'Revenue'
+                    ]}
+                    labelFormatter={(label) => viewMode === 'online' ? '' : `${label}`}
+                    contentStyle={{
+                      backgroundColor: 'white',
+                      border: '1px solid #ccc',
+                      borderRadius: '8px',
+                      fontSize: '12px'
+                    }}
+                  />
+                  {viewMode !== 'online' && (
+                    <Legend 
+                      verticalAlign="bottom" 
+                      height={60}
+                      wrapperStyle={{
+                        paddingTop: '10px',
+                        fontSize: '11px'
+                      }}
+                      formatter={(value) => value.length > 25 ? `${value.substring(0, 25)}...` : value}
                     />
-                  ))}
-                </Pie>
-                <Tooltip />
-                <Legend />
-              </PieChart>
-            </ResponsiveContainer>
+                  )}
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+          
+          {/* Summary Stats */}
+          <div className="mt-4 grid grid-cols-1 gap-4">
+            <div className="bg-gray-50 p-3 rounded">
+              <p className="text-xs text-gray-600">
+                {viewMode === 'overview' ? 'Total Transactions' : 'Total Revenue'}
+              </p>
+              <p className="text-lg font-bold text-gray-800">
+                {viewMode === 'overview' 
+                  ? filteredData.reduce((sum, item) => sum + item.value, 0)
+                  : `₹${filteredData.reduce((sum, item) => sum + item.value, 0).toLocaleString()}`
+                }
+              </p>
+            </div>
           </div>
         </div>
 
@@ -589,64 +770,181 @@ export default function Admin() {
                     </div>
                   </div>
 
-                  {/* Strategic Recommendations */}
+                  {/* Poor Performing Stores Section */}
                   <div>
-                    <h4 className="text-lg font-bold text-slate-800 mb-4 flex items-center">
-                      <span className="w-2 h-2 bg-purple-500 rounded-full mr-3"></span>
-                      Strategic Recommendations
+                    <h4 className="text-lg font-bold text-red-800 mb-4 flex items-center">
+                      <span className="w-2 h-2 bg-red-500 rounded-full mr-3"></span>
+                      🚨 Critical: Poor Performing Stores
                     </h4>
-                    <div className="space-y-4">
-                      {storeAnalytics.map((store) => (
+                    <div className="bg-red-50 border-2 border-red-200 rounded-lg p-4 mb-4">
+                      <div className="flex items-center justify-between mb-3">
+                        <div>
+                          <p className="text-red-900 font-bold text-sm">
+                            ⚠️ URGENT ATTENTION REQUIRED
+                          </p>
+                          <p className="text-red-700 text-xs">
+                            These stores are significantly underperforming and
+                            require immediate intervention
+                          </p>
+                        </div>
+                        <div className="text-right">
+                          <p className="text-red-900 font-bold text-lg">
+                            {poorPerformingStores.length}
+                          </p>
+                          <p className="text-red-600 text-xs">Stores at Risk</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {poorPerformingStores.map((store) => (
                         <div
                           key={store.id}
-                          className="bg-slate-50 p-4 rounded-lg border border-slate-200"
+                          className="bg-white border-2 border-red-300 rounded-lg p-4 shadow-md"
                         >
                           <div className="flex items-center justify-between mb-3">
-                            <h5 className="font-bold text-slate-800">
+                            <div>
+                              <h5 className="font-bold text-red-900 text-sm">
+                                {store.name}
+                              </h5>
+                              <p className="text-red-700 text-xs">
+                                Manager: {store.manager}
+                              </p>
+                            </div>
+                            <span className="bg-red-100 text-red-800 px-2 py-1 rounded-full text-xs font-bold uppercase">
+                              {store.performance}
+                            </span>
+                          </div>
+
+                          <div className="grid grid-cols-2 gap-3 mb-3 text-xs">
+                            <div className="bg-red-50 p-2 rounded">
+                              <p className="font-semibold text-red-800">
+                                ₹{store.totalRevenue.toLocaleString()}
+                              </p>
+                              <p className="text-red-600">Revenue</p>
+                            </div>
+                            <div className="bg-red-50 p-2 rounded">
+                              <p className="font-semibold text-red-800">
+                                {store.completionRate}%
+                              </p>
+                              <p className="text-red-600">Success Rate</p>
+                            </div>
+                            <div className="bg-red-50 p-2 rounded">
+                              <p className="font-semibold text-red-800">
+                                {store.totalTransactions}
+                              </p>
+                              <p className="text-red-600">Orders</p>
+                            </div>
+                            <div className="bg-red-50 p-2 rounded">
+                              <p className="font-semibold text-red-800">
+                                {store.uniqueCustomers}
+                              </p>
+                              <p className="text-red-600">Customers</p>
+                            </div>
+                          </div>
+
+                          <div className="bg-red-100 p-3 rounded">
+                            <p className="text-xs font-semibold text-red-800 mb-1">
+                              Immediate Actions:
+                            </p>
+                            <ul className="text-xs text-red-700 space-y-1">
+                              <li>
+                                🔧 Review operational costs and efficiency
+                              </li>
+                              <li>👥 Staff retraining and management review</li>
+                              <li>📱 Implement digital marketing campaigns</li>
+                              <li>💰 Focus on customer acquisition</li>
+                            </ul>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+
+                    <div className="mt-4 bg-gradient-to-r from-red-100 to-orange-100 border border-red-200 rounded-lg p-4">
+                      <h5 className="font-bold text-red-900 mb-2">
+                        📋 Recommended Action Plan for Poor Performers:
+                      </h5>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                        <div>
+                          <p className="font-semibold text-red-800 mb-1">
+                            Week 1-2: Assessment
+                          </p>
+                          <ul className="text-red-700 space-y-1">
+                            <li>• Conduct thorough store audit</li>
+                            <li>• Analyze customer feedback</li>
+                            <li>• Review inventory turnover</li>
+                            <li>• Assess staff performance</li>
+                          </ul>
+                        </div>
+                        <div>
+                          <p className="font-semibold text-red-800 mb-1">
+                            Week 3-4: Implementation
+                          </p>
+                          <ul className="text-red-700 space-y-1">
+                            <li>• Launch targeted marketing campaigns</li>
+                            <li>• Implement staff training programs</li>
+                            <li>• Optimize product mix and pricing</li>
+                            <li>• Set up weekly performance reviews</li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Strategic Recommendations for Poor Performers Only */}
+                  <div>
+                    <h4 className="text-lg font-bold text-red-800 mb-4 flex items-center">
+                      <span className="w-2 h-2 bg-red-500 rounded-full mr-3"></span>
+                      Strategic Recommendations for Poor Performing Stores
+                    </h4>
+                    <div className="space-y-4">
+                      {poorPerformingStores.map((store) => (
+                        <div
+                          key={store.id}
+                          className="bg-red-50 p-4 rounded-lg border-2 border-red-200"
+                        >
+                          <div className="flex items-center justify-between mb-3">
+                            <h5 className="font-bold text-red-900">
                               {store.name}
                             </h5>
-                            <span
-                              className={`px-2 py-1 rounded-full text-xs font-semibold ${
-                                store.performance === "excellent"
-                                  ? "bg-emerald-100 text-emerald-800"
-                                  : store.performance === "good"
-                                  ? "bg-blue-100 text-blue-800"
-                                  : store.performance === "average"
-                                  ? "bg-amber-100 text-amber-800"
-                                  : "bg-red-100 text-red-800"
-                              }`}
-                            >
-                              {store.performance.toUpperCase()}
+                            <span className="bg-red-100 text-red-800 px-2 py-1 rounded-full text-xs font-bold uppercase">
+                              {store.performance}
                             </span>
                           </div>
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
-                              <p className="text-xs font-semibold text-slate-600 mb-2">
-                                Key Metrics:
+                              <p className="text-xs font-semibold text-red-700 mb-2">
+                                Critical Metrics:
                               </p>
-                              <div className="text-xs text-slate-700 space-y-1">
+                              <div className="text-xs text-red-800 space-y-1">
                                 <p>
-                                  📈 Revenue: ₹
-                                  {store.totalRevenue.toLocaleString()}
+                                  📉 Revenue: ₹
+                                  {store.totalRevenue.toLocaleString()} (Low)
                                 </p>
-                                <p>📦 Orders: {store.totalTransactions}</p>
-                                <p>👥 Customers: {store.uniqueCustomers}</p>
                                 <p>
-                                  ✅ Success Rate:{" "}
-                                  {Math.round(store.completionRate)}%
+                                  📦 Orders: {store.totalTransactions}{" "}
+                                  (Critical)
+                                </p>
+                                <p>
+                                  👥 Customers: {store.uniqueCustomers} (Low
+                                  Base)
+                                </p>
+                                <p>
+                                  ❌ Success Rate: {store.completionRate}%
+                                  (Poor)
                                 </p>
                               </div>
                             </div>
                             <div>
-                              <p className="text-xs font-semibold text-slate-600 mb-2">
-                                Action Items:
+                              <p className="text-xs font-semibold text-red-700 mb-2">
+                                Urgent Action Items:
                               </p>
-                              <div className="text-xs text-slate-700 space-y-1">
-                                {getStoreRecommendations(store)
-                                  .slice(0, 3)
-                                  .map((rec, idx) => (
+                              <div className="text-xs text-red-800 space-y-1">
+                                {getStoreRecommendations(store).map(
+                                  (rec, idx) => (
                                     <p key={idx}>{rec}</p>
-                                  ))}
+                                  )
+                                )}
                               </div>
                             </div>
                           </div>
