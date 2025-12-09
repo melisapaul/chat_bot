@@ -104,7 +104,7 @@ export default function UserJourney() {
         </div>
 
         {/* User Info Card */}
-        <div className="mb-8 bg-gradient-to-br from-yellow-50 via-amber-50 to-orange-50 border border-yellow-200 rounded-3xl p-8 shadow-xl">
+        <div className="mb-8 bg-white border border-gray-200 rounded-3xl p-8 shadow-xl">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="text-center md:text-left">
               <p className="text-xs uppercase tracking-wider text-gray-500 mb-2">

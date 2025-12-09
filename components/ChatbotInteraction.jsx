@@ -163,63 +163,64 @@ export default function ChatbotInteraction() {
   ];
 
   return (
-    <div className="h-screen top_section flex bg-[#0d0d0d] text-gray-200 font-sans text-[1.4vw] leading-[1.8vh]">
+    <div className="h-screen top_section flex bg-gradient-to-br from-orange-100 via-yellow-100 to-amber-100 text-gray-800 font-sans text-[1.4vw] leading-[1.8vh]">
       {/* LEFT */}
-      <div className="w-1/3 bottom_section p-4 overflow-y-auto border-r border-gray-700 bg-[#111]">
-        <header className=" left_scroll min-h-[20%] max-h-[20%] p-4 border-b border-gray-700 bg-[#111] flex justify-between items-center">
+      <div className="w-1/3 bottom_section overflow-y-auto border-r border-orange-300 bg-white shadow-lg">
+        <header className=" left_scroll min-h-[20%] max-h-[20%] p-4 border-b border-orange-300 bg-gradient-to-r from-orange-500 via-amber-500 to-yellow-500 flex justify-between items-center shadow-lg">
           <div>
-            <h1 className="text-[2vw] font-bold flex items-center">
+            <h1 className="text-[2vw] font-bold flex items-center text-white drop-shadow-md">
               ⚡ Agent Timeline
             </h1>
-            <p className="text-[1vw] text-gray-400 mt-6">
+            <p className="text-[1vw] text-orange-100 mt-2">
               Live Orchestration Log
             </p>
           </div>
         </header>
+        <div className="p-4">
         {log.length === 0 && !isLoading && (
-          <div className="text-center p-4 bg-[#1a1a1a] rounded border border-gray-700 text-gray-500 text-[1vw]">
+          <div className="text-center p-4 bg-gradient-to-r from-orange-50 to-amber-50 rounded-lg border border-orange-300 text-gray-700 text-[1vw] shadow-sm">
             Waiting to start journey...
           </div>
         )}
 
         {isLoading && (
-          <div className="text-center p-4 bg-[#1a1a1a] rounded border border-gray-700 text-blue-400 text-[1vw] animate-pulse">
+          <div className="text-center p-4 bg-gradient-to-r from-orange-50 to-amber-50 rounded-lg border border-orange-400 text-orange-700 text-[1vw] animate-pulse shadow-sm">
             <div className="flex items-center justify-center gap-2 mb-2">
-              <Loader2 className="w-4 h-4 animate-spin" />
+              <Loader2 className="w-4 h-4 animate-spin text-orange-600" />
               <span>Processing...</span>
             </div>
-            <p className="text-[0.9vw] text-gray-500">{loadingMessage}</p>
+            <p className="text-[0.9vw] text-gray-700">{loadingMessage}</p>
           </div>
         )}
 
         <div className="space-y-3 relative pl-2 h-500 overflow-y-auto ds">
           {(log.length > 0 || isLoading) && (
-            <div className="absolute left-5 top-0 bottom-0 w-[2px] bg-blue-600" />
+            <div className="absolute left-5 top-0 bottom-0 w-[2px] bg-gradient-to-b from-orange-500 to-amber-500" />
           )}
 
           {log.map((a, i) => (
             <div key={i} className="relative pl-8">
-              <div className="absolute left-0 top-1 h-3 w-3 bg-blue-500 rounded-full"></div>
+              <div className="absolute left-0 top-1 h-3 w-3 bg-orange-500 rounded-full shadow-md"></div>
 
-              <div className="p-3 bg-[#1a1a1a] rounded border border-gray-700">
+              <div className="p-3 bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50 rounded-lg border border-orange-300 shadow-sm hover:shadow-md transition-shadow">
                 <div className="flex justify-between mb-1">
-                  <p className="font-bold text-[1.3vw]">{a.title}</p>
-                  <span className="text-[0.8vw] bg-blue-900 px-2 py-1 rounded">
+                  <p className="font-bold text-[1.3vw] text-gray-900">{a.title}</p>
+                  <span className="text-[0.8vw] bg-orange-500 text-white px-2 py-1 rounded-md font-semibold shadow-sm">
                     {a.agentId}
                   </span>
                 </div>
-                <p className="text-[1vw] text-gray-400">{a.action}</p>
+                <p className="text-[1vw] text-gray-700">{a.action}</p>
               </div>
             </div>
           ))}
 
           {isLoading && (
             <div className="relative pl-8">
-              <div className="absolute left-0 top-1 h-3 w-3 bg-blue-400 rounded-full animate-pulse"></div>
-              <div className="p-3 bg-[#1a1a1a] rounded border border-gray-700 border-blue-500">
+              <div className="absolute left-0 top-1 h-3 w-3 bg-amber-500 rounded-full animate-pulse shadow-md"></div>
+              <div className="p-3 bg-gradient-to-r from-orange-50 to-amber-50 rounded-lg border border-orange-400 shadow-sm">
                 <div className="flex items-center gap-2">
-                  <Loader2 className="w-4 h-4 animate-spin text-blue-400" />
-                  <p className="text-blue-400 text-[1.1vw]">
+                  <Loader2 className="w-4 h-4 animate-spin text-orange-600" />
+                  <p className="text-orange-600 text-[1.1vw] font-semibold">
                     Agent Processing...
                   </p>
                 </div>
@@ -231,51 +232,52 @@ export default function ChatbotInteraction() {
             <p className="text-green-500 font-bold text-[1.5vw] pl-8 mt-2">Journey Completed</p>
           )} */}
         </div>
+        </div>
       </div>
 
       {/* RIGHT */}
-      <div className="bottom_section w-2/3 flex flex-col bg-[#0f0f0f]">
-        <header className="min-h-[20%] max-h-[20%] p-4 border-b border-gray-700 bg-[#111] flex justify-between items-center">
+      <div className="bottom_section w-2/3 flex flex-col bg-white">
+        <header className="min-h-[20%] max-h-[20%] p-4 border-b border-orange-300 bg-gradient-to-r from-orange-500 via-amber-500 to-yellow-500 flex justify-between items-center shadow-lg">
           <div>
-            <h1 className="text-[2vw] font-bold flex items-center">
+            <h1 className="text-[2vw] font-bold flex items-center text-white drop-shadow-md">
               🤖 AI Orchestrator
             </h1>
-            <p className="text-[1vw] text-gray-400 mt-6">
+            <p className="text-[1vw] text-orange-100 mt-2">
               Multi-agent automation simulation
             </p>
           </div>
-          <div className="text-[1vw] bg-[#1a1a1a] px-3 py-1 rounded border border-gray-700">
+          <div className="text-[1vw] bg-white/20 backdrop-blur-sm px-3 py-1 rounded-lg border border-orange-200 shadow-md">
             Status:{" "}
             {isJourneyComplete ? (
-              <span className="text-green-500">Complete</span>
+              <span className="text-green-200 font-bold">Complete</span>
             ) : (
-              <span className="text-blue-500">In Progress</span>
+              <span className="text-white font-bold">In Progress</span>
             )}
           </div>
         </header>
 
         <div className="flex-1 overflow-y-auto p-6 space-y-6">
           {log.length === 0 && !isLoading && (
-            <div className="h-full flex flex-col justify-center items-center text-gray-600">
+            <div className="h-full flex flex-col justify-center items-center text-gray-700">
               <span className="text-[8vw]">👋</span>
-              <p className="text-[1.5vw]">Click "Search" to begin!</p>
+              <p className="text-[1.5vw] font-bold bg-gradient-to-r from-orange-500 via-amber-500 to-yellow-500 bg-clip-text text-transparent">Click "Search" to begin!</p>
             </div>
           )}
 
           {log.map((agent, index) => (
             <div
               key={index}
-              className="bg-[#1a1a1a] p-4 rounded border border-gray-700"
+              className="bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50 p-4 rounded-xl border border-orange-200 shadow-lg hover:shadow-xl transition-shadow duration-300"
             >
-              <div className="flex items-center mb-3 border-b border-gray-700 pb-2">
-                <div className="h-10 w-10 rounded flex justify-center items-center bg-blue-900 mr-3">
-                  💬
+              <div className="flex items-center mb-3 border-b border-orange-200 pb-2">
+                <div className="h-10 w-10 rounded-lg flex justify-center items-center bg-gradient-to-br from-orange-500 to-amber-500 mr-3 shadow-md">
+                  <span className="text-white text-lg">💬</span>
                 </div>
-                <h3 className="font-bold text-[1.4vw]">{agent.title}</h3>
+                <h3 className="font-bold text-[1.4vw] text-gray-900">{agent.title}</h3>
               </div>
 
               {agent.output?.message && (
-                <p className="text-gray-300 mb-4 text-[1.1vw] pl-12">
+                <p className="text-gray-800 mb-4 text-[1.1vw] pl-12">
                   {agent.output.message}
                 </p>
               )}
@@ -287,10 +289,10 @@ export default function ChatbotInteraction() {
                     {agent.output.products.map((p) => (
                       <div
                         key={p.id}
-                        className={`p-3 rounded cursor-pointer border ${
+                        className={`p-3 rounded-xl cursor-pointer border transition-all duration-300 ${
                           selectedProduct?.id === p.id
-                            ? "bg-blue-900 border-blue-500"
-                            : "bg-[#111] border-gray-700"
+                            ? "bg-gradient-to-br from-orange-500 to-amber-500 text-white border-orange-500 shadow-lg scale-105"
+                            : "bg-white border-orange-300 hover:border-orange-500 hover:shadow-md hover:scale-102"
                         }`}
                         onClick={() => {
                           setSelectedProduct(p);
@@ -298,12 +300,12 @@ export default function ChatbotInteraction() {
                         }}
                       >
                         <div className="flex justify-between mb-2">
-                          <p className="font-bold text-[1.1vw]">{p.name}</p>
-                          <span className="bg-blue-800 px-2 py-1 rounded">
+                          <p className={`font-bold text-[1.1vw] ${selectedProduct?.id === p.id ? 'text-white' : 'text-gray-900'}`}>{p.name}</p>
+                          <span className={`px-2 py-1 rounded-lg font-bold ${selectedProduct?.id === p.id ? 'bg-white/20 text-white' : 'bg-gradient-to-r from-orange-500 to-amber-500 text-white'}`}>
                             ₹{p.price.toLocaleString()}
                           </span>
                         </div>
-                        <p className="text-gray-400 text-[1vw]">{p.reason}</p>
+                        <p className={`text-[1vw] ${selectedProduct?.id === p.id ? 'text-orange-100' : 'text-gray-600'}`}>{p.reason}</p>
                       </div>
                     ))}
                   </div>
@@ -311,10 +313,10 @@ export default function ChatbotInteraction() {
                 {/* INVENTORY */}
                 {agent.agentId === "inventory_agent" &&
                   agent.output?.availability && (
-                    <div className="bg-[#111] p-4 rounded border border-gray-700">
+                    <div className="bg-gray-50 p-4 rounded border border-gray-300">
                       {!purchaseType ? (
                         <div>
-                          <div className="text-blue-400 font-bold mb-4 text-[1.2vw] flex items-center">
+                          <div className="text-gray-800 font-bold mb-4 text-[1.2vw] flex items-center">
                             📦 Choose Purchase Method
                           </div>
                           <div className="grid grid-cols-2 gap-4 mb-4">
@@ -322,13 +324,13 @@ export default function ChatbotInteraction() {
                               onClick={() =>
                                 handlePurchaseTypeSelection("online")
                               }
-                              className="bg-green-700 hover:bg-green-600 text-white p-4 rounded border border-green-600 transition-colors duration-200 flex flex-col items-center gap-2"
+                              className="bg-gradient-to-br from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white p-4 rounded-xl border border-green-500 transition-all duration-300 flex flex-col items-center gap-2 shadow-lg hover:shadow-xl hover:scale-105"
                             >
                               <span className="text-2xl">🛒</span>
                               <span className="font-bold text-[1.1vw]">
                                 Buy Online
                               </span>
-                              <span className="text-[0.9vw] text-green-200">
+                              <span className="text-[0.9vw] text-green-100">
                                 Home Delivery
                               </span>
                             </button>
@@ -336,13 +338,13 @@ export default function ChatbotInteraction() {
                               onClick={() =>
                                 handlePurchaseTypeSelection("offline")
                               }
-                              className="bg-blue-700 hover:bg-blue-600 text-white p-4 rounded border border-blue-600 transition-colors duration-200 flex flex-col items-center gap-2"
+                              className="bg-gradient-to-br from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white p-4 rounded-xl border border-orange-400 transition-all duration-300 flex flex-col items-center gap-2 shadow-lg hover:shadow-xl hover:scale-105"
                             >
                               <span className="text-2xl">🏪</span>
                               <span className="font-bold text-[1.1vw]">
                                 Nearest Store
                               </span>
-                              <span className="text-[0.9vw] text-blue-200">
+                              <span className="text-[0.9vw] text-orange-100">
                                 Store Pickup
                               </span>
                             </button>
@@ -350,7 +352,7 @@ export default function ChatbotInteraction() {
                         </div>
                       ) : purchaseType === "offline" && !selectedStore ? (
                         <div>
-                          <div className="text-blue-400 font-bold mb-4 text-[1.1vw] flex items-center">
+                          <div className="text-gray-800 font-bold mb-4 text-[1.1vw] flex items-center">
                             🏪 Select Store for Pickup
                           </div>
                           <ul className="space-y-2">
@@ -358,13 +360,13 @@ export default function ChatbotInteraction() {
                               <li key={idx}>
                                 <button
                                   onClick={() => handleStoreSelection(store)}
-                                  className="w-full flex justify-between items-center bg-[#0f0f0f] hover:bg-[#1a1a1a] p-3 rounded border border-gray-700 transition-colors duration-200"
+                                  className="w-full flex justify-between items-center bg-white hover:bg-gradient-to-r hover:from-orange-50 hover:to-amber-50 p-3 rounded-xl border border-orange-300 transition-all duration-300 shadow-sm hover:shadow-md hover:scale-102"
                                 >
                                   <div className="text-left">
-                                    <div className="text-[1vw] font-semibold text-white">
+                                    <div className="text-[1vw] font-semibold text-gray-900">
                                       {store.store_name}
                                     </div>
-                                    <div className="text-[0.8vw] text-gray-400">
+                                    <div className="text-[0.8vw] text-gray-600">
                                       {store.name}
                                     </div>
                                   </div>
@@ -383,11 +385,11 @@ export default function ChatbotInteraction() {
                           </ul>
                         </div>
                       ) : purchaseType === "online" ? (
-                        <div className="text-green-500 font-bold mb-2 text-[1.1vw] flex items-center">
+                        <div className="text-green-700 font-bold mb-2 text-[1.1vw] flex items-center">
                           ✔ Online Purchase - Proceeding to Payment
                         </div>
                       ) : (
-                        <div className="text-blue-500 font-bold mb-2 text-[1.1vw] flex items-center">
+                        <div className="text-gray-800 font-bold mb-2 text-[1.1vw] flex items-center">
                           ✔ Store Selected: {selectedStore?.store_name}
                         </div>
                       )}
@@ -406,62 +408,62 @@ export default function ChatbotInteraction() {
                 )}
                 {/* OFFLINE FULFILLMENT */}
                 {agent.agentId === "fulfillment_agent_offline" && (
-                  <div className="bg-[#111] p-6 rounded border border-green-700">
-                    <div className="text-green-400 font-bold text-[1.3vw] mb-4 flex items-center">
+                  <div className="bg-white p-6 rounded border border-gray-300">
+                    <div className="text-green-700 font-bold text-[1.3vw] mb-4 flex items-center">
                       ✅ Order Confirmed - Store Pickup
                     </div>
-                    <div className="bg-[#0f0f0f] p-4 rounded border border-gray-700 space-y-3">
+                    <div className="bg-gray-50 p-4 rounded border border-gray-300 space-y-3">
                       <div className="grid grid-cols-2 gap-4 text-[1vw]">
                         <div>
-                          <span className="text-gray-400">Order ID:</span>
-                          <div className="font-mono font-bold text-green-400">
+                          <span className="text-gray-600">Order ID:</span>
+                          <div className="font-mono font-bold text-gray-900">
                             {agent.output?.orderId}
                           </div>
                         </div>
                         <div>
-                          <span className="text-gray-400">Customer:</span>
-                          <div className="font-bold text-white">
+                          <span className="text-gray-600">Customer:</span>
+                          <div className="font-bold text-gray-900">
                             {agent.output?.customerName}
                           </div>
                         </div>
                         <div>
-                          <span className="text-gray-400">User ID:</span>
-                          <div className="font-mono font-bold text-blue-400">
+                          <span className="text-gray-600">User ID:</span>
+                          <div className="font-mono font-bold text-gray-900">
                             {agent.output?.customerId}
                           </div>
                         </div>
                         <div>
-                          <span className="text-gray-400">Product:</span>
-                          <div className="font-bold text-white">
+                          <span className="text-gray-600">Product:</span>
+                          <div className="font-bold text-gray-900">
                             {agent.output?.productName}
                           </div>
                         </div>
                       </div>
-                      <div className="pt-3 border-t border-gray-600">
-                        <div className="text-gray-400 text-[0.9vw] mb-2">
+                      <div className="pt-3 border-t border-gray-300">
+                        <div className="text-gray-600 text-[0.9vw] mb-2">
                           Pickup Location:
                         </div>
-                        <div className="font-bold text-yellow-400 text-[1.1vw] mb-1">
+                        <div className="font-bold text-gray-900 text-[1.1vw] mb-1">
                           {agent.output?.storeName}
                         </div>
                         {agent.output?.storeLocation && (
-                          <div className="text-gray-300 text-[0.9vw] mb-3">
+                          <div className="text-gray-700 text-[0.9vw] mb-3">
                             {agent.output?.storeLocation}
                           </div>
                         )}
-                        <div className="text-gray-400 text-[0.9vw] mb-1">
+                        <div className="text-gray-600 text-[0.9vw] mb-1">
                           Pickup Hours:
                         </div>
-                        <div className="font-bold text-white text-[1vw]">
+                        <div className="font-bold text-gray-900 text-[1vw]">
                           10:00 AM - 9:00 PM
                         </div>
                       </div>
                     </div>
-                    <div className="mt-4 p-3 bg-green-900/30 rounded border border-green-700">
-                      <div className="text-green-300 font-bold text-center text-[1.1vw]">
+                    <div className="mt-4 p-3 bg-green-50 rounded border border-green-300">
+                      <div className="text-green-700 font-bold text-center text-[1.1vw]">
                         🙏 Thank you for purchasing from ABFRL!
                       </div>
-                      <div className="text-green-400 text-center text-[0.9vw] mt-1">
+                      <div className="text-green-600 text-center text-[0.9vw] mt-1">
                         Your order is ready for pickup at the selected store.
                       </div>
                     </div>
@@ -469,18 +471,18 @@ export default function ChatbotInteraction() {
                 )}
                 {/* LOYALTY */}
                 {agent.agentId === "loyalty_agent" && (
-                  <div className="bg-[#111] p-4 rounded border border-gray-700">
-                    <h4 className="text-yellow-400 font-bold text-[1.2vw] mb-3">
+                  <div className="bg-gray-50 p-4 rounded border border-gray-300">
+                    <h4 className="text-gray-800 font-bold text-[1.2vw] mb-3">
                       Savings Applied
                     </h4>
                     <div className="flex gap-3">
-                      <div className="bg-[#0f0f0f] p-2 rounded border border-gray-700 text-[1vw]">
+                      <div className="bg-white p-2 rounded border border-gray-300 text-[1vw] text-gray-800">
                         🎟 Coupon:{" "}
                         <span className="font-mono font-bold">
                           {agent.output.coupon}
                         </span>
                       </div>
-                      <div className="bg-[#0f0f0f] p-2 rounded border border-gray-700 text-[1vw]">
+                      <div className="bg-white p-2 rounded border border-gray-300 text-[1vw] text-gray-800">
                         ⭐ Points:{" "}
                         <span className="font-bold">{agent.output.points}</span>
                       </div>
@@ -489,8 +491,8 @@ export default function ChatbotInteraction() {
                 )}
                 {/* PAYMENT */}
                 {agent.agentId === "payment_agent" && (
-                  <div className="bg-[#111] p-4 rounded border border-gray-700 max-w-sm">
-                    <label className="block text-gray-300 mb-2 text-[1vw]">
+                  <div className="bg-gray-50 p-4 rounded border border-gray-300 max-w-sm">
+                    <label className="block text-gray-800 mb-2 text-[1vw]">
                       Enter UPI ID
                     </label>
                     <div className="flex">
@@ -498,10 +500,10 @@ export default function ChatbotInteraction() {
                         value={upi}
                         onChange={(e) => setUpi(e.target.value)}
                         placeholder="username@upi"
-                        className="w-full p-2 bg-[#0f0f0f] border border-gray-700 rounded-l outline-none"
+                        className="w-full p-2 bg-white border border-gray-300 rounded-l outline-none text-gray-800"
                       />
                       <button
-                        className="bg-green-700 px-4 rounded-r hover:bg-green-600 transition-colors"
+                        className="bg-gradient-to-r from-green-600 to-emerald-600 px-4 rounded-r-lg hover:from-green-700 hover:to-emerald-700 transition-all text-white font-bold shadow-md hover:shadow-lg"
                         onClick={() => {
                           if (upi.trim()) {
                             // For online purchases, update profiles and continue to next agent
@@ -517,17 +519,17 @@ export default function ChatbotInteraction() {
                 )}
                 {/* FEEDBACK */}
                 {agent.agentId === "post_purchase_agent" && (
-                  <div className="bg-[#111] p-4 rounded border border-gray-700 max-w-lg">
-                    <label className="block text-gray-300 mb-2 text-[1vw]">
+                  <div className="bg-gray-50 p-4 rounded border border-gray-300 max-w-lg">
+                    <label className="block text-gray-800 mb-2 text-[1vw]">
                       Your Feedback
                     </label>
                     <textarea
                       rows="3"
                       value={feedback}
                       onChange={(e) => setFeedback(e.target.value)}
-                      className="w-full p-2 bg-[#0f0f0f] border border-gray-700 rounded outline-none"
+                      className="w-full p-2 bg-white border border-gray-300 rounded outline-none text-gray-800"
                     ></textarea>
-                    <button className="mt-3 w-full bg-blue-700 py-2 rounded">
+                    <button className="mt-3 w-full bg-gradient-to-r from-orange-500 to-amber-500 py-2 rounded-xl text-white font-bold hover:from-orange-600 hover:to-amber-600 transition-all shadow-md hover:shadow-lg">
                       Submit
                     </button>
                   </div>
@@ -537,25 +539,25 @@ export default function ChatbotInteraction() {
           ))}
 
           {isLoading && (
-            <div className="bg-[#1a1a1a] p-4 rounded border border-gray-700 border-blue-500">
-              <div className="flex items-center mb-3 border-b border-gray-700 pb-2">
-                <div className="h-10 w-10 rounded flex justify-center items-center bg-blue-900 mr-3 animate-pulse">
+            <div className="bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50 p-4 rounded-xl border border-orange-300 shadow-lg">
+              <div className="flex items-center mb-3 border-b border-orange-200 pb-2">
+                <div className="h-10 w-10 rounded-lg flex justify-center items-center bg-gradient-to-br from-orange-500 to-amber-500 mr-3 animate-pulse shadow-md">
                   <Loader2 className="w-5 h-5 animate-spin text-white" />
                 </div>
-                <h3 className="font-bold text-[1.4vw] text-blue-400">
+                <h3 className="font-bold text-[1.4vw] text-orange-600">
                   Agent Working...
                 </h3>
               </div>
               <div className="pl-12">
-                <div className="flex items-center gap-2 text-gray-400">
+                <div className="flex items-center gap-2 text-gray-700">
                   <div className="flex gap-1">
-                    <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce"></div>
+                    <div className="w-2 h-2 bg-orange-500 rounded-full animate-bounce"></div>
                     <div
-                      className="w-2 h-2 bg-blue-400 rounded-full animate-bounce"
+                      className="w-2 h-2 bg-orange-500 rounded-full animate-bounce"
                       style={{ animationDelay: "0.1s" }}
                     ></div>
                     <div
-                      className="w-2 h-2 bg-blue-400 rounded-full animate-bounce"
+                      className="w-2 h-2 bg-orange-500 rounded-full animate-bounce"
                       style={{ animationDelay: "0.2s" }}
                     ></div>
                   </div>
@@ -568,8 +570,8 @@ export default function ChatbotInteraction() {
           <div ref={chatEndRef} />
         </div>
 
-        <div className="p-4 min-h-[14%] border-t border-gray-700 bg-[#111] flex justify-between items-center">
-          <span className="text-[1vw] text-gray-400">
+        <div className="p-4 min-h-[14%] border-t border-gray-300 bg-white flex justify-between items-center">
+          <span className="text-[1vw] text-gray-700">
             {isJourneyComplete
               ? "All steps executed."
               : `Step ${step} of ${agents.length}`}
@@ -581,17 +583,17 @@ export default function ChatbotInteraction() {
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Enter Query..."
-              className="p-2 bg-[#0f0f0f] border border-gray-700 rounded text-[1vw] min-w-[60%]"
+              className="p-2 bg-white border border-gray-300 rounded text-[1vw] min-w-[60%] text-gray-800"
             />
           )}
 
           <button
             onClick={nextAgent}
             disabled={isLoading}
-            className={`px-4 py-2 rounded text-[1vw] flex items-center gap-2 ${
+            className={`px-4 py-2 rounded-xl text-[1vw] flex items-center gap-2 font-bold transition-all shadow-md ${
               isLoading
-                ? "bg-gray-600 cursor-not-allowed"
-                : "bg-blue-700 hover:bg-blue-600"
+                ? "bg-gray-300 cursor-not-allowed text-gray-500"
+                : "bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white hover:shadow-lg hover:scale-105"
             }`}
           >
             {isLoading && <Loader2 className="w-4 h-4 animate-spin" />}
