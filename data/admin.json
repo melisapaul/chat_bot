@@ -1818,16 +1818,124 @@
   "storeStats": {
     "productsSold": [
       {
-        "productId": "p1",
-        "count": 12
+        "productId": "p001",
+        "count": 15
       },
       {
-        "productId": "p2",
+        "productId": "p002",
+        "count": 14
+      },
+      {
+        "productId": "p003",
+        "count": 11
+      },
+      {
+        "productId": "p004",
         "count": 8
       },
       {
-        "productId": "p3",
-        "count": 5
+        "productId": "p005",
+        "count": 6
+      },
+      {
+        "productId": "p006",
+        "count": 7
+      },
+      {
+        "productId": "p007",
+        "count": 10
+      },
+      {
+        "productId": "p008",
+        "count": 6
+      },
+      {
+        "productId": "p009",
+        "count": 21
+      },
+      {
+        "productId": "p010",
+        "count": 11
+      },
+      {
+        "productId": "p011",
+        "count": 9
+      },
+      {
+        "productId": "p012",
+        "count": 3
+      },
+      {
+        "productId": "p013",
+        "count": 9
+      },
+      {
+        "productId": "p014",
+        "count": 12
+      },
+      {
+        "productId": "p015",
+        "count": 18
+      },
+      {
+        "productId": "p016",
+        "count": 14
+      },
+      {
+        "productId": "p017",
+        "count": 11
+      },
+      {
+        "productId": "p018",
+        "count": 15
+      },
+      {
+        "productId": "p019",
+        "count": 10
+      },
+      {
+        "productId": "p020",
+        "count": 10
+      },
+      {
+        "productId": "p021",
+        "count": 14
+      },
+      {
+        "productId": "p022",
+        "count": 7
+      },
+      {
+        "productId": "p023",
+        "count": 8
+      },
+      {
+        "productId": "p024",
+        "count": 11
+      },
+      {
+        "productId": "p025",
+        "count": 3
+      },
+      {
+        "productId": "p026",
+        "count": 15
+      },
+      {
+        "productId": "p027",
+        "count": 4
+      },
+      {
+        "productId": "p028",
+        "count": 13
+      },
+      {
+        "productId": "p029",
+        "count": 15
+      },
+      {
+        "productId": "p030",
+        "count": 7
       }
     ],
     "paymentsFailed": 6,
