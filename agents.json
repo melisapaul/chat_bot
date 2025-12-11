@@ -9,14 +9,20 @@
         "agentId": "recommendation_agent",
         "title": "Recommendation Agent",
         "status": "active",
-        "action": "Recommending products based on user request...",
+        "action": "Analyzing user preferences and searching product catalog to recommend best matches...",
         "output": {
           "products": [
 
-             {"id": "p1", "name": "Raymond Shirt","image": "/images/mobile.png","price": 1789,"reason": "Best Cotton Shirts"},
-    {"id": "p2", "name": "Peter England Shirt","image": "/images/mobile.png","price": 2850,"reason": "Best Cotton Shirts , with history"},
-    {"id": "p3", "name": "Raymond Pant","image": "/images/mobile.png","price": 2950,"reason": "Best Cotton Pant"}
+             {"id": "p1", "name": "Louis Philippe Shirt","image": "/images/Louis Philippe Shirt.avif","price": 2199,"reason": "Premium Cotton Shirt with elegant design"},
+    {"id": "p2", "name": "Raymond Shirt","image": "/images/raymond-shirt.jpeg","price": 1789,"reason": "Best Cotton Shirts"},
+    {"id": "p3", "name": "Peter England Shirt","image": "/images/peter-shirt.jpeg","price": 2850,"reason": "Best Cotton Shirts , with history"}
              
+          ],
+          "moreProducts": [
+            {"id": "p4", "name": "Premium Shirt","image": "/images/shirt 1.webp","price": 1999,"reason": "Classic formal shirt"},
+            {"id": "p5", "name": "Casual Shirt","image": "/images/shirt 2.avif","price": 1699,"reason": "Comfortable daily wear"},
+            {"id": "p6", "name": "Designer Shirt","image": "/images/shirt 3.webp","price": 2299,"reason": "Modern stylish design"},
+            {"id": "p7", "name": "Elegant Shirt","image": "/images/shirt 4.avif","price": 2499,"reason": "Perfect for any occasion"}
           ],
           "message": "Here are some products curated for you."
         }
@@ -25,7 +31,7 @@
         "agentId": "inventory_agent",
         "title": "Inventory Agent",
         "status": "pending",
-        "action": "Checking nearest store and online inventory...",
+        "action": "Searching inventory database, checking stock availability at nearby stores and online warehouse...",
         "output": {
           "availability": {
             "online": true,
@@ -47,7 +53,7 @@
         "agentId": "payment_agent",
         "title": "Payment Agent",
         "status": "pending",
-        "action": "Waiting for UPI Payment...",
+        "action": "Processing payment details, verifying transaction and confirming order...",
         "inputRequired": true,
         "output": {
           "message": "Enter your UPI ID to complete payment."
@@ -57,7 +63,7 @@
         "agentId": "fulfillment_agent",
         "title": "Fulfillment Agent",
         "status": "pending",
-        "action": "Scheduling delivery...",
+        "action": "Coordinating with logistics, scheduling delivery slot and assigning delivery partner...",
         "output": {
           "delivery": {
             "scheduled": true,
@@ -70,7 +76,7 @@
         "agentId": "loyalty_agent",
         "title": "Loyalty & Offers Agent",
         "status": "pending",
-        "action": "Applying points & coupons...",
+        "action": "Calculating loyalty points, checking available coupons and applying best discounts...",
         "output": {
           "coupon": "SAVE300",
           "points": 120,
@@ -81,7 +87,7 @@
         "agentId": "post_purchase_agent",
         "title": "Post Purchase Agent",
         "status": "pending",
-        "action": "Asking for feedback...",
+        "action": "Collecting customer feedback, processing return requests and ensuring satisfaction...",
         "output": {
           "message": "Would you like to give feedback or request a return?",
           "options": [

@@ -16,8 +16,8 @@ export default function Home() {
               className="h-24 w-auto object-contain"
             />
           </div>
-          <h1 className="text-5xl font-bold mb-4 bg-gradient-to-r from-red-800 to-amber-600 bg-clip-text text-transparent">
-            Welcome to ABFRL Dashboard
+          <h1 className="text-5xl font-bold mb-6 pb-2 bg-gradient-to-r from-red-800 to-amber-600 bg-clip-text text-transparent">
+            Welcome to ABFRL Agentic Dashboard
           </h1>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
             Navigate through different user journeys to explore and analyze your

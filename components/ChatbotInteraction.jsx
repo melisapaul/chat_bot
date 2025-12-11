@@ -20,10 +20,25 @@ export default function ChatbotInteraction({ onClose }) {
   const [purchaseData, setPurchaseData] = useState(null);
   const [isStorekeeperMode, setIsStorekeeperMode] = useState(false);
   const [customerDetails, setCustomerDetails] = useState(null);
+  const [showMoreProducts, setShowMoreProducts] = useState(false);
+  const [paymentMethod, setPaymentMethod] = useState(null); // 'upi', 'credit', 'debit', 'cod'
 
   const [userSelectedMode, setUserSelectedMode] = useState("customer"); // 'customer' or 'storekeeper'
   const chatEndRef = useRef(null);
   const searchRef = useRef("");
+
+  // Helper function to get specific loading message based on agent
+  const getAgentLoadingMessage = (agentId) => {
+    const messages = {
+      recommendation_agent: "Analyzing preferences and finding best products...",
+      inventory_agent: "Finding in inventory and checking stock availability...",
+      payment_agent: "Processing payment and verifying transaction...",
+      fulfillment_agent: "Arranging delivery and scheduling slot...",
+      loyalty_agent: "Calculating rewards and applying offers...",
+      post_purchase_agent: "Preparing feedback form and assistance options..."
+    };
+    return messages[agentId] || "Processing...";
+  };
 
   // Define storekeeper workflow agents
   const storekeeperAgents = [
@@ -136,7 +151,7 @@ export default function ChatbotInteraction({ onClose }) {
     if (step < storekeeperAgents.length) {
       setIsLoading(true);
       const currentAgent = storekeeperAgents[step];
-      setLoadingMessage(`Processing with ${currentAgent.title}...`);
+      setLoadingMessage(getAgentLoadingMessage(currentAgent.agentId));
 
       setTimeout(() => {
         setLog((prev) => [...prev, currentAgent]);
@@ -157,7 +172,7 @@ export default function ChatbotInteraction({ onClose }) {
   const nextAgent = () => {
     if (step < agents.length) {
       setIsLoading(true);
-      setLoadingMessage(`Processing with ${agents[step].title}...`);
+      setLoadingMessage(getAgentLoadingMessage(agents[step].agentId));
 
       // Simulate agent processing time
       setTimeout(() => {
@@ -256,7 +271,7 @@ export default function ChatbotInteraction({ onClose }) {
     }, 1500 + Math.random() * 1000);
 
     setIsLoading(true);
-    setLoadingMessage(`Processing with Fulfillment Agent...`);
+    setLoadingMessage("Arranging delivery and scheduling slot...");
   };
 
   // Hardcoded store data for offline purchases
@@ -352,7 +367,7 @@ export default function ChatbotInteraction({ onClose }) {
                 <div className="absolute left-0 top-1 h-3 w-3 bg-orange-500 rounded-full shadow-md"></div>
 
                 <div className="p-3 bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50 rounded-lg border border-orange-300 shadow-sm hover:shadow-md transition-shadow">
-                  <div className="flex justify-between mb-1">
+                  <div className="flex justify-between">
                     <p className="font-bold text-[1.3vw] text-gray-900">
                       {a.title}
                     </p>
@@ -360,7 +375,6 @@ export default function ChatbotInteraction({ onClose }) {
                       {a.agentId}
                     </span>
                   </div>
-                  <p className="text-[1vw] text-gray-700">{a.action}</p>
                 </div>
               </div>
             ))}
@@ -371,8 +385,8 @@ export default function ChatbotInteraction({ onClose }) {
                 <div className="p-3 bg-gradient-to-r from-orange-50 to-amber-50 rounded-lg border border-orange-400 shadow-sm">
                   <div className="flex items-center gap-2">
                     <Loader2 className="w-4 h-4 animate-spin text-orange-600" />
-                    <p className="text-orange-600 text-[1.1vw] font-semibold">
-                      Agent Processing...
+                    <p className="text-orange-600 text-[1vw] font-semibold">
+                      {loadingMessage || "Agent Processing..."}
                     </p>
                   </div>
                 </div>
@@ -615,6 +629,70 @@ export default function ChatbotInteraction({ onClose }) {
                           nextAgent();
                         }}
                       >
+                        {p.image && (
+                          <div className="mb-3 rounded-lg overflow-hidden bg-gray-100">
+                            <img 
+                              src={p.image} 
+                              alt={p.name}
+                              className="w-full h-40 object-cover"
+                            />
+                          </div>
+                        )}
+                        <div className="flex justify-between mb-2">
+                          <p
+                            className={`font-bold text-[1.1vw] ${
+                              selectedProduct?.id === p.id
+                                ? "text-white"
+                                : "text-gray-900"
+                            }`}
+                          >
+                            {p.name}
+                          </p>
+                          <span
+                            className={`px-2 py-1 rounded-lg font-bold ${
+                              selectedProduct?.id === p.id
+                                ? "bg-white/20 text-white"
+                                : "bg-gradient-to-r from-orange-500 to-amber-500 text-white"
+                            }`}
+                          >
+                            ₹{p.price.toLocaleString()}
+                          </span>
+                        </div>
+                        <p
+                          className={`text-[1vw] ${
+                            selectedProduct?.id === p.id
+                              ? "text-orange-100"
+                              : "text-gray-600"
+                          }`}
+                        >
+                          {p.reason}
+                        </p>
+                      </div>
+                    ))}
+                    
+                    {/* MORE PRODUCTS */}
+                    {showMoreProducts && agent.output?.moreProducts && agent.output.moreProducts.map((p) => (
+                      <div
+                        key={p.id}
+                        className={`p-3 rounded-xl cursor-pointer border transition-all duration-300 ${
+                          selectedProduct?.id === p.id
+                            ? "bg-gradient-to-br from-orange-500 to-amber-500 text-white border-orange-500 shadow-lg scale-105"
+                            : "bg-white border-orange-300 hover:border-orange-500 hover:shadow-md hover:scale-102"
+                        }`}
+                        onClick={() => {
+                          setSelectedProduct(p);
+                          nextAgent();
+                        }}
+                      >
+                        {p.image && (
+                          <div className="mb-3 rounded-lg overflow-hidden bg-gray-100">
+                            <img 
+                              src={p.image} 
+                              alt={p.name}
+                              className="w-full h-40 object-cover"
+                            />
+                          </div>
+                        )}
                         <div className="flex justify-between mb-2">
                           <p
                             className={`font-bold text-[1.1vw] ${
@@ -648,6 +726,19 @@ export default function ChatbotInteraction({ onClose }) {
                     ))}
                   </div>
                 )}
+                
+                {/* SEE MORE BUTTON */}
+                {agent.output?.products && agent.output?.moreProducts && !showMoreProducts && (
+                  <div className="mt-4 flex justify-center">
+                    <button
+                      className="px-6 py-3 bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white font-bold rounded-lg shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105 text-[1vw]"
+                      onClick={() => setShowMoreProducts(true)}
+                    >
+                      See More Products
+                    </button>
+                  </div>
+                )}
+
                 {/* INVENTORY */}
                 {agent.agentId === "inventory_agent" &&
                   agent.output?.availability && (
@@ -829,40 +920,181 @@ export default function ChatbotInteraction({ onClose }) {
                 )}
                 {/* PAYMENT */}
                 {agent.agentId === "payment_agent" && (
-                  <div className="bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50 p-6 rounded-xl border border-orange-200 max-w-md shadow-lg hover:shadow-xl transition-shadow duration-300">
-                    <label className="block text-gray-800 mb-3 text-[1.1vw] font-bold bg-gradient-to-r from-orange-600 via-amber-600 to-yellow-600 bg-clip-text text-transparent">
-                      Enter your UPI ID to complete payment.
-                    </label>
-                    <div className="bg-gradient-to-br from-orange-100 via-amber-100 to-yellow-100 p-4 rounded-lg border border-orange-300 shadow-inner">
-                      <label className="block text-gray-700 mb-2 text-[0.9vw] font-medium">
-                        Enter UPI ID
-                      </label>
-                      <div className="flex shadow-md">
-                        <input
-                          value={upi}
-                          onChange={(e) => setUpi(e.target.value)}
-                          placeholder="username@upi"
-                          className="flex-1 p-3 bg-white border border-orange-200 rounded-l text-gray-800 placeholder-gray-500 outline-none focus:border-orange-400 focus:ring-2 focus:ring-orange-200 transition-all"
-                        />
+                  <div className="bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50 p-6 rounded-xl border border-orange-200 max-w-3xl shadow-lg hover:shadow-xl transition-shadow duration-300">
+                    {!paymentMethod ? (
+                      <div>
+                        <label className="block text-gray-800 mb-4 text-[1.2vw] font-bold bg-gradient-to-r from-orange-600 via-amber-600 to-yellow-600 bg-clip-text text-transparent">
+                          Choose Payment Method
+                        </label>
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                          <button
+                            onClick={() => setPaymentMethod('upi')}
+                            className="bg-white hover:bg-gradient-to-br hover:from-orange-100 hover:to-amber-100 border-2 border-orange-300 hover:border-orange-500 p-4 rounded-xl transition-all duration-300 flex flex-col items-center gap-3 shadow-md hover:shadow-lg hover:scale-105"
+                          >
+                            <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-full flex items-center justify-center shadow-md">
+                              <span className="text-white text-2xl">📱</span>
+                            </div>
+                            <span className="font-bold text-gray-800 text-[1vw]">UPI</span>
+                          </button>
+                          
+                          <button
+                            onClick={() => setPaymentMethod('credit')}
+                            className="bg-white hover:bg-gradient-to-br hover:from-orange-100 hover:to-amber-100 border-2 border-orange-300 hover:border-orange-500 p-4 rounded-xl transition-all duration-300 flex flex-col items-center gap-3 shadow-md hover:shadow-lg hover:scale-105"
+                          >
+                            <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center shadow-md">
+                              <span className="text-white text-2xl">💳</span>
+                            </div>
+                            <span className="font-bold text-gray-800 text-[1vw]">Credit Card</span>
+                          </button>
+                          
+                          <button
+                            onClick={() => setPaymentMethod('debit')}
+                            className="bg-white hover:bg-gradient-to-br hover:from-orange-100 hover:to-amber-100 border-2 border-orange-300 hover:border-orange-500 p-4 rounded-xl transition-all duration-300 flex flex-col items-center gap-3 shadow-md hover:shadow-lg hover:scale-105"
+                          >
+                            <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center shadow-md">
+                              <span className="text-white text-2xl">💳</span>
+                            </div>
+                            <span className="font-bold text-gray-800 text-[1vw]">Debit Card</span>
+                          </button>
+                          
+                          <button
+                            onClick={() => setPaymentMethod('cod')}
+                            className="bg-white hover:bg-gradient-to-br hover:from-orange-100 hover:to-amber-100 border-2 border-orange-300 hover:border-orange-500 p-4 rounded-xl transition-all duration-300 flex flex-col items-center gap-3 shadow-md hover:shadow-lg hover:scale-105"
+                          >
+                            <div className="w-12 h-12 bg-gradient-to-br from-orange-500 to-amber-500 rounded-full flex items-center justify-center shadow-md">
+                              <span className="text-white text-2xl">💵</span>
+                            </div>
+                            <span className="font-bold text-gray-800 text-[1vw]">Cash on Delivery</span>
+                          </button>
+                        </div>
+                      </div>
+                    ) : paymentMethod === 'upi' ? (
+                      <div>
                         <button
-                          className="bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 px-6 py-3 rounded-r text-white font-bold transition-all shadow-lg hover:shadow-xl hover:scale-105 active:scale-95"
-                          onClick={() => {
-                            if (upi.trim()) {
+                          onClick={() => setPaymentMethod(null)}
+                          className="mb-4 text-orange-600 hover:text-orange-700 font-semibold text-[0.9vw] flex items-center gap-1"
+                        >
+                          ← Back to payment methods
+                        </button>
+                        <label className="block text-gray-800 mb-3 text-[1.1vw] font-bold bg-gradient-to-r from-orange-600 via-amber-600 to-yellow-600 bg-clip-text text-transparent">
+                          Enter your UPI ID to complete payment
+                        </label>
+                        <div className="bg-gradient-to-br from-orange-100 via-amber-100 to-yellow-100 p-4 rounded-lg border border-orange-300 shadow-inner">
+                          <label className="block text-gray-700 mb-2 text-[0.9vw] font-medium">
+                            Enter UPI ID
+                          </label>
+                          <div className="flex shadow-md">
+                            <input
+                              value={upi}
+                              onChange={(e) => setUpi(e.target.value)}
+                              placeholder="username@upi"
+                              className="flex-1 p-3 bg-white border border-orange-200 rounded-l text-gray-800 placeholder-gray-500 outline-none focus:border-orange-400 focus:ring-2 focus:ring-orange-200 transition-all"
+                            />
+                            <button
+                              className="bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 px-6 py-3 rounded-r text-white font-bold transition-all shadow-lg hover:shadow-xl hover:scale-105 active:scale-95"
+                              onClick={() => {
+                                if (upi.trim()) {
+                                  if (isStorekeeperMode) {
+                                    nextStorekeeperAgent();
+                                  } else {
+                                    updateProfiles();
+                                    nextAgent();
+                                  }
+                                }
+                              }}
+                            >
+                              Pay
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    ) : paymentMethod === 'credit' || paymentMethod === 'debit' ? (
+                      <div>
+                        <button
+                          onClick={() => setPaymentMethod(null)}
+                          className="mb-4 text-orange-600 hover:text-orange-700 font-semibold text-[0.9vw] flex items-center gap-1"
+                        >
+                          ← Back to payment methods
+                        </button>
+                        <label className="block text-gray-800 mb-3 text-[1.1vw] font-bold bg-gradient-to-r from-orange-600 via-amber-600 to-yellow-600 bg-clip-text text-transparent">
+                          Enter {paymentMethod === 'credit' ? 'Credit' : 'Debit'} Card Details
+                        </label>
+                        <div className="bg-gradient-to-br from-orange-100 via-amber-100 to-yellow-100 p-4 rounded-lg border border-orange-300 shadow-inner space-y-3">
+                          <div>
+                            <label className="block text-gray-700 mb-2 text-[0.9vw] font-medium">Card Number</label>
+                            <input
+                              placeholder="1234 5678 9012 3456"
+                              className="w-full p-3 bg-white border border-orange-200 rounded text-gray-800 placeholder-gray-500 outline-none focus:border-orange-400 focus:ring-2 focus:ring-orange-200 transition-all"
+                            />
+                          </div>
+                          <div className="grid grid-cols-2 gap-3">
+                            <div>
+                              <label className="block text-gray-700 mb-2 text-[0.9vw] font-medium">Expiry Date</label>
+                              <input
+                                placeholder="MM/YY"
+                                className="w-full p-3 bg-white border border-orange-200 rounded text-gray-800 placeholder-gray-500 outline-none focus:border-orange-400 focus:ring-2 focus:ring-orange-200 transition-all"
+                              />
+                            </div>
+                            <div>
+                              <label className="block text-gray-700 mb-2 text-[0.9vw] font-medium">CVV</label>
+                              <input
+                                placeholder="123"
+                                type="password"
+                                maxLength="3"
+                                className="w-full p-3 bg-white border border-orange-200 rounded text-gray-800 placeholder-gray-500 outline-none focus:border-orange-400 focus:ring-2 focus:ring-orange-200 transition-all"
+                              />
+                            </div>
+                          </div>
+                          <button
+                            className="w-full bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 px-6 py-3 rounded text-white font-bold transition-all shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 mt-2"
+                            onClick={() => {
                               if (isStorekeeperMode) {
-                                // For storekeeper mode, just continue to next agent
                                 nextStorekeeperAgent();
                               } else {
-                                // For online purchases, update profiles and continue to next agent
                                 updateProfiles();
                                 nextAgent();
                               }
-                            }
-                          }}
-                        >
-                          Pay
-                        </button>
+                            }}
+                          >
+                            Pay Now
+                          </button>
+                        </div>
                       </div>
-                    </div>
+                    ) : paymentMethod === 'cod' ? (
+                      <div>
+                        <button
+                          onClick={() => setPaymentMethod(null)}
+                          className="mb-4 text-orange-600 hover:text-orange-700 font-semibold text-[0.9vw] flex items-center gap-1"
+                        >
+                          ← Back to payment methods
+                        </button>
+                        <label className="block text-gray-800 mb-3 text-[1.1vw] font-bold bg-gradient-to-r from-orange-600 via-amber-600 to-yellow-600 bg-clip-text text-transparent">
+                          Cash on Delivery Selected
+                        </label>
+                        <div className="bg-gradient-to-br from-orange-100 via-amber-100 to-yellow-100 p-4 rounded-lg border border-orange-300 shadow-inner">
+                          <div className="flex items-center gap-3 mb-4">
+                            <span className="text-4xl">💵</span>
+                            <div>
+                              <p className="text-gray-800 font-semibold text-[1vw]">Pay when you receive your order</p>
+                              <p className="text-gray-600 text-[0.9vw]">No advance payment required</p>
+                            </div>
+                          </div>
+                          <button
+                            className="w-full bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 px-6 py-3 rounded text-white font-bold transition-all shadow-lg hover:shadow-xl hover:scale-105 active:scale-95"
+                            onClick={() => {
+                              if (isStorekeeperMode) {
+                                nextStorekeeperAgent();
+                              } else {
+                                updateProfiles();
+                                nextAgent();
+                              }
+                            }}
+                          >
+                            Confirm Order
+                          </button>
+                        </div>
+                      </div>
+                    ) : null}
                   </div>
                 )}
                 {/* FEEDBACK */}
