@@ -119,8 +119,7 @@ export default function Home() {
             </div>
             <div className="p-8">
               <p className="text-gray-600 mb-6 leading-relaxed text-base">
-                Configure system settings, manage users, oversee operations, and
-                access comprehensive analytics and reports
+                Get insights into last month's revenue, transactions, customer growth, and store overview instantly in one dashboard
               </p>
               <div className="flex items-center text-red-800 font-semibold group-hover:text-red-900 transition-colors">
                 <span>Open Admin</span>
