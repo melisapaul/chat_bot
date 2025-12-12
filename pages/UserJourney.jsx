@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from "react";
 import data from "../data/admin.json";
+import MessengerChatbot from "../components/MessengerChatbot";
+import { MessageCircle } from "lucide-react";
 
 export default function UserJourney() {
   const [newPurchase, setNewPurchase] = useState(null);
   const [tempPurchases, setTempPurchases] = useState([]);
   const [loyaltyPointsUpdate, setLoyaltyPointsUpdate] = useState(0);
+  const [showMessengerChat, setShowMessengerChat] = useState(false);
 
   const user = data.users.find((u) => u.id === "00001");
 
@@ -300,6 +303,22 @@ export default function UserJourney() {
           })}
         </div>
       </div>
+
+      {/* Floating Messenger Chat Button */}
+      {!showMessengerChat && (
+        <button
+          onClick={() => setShowMessengerChat(true)}
+          className="fixed bottom-6 right-6 w-16 h-16 bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white rounded-full shadow-2xl hover:shadow-3xl transition-all flex items-center justify-center z-50 animate-bounce hover:animate-none group"
+          title="Open Chat"
+        >
+          <MessageCircle size={28} className="group-hover:scale-110 transition-transform" />
+        </button>
+      )}
+
+      {/* Messenger Chatbot */}
+      {showMessengerChat && (
+        <MessengerChatbot onClose={() => setShowMessengerChat(false)} />
+      )}
     </div>
   );
 }
