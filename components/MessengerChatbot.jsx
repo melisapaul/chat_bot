@@ -9,6 +9,7 @@ export default function MessengerChatbot({ onClose }) {
   const [agentLogs, setAgentLogs] = useState([]);
   const messagesEndRef = useRef(null);
   const timelineEndRef = useRef(null);
+  const hasInitialized = useRef(false);
 
   const channels = [
     { value: "web", label: "Web", icon: Globe },
@@ -17,14 +18,17 @@ export default function MessengerChatbot({ onClose }) {
   ];
 
   useEffect(() => {
-    // Initial greeting with agent logs
-    addAgentLog("System", "SalesAgent", "Session initiated");
-    addAgentMessage(
-      "Hi! I'm your Sales Agent. What kind of product are you looking for today?",
-      ["shirts under 3000", "Show me products", "Browse catalog"],
-      { title: "Sales Agent", id: "sales_agent" }
-    );
-    addAgentLog("SalesAgent", "User", "Greeting sent, awaiting user query");
+    // Initial greeting with agent logs - only run once
+    if (!hasInitialized.current) {
+      hasInitialized.current = true;
+      addAgentLog("System", "SalesAgent", "Session initiated");
+      addAgentMessage(
+        "Hi Arjun! I'm your Sales Agent. What kind of product are you looking for today?",
+        ["shirts under 3000", "Show me products", "Browse catalog"],
+        { title: "Sales Agent", id: "sales_agent" }
+      );
+      addAgentLog("SalesAgent", "User", "Greeting sent, awaiting user query");
+    }
   }, []);
 
   useEffect(() => {
@@ -123,7 +127,130 @@ export default function MessengerChatbot({ onClose }) {
           agentInfo: { title: "Recommendation Agent", id: "recommendation_agent" }
         }]);
       }, 1200);
-    } else if (reply === "Check Availability" || reply.includes("Kolkata") || reply.includes("Mall")) {
+    } else if (reply === "Check Availability") {
+      addAgentLog("User", "SalesAgent", `Selected: ${reply}`);
+      setTimeout(() => {
+        setIsTyping(false);
+        addAgentMessage(
+          "Checking real-time stock for size 40 near your location…",
+          [],
+          { title: "Sales Agent", id: "sales_agent" }
+        );
+        addAgentLog("SalesAgent", "InventoryAgent", "check Raymond Shirt size 40 near Mumbai");
+      }, 800);
+      setTimeout(() => {
+        setIsTyping(true);
+        addAgentLog("InventoryAgent", "StoreDB", "Query stores in Mumbai region with size 40");
+      }, 1200);
+      setTimeout(() => {
+        addAgentLog("StoreDB", "InventoryAgent", "Found: Online(12), South City Mall(3), City Centre(0)");
+        addAgentLog("InventoryAgent", "SalesAgent", "Stock data ready for display");
+        setIsTyping(false);
+        addAgentMessage(
+          "Good news! Size 40 is available 🎉\n\nHere's what I found:\n\n• Online stock: 12 pcs\n• South City Mall: 3 pcs (3.2 km away)\n• City Centre Salt Lake: Out of stock\n\nHow would you like to proceed?",
+          ["Ship to Home", "Reserve in Store"],
+          { title: "Inventory Agent", id: "inventory_agent" }
+        );
+      }, 2000);
+    } else if (reply === "Reserve in Store") {
+      addAgentLog("User", "SalesAgent", `Selected: ${reply}`);
+      setTimeout(() => {
+        setIsTyping(false);
+        addAgentMessage(
+          "Which store would you like to reserve at?",
+          ["South City Mall (3 pcs)", "Check Other Stores"],
+          { title: "Sales Agent", id: "sales_agent" }
+        );
+      }, 600);
+    } else if (reply === "South City Mall (3 pcs)") {
+      addAgentLog("User", "SalesAgent", `Selected: South City Mall`);
+      setTimeout(() => {
+        setIsTyping(false);
+        addAgentMessage(
+          "Done! Reserving your shirt for pickup at South City Mall… ⏳",
+          [],
+          { title: "Sales Agent", id: "sales_agent" }
+        );
+        addAgentLog("SalesAgent", "InventoryAgent", "Reserve Raymond Shirt size 40 at South City Mall");
+      }, 800);
+      setTimeout(() => {
+        setIsTyping(true);
+        addAgentLog("InventoryAgent", "StoreDB", "Creating reservation for Arjun at South City Mall");
+      }, 1400);
+      setTimeout(() => {
+        addAgentLog("StoreDB", "InventoryAgent", "Reservation confirmed: ID #RSV12345");
+        addAgentLog("InventoryAgent", "SalesAgent", "Pickup ready - valid 24hrs");
+        setIsTyping(false);
+        addAgentMessage(
+          "✅ Reserved successfully!\n\nReservation ID: #RSV12345\nStore: South City Mall, Third Floor (3.2 km away)\nValid for: 24 hours\n\nWould you like to complete the purchase now or pay at store?",
+          ["Pay Now", "Pay at Store", "Get Directions"],
+          { title: "Sales Agent", id: "sales_agent" }
+        );
+      }, 2200);
+    } else if (reply === "Add to Cart") {
+      addAgentLog("User", "SalesAgent", `Selected: ${reply}`);
+      setTimeout(() => {
+        addAgentLog("SalesAgent", "PaymentAgent", "Add Raymond Shirt to cart");
+        addAgentLog("PaymentAgent", "CartDB", "Update cart for user Arjun");
+        setIsTyping(false);
+        addAgentMessage(
+          "✅ Added to cart!\n\nRaymond Shirt (Size 40) - ₹1,789\n\nYour cart: 1 item\n\nWould you like to continue shopping or proceed to checkout?",
+          ["Checkout Now", "Continue Shopping", "View Cart"],
+          { title: "Payment Agent", id: "payment_agent" }
+        );
+      }, 1000);
+    } else if (reply === "Checkout Now" || reply === "Pay Now") {
+      addAgentLog("User", "SalesAgent", `Selected: ${reply}`);
+      setTimeout(() => {
+        addAgentLog("SalesAgent", "PaymentAgent", "Initiate payment flow");
+        addAgentLog("PaymentAgent", "User", "Display payment options");
+        setIsTyping(false);
+        addAgentMessage(
+          "Choose your payment method:\n\nTotal amount: ₹1,789\nDelivery: ₹0 (Free)\n━━━━━━━━━━━━\nGrand Total: ₹1,789",
+          ["UPI", "Credit/Debit Card", "Cash on Delivery"],
+          { title: "Payment Agent", id: "payment_agent" }
+        );
+      }, 1000);
+    } else if (reply === "UPI") {
+      addAgentLog("User", "PaymentAgent", `Selected payment: ${reply}`);
+      setTimeout(() => {
+        addAgentLog("PaymentAgent", "PaymentGateway", "Generate UPI payment link");
+        addAgentLog("PaymentGateway", "PaymentAgent", "Payment link ready");
+        setIsTyping(false);
+        addAgentMessage(
+          "💳 UPI Payment\n\nScan QR code or use UPI ID:\nabfrl@paytm\n\nAmount: ₹1,789\n\nWaiting for payment confirmation...",
+          ["Payment Done", "Try Other Method"],
+          { title: "Payment Agent", id: "payment_agent" }
+        );
+      }, 1200);
+    } else if (reply === "Payment Done") {
+      addAgentLog("User", "PaymentAgent", "Payment confirmation received");
+      setTimeout(() => {
+        setIsTyping(true);
+        addAgentLog("PaymentAgent", "PaymentGateway", "Verify payment status");
+      }, 400);
+      setTimeout(() => {
+        addAgentLog("PaymentGateway", "PaymentAgent", "Payment verified: ₹1,789 received");
+        addAgentLog("PaymentAgent", "FulfillmentAgent", "Order confirmed - prepare for dispatch");
+        setIsTyping(false);
+        addAgentMessage(
+          "🎉 Payment Successful!\n\nOrder ID: #ORD789456\nAmount: ₹1,789\nPayment Method: UPI\n\nYour order has been confirmed and will be dispatched soon.\n\nEstimated delivery: 2-3 business days",
+          ["Track Order", "View Invoice", "Continue Shopping"],
+          { title: "Fulfillment Agent", id: "fulfillment_agent" }
+        );
+      }, 1800);
+    } else if (reply === "Ship to Home") {
+      addAgentLog("User", "SalesAgent", `Selected: ${reply}`);
+      setTimeout(() => {
+        addAgentLog("SalesAgent", "PaymentAgent", "Initiate checkout for home delivery");
+        setIsTyping(false);
+        addAgentMessage(
+          "Great! Proceeding with home delivery from our online warehouse.\n\nDelivery to your address:\nMumbai, Maharashtra\n\nEstimated delivery: 2-3 business days\n\nHow would you like to pay?",
+          ["UPI", "Card", "Cash on Delivery"],
+          { title: "Payment Agent", id: "payment_agent" }
+        );
+      }, 1000);
+    } else if (reply.includes("Kolkata") || reply.includes("Mall")) {
       addAgentLog("User", "SalesAgent", `Selected: ${reply}`);
       setTimeout(() => {
         addAgentLog("SalesAgent", "InventoryAgent", "check SKU101 near pin 700001");
@@ -139,6 +266,84 @@ export default function MessengerChatbot({ onClose }) {
           { title: "Inventory Agent", id: "inventory_agent" }
         );
       }, 1200);
+    } else if (reply === "Pay at Store") {
+      addAgentLog("User", "PaymentAgent", `Selected: ${reply}`);
+      setTimeout(() => {
+        addAgentLog("PaymentAgent", "FulfillmentAgent", "Confirm pay-at-store reservation");
+        setIsTyping(false);
+        addAgentMessage(
+          "✅ Confirmed!\n\nYou can pay when you pick up at South City Mall.\n\nReservation Details:\n• ID: #RSV12345\n• Valid: 24 hours\n• Amount: ₹1,789\n\nWe'll send you directions and store contact details.",
+          ["Get Directions", "Call Store", "Done"],
+          { title: "Fulfillment Agent", id: "fulfillment_agent" }
+        );
+      }, 1000);
+    } else if (reply === "Get Directions") {
+      addAgentLog("User", "FulfillmentAgent", `Selected: ${reply}`);
+      setTimeout(() => {
+        setIsTyping(false);
+        addAgentMessage(
+          "📍 Directions to South City Mall\n\nAddress: South City Mall, Third Floor\nPrince Anwar Shah Rd, Kolkata\n\nDistance: 3.2 km (8 mins drive)\n\nStore Contact: +91 98765 43210\n\nOpening Hours: 10 AM - 10 PM",
+          ["Open in Maps", "Call Store", "Done"],
+          { title: "Fulfillment Agent", id: "fulfillment_agent" }
+        );
+      }, 800);
+    } else if (reply === "Track Order") {
+      addAgentLog("User", "FulfillmentAgent", `Selected: ${reply}`);
+      setTimeout(() => {
+        addAgentLog("FulfillmentAgent", "LogisticsDB", "Query order #ORD789456 status");
+        setIsTyping(true);
+      }, 400);
+      setTimeout(() => {
+        addAgentLog("LogisticsDB", "FulfillmentAgent", "Order dispatched, in transit");
+        setIsTyping(false);
+        addAgentMessage(
+          "📦 Order Status: #ORD789456\n\n✅ Payment confirmed\n✅ Order packed\n🚚 Out for delivery\n\nExpected delivery: Tomorrow by 6 PM\n\nCarrier: BlueDart Express\nTracking ID: BD789456123\n\nYour package is on its way!",
+          ["View Tracking Details", "Contact Delivery", "Done"],
+          { title: "Fulfillment Agent", id: "fulfillment_agent" }
+        );
+      }, 1400);
+    } else if (reply === "View Invoice") {
+      addAgentLog("User", "PaymentAgent", `Selected: ${reply}`);
+      setTimeout(() => {
+        setIsTyping(false);
+        addAgentMessage(
+          "📄 Invoice #INV789456\n\nOrder ID: #ORD789456\n━━━━━━━━━━━━━━━━━\nRaymond Shirt (Size 40)\n₹1,789 × 1 = ₹1,789\n\nDelivery Charges: ₹0\nGST (18%): ₹322\n━━━━━━━━━━━━━━━━━\nTotal Paid: ₹2,111\n\nPayment Method: UPI\nDate: " + new Date().toLocaleDateString() + "\n\nInvoice sent to your email!",
+          ["Download PDF", "Email Invoice", "Done"],
+          { title: "Payment Agent", id: "payment_agent" }
+        );
+      }, 800);
+    } else if (reply === "Continue Shopping" || reply === "Done") {
+      addAgentLog("User", "SalesAgent", `Selected: ${reply}`);
+      setTimeout(() => {
+        setIsTyping(false);
+        addAgentMessage(
+          "Thank you for shopping with us, Arjun! 🎉\n\nIs there anything else I can help you with today?",
+          ["Browse More Products", "Check My Orders", "Contact Support"],
+          { title: "Sales Agent", id: "sales_agent" }
+        );
+      }, 800);
+    } else if (reply === "Credit/Debit Card" || reply === "Card") {
+      addAgentLog("User", "PaymentAgent", `Selected payment: Card`);
+      setTimeout(() => {
+        addAgentLog("PaymentAgent", "PaymentGateway", "Redirect to secure card payment");
+        setIsTyping(false);
+        addAgentMessage(
+          "💳 Card Payment\n\nRedirecting to secure payment gateway...\n\nAmount: ₹1,789\n\nWe accept:\n• Visa\n• Mastercard\n• American Express\n• RuPay",
+          ["Proceed to Payment", "Try Other Method"],
+          { title: "Payment Agent", id: "payment_agent" }
+        );
+      }, 1000);
+    } else if (reply === "Cash on Delivery") {
+      addAgentLog("User", "PaymentAgent", `Selected payment: COD`);
+      setTimeout(() => {
+        addAgentLog("PaymentAgent", "FulfillmentAgent", "Order confirmed - COD");
+        setIsTyping(false);
+        addAgentMessage(
+          "✅ Order Confirmed with Cash on Delivery!\n\nOrder ID: #ORD789457\nAmount to pay: ₹1,789\n\nDelivery: 2-3 business days\n\nPay cash when you receive the package. Keep exact change ready!",
+          ["Track Order", "View Order Details", "Done"],
+          { title: "Fulfillment Agent", id: "fulfillment_agent" }
+        );
+      }, 1000);
     } else if (reply.includes("₹")) {
       addAgentLog("User", "SalesAgent", `Product selected: ${reply}`);
       setTimeout(() => {
@@ -152,14 +357,8 @@ export default function MessengerChatbot({ onClose }) {
         );
       }, 1200);
     } else {
-      setTimeout(() => {
-        setIsTyping(false);
-        addAgentMessage(
-          "Let me help you with that!",
-          ["Continue", "Go Back"],
-          { title: "Sales Agent", id: "sales_agent" }
-        );
-      }, 1200);
+      // Handle unrecognized replies silently or log for debugging
+      setIsTyping(false);
     }
   };
 
@@ -296,7 +495,7 @@ export default function MessengerChatbot({ onClose }) {
               )}
 
               {/* Payment Agent */}
-              {agentLogs.some(log => log.from === 'PaymentAgent' || log.to === 'PaymentAgent') && (
+              {agentLogs.some(log => log.from === 'PaymentAgent' || log.to === 'PaymentAgent' || log.from === 'PaymentGateway' || log.to === 'PaymentGateway') && (
                 <div className="relative pl-8">
                   <div className="absolute left-0 top-1 h-3 w-3 bg-red-500 rounded-full shadow-md"></div>
                   <div className="p-3 bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50 rounded-lg border border-orange-300 shadow-sm hover:shadow-md transition-shadow">
@@ -312,7 +511,37 @@ export default function MessengerChatbot({ onClose }) {
                     {/* Timeline logs */}
                     <div className="mt-2 space-y-1 border-t border-orange-200 pt-2">
                       {agentLogs
-                        .filter(log => log.from === 'PaymentAgent' || log.to === 'PaymentAgent')
+                        .filter(log => log.from === 'PaymentAgent' || log.to === 'PaymentAgent' || log.from === 'PaymentGateway' || log.to === 'PaymentGateway' || log.from === 'CartDB' || log.to === 'CartDB')
+                        .slice(-3)
+                        .map((log, idx) => (
+                          <div key={idx} className="flex items-start gap-2 text-[0.75vw] font-mono">
+                            <span className="text-gray-400 min-w-[60px]">{log.timestamp}</span>
+                            <div className="flex-1 text-gray-700">{log.message}</div>
+                          </div>
+                        ))}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Fulfillment Agent */}
+              {agentLogs.some(log => log.from === 'FulfillmentAgent' || log.to === 'FulfillmentAgent') && (
+                <div className="relative pl-8">
+                  <div className="absolute left-0 top-1 h-3 w-3 bg-blue-500 rounded-full shadow-md"></div>
+                  <div className="p-3 bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50 rounded-lg border border-orange-300 shadow-sm hover:shadow-md transition-shadow">
+                    <div className="flex justify-between items-center mb-2">
+                      <p className="font-bold text-[1.3vw] text-gray-900">
+                        Fulfillment Agent
+                      </p>
+                      <span className="text-[0.8vw] bg-blue-500 text-white px-2 py-1 rounded-md font-semibold shadow-sm">
+                        fulfillment_agent
+                      </span>
+                    </div>
+                    
+                    {/* Timeline logs */}
+                    <div className="mt-2 space-y-1 border-t border-orange-200 pt-2">
+                      {agentLogs
+                        .filter(log => log.from === 'FulfillmentAgent' || log.to === 'FulfillmentAgent')
                         .slice(-3)
                         .map((log, idx) => (
                           <div key={idx} className="flex items-start gap-2 text-[0.75vw] font-mono">
@@ -431,10 +660,16 @@ export default function MessengerChatbot({ onClose }) {
                             
                             {/* CTA Buttons */}
                             <div className="flex flex-col gap-2">
-                              <button className="w-full px-3 py-2 bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white rounded-lg text-[0.8vw] font-medium transition-all shadow-sm hover:shadow-md">
+                              <button 
+                                onClick={() => handleQuickReply("Check Availability")}
+                                className="w-full px-3 py-2 bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white rounded-lg text-[0.8vw] font-medium transition-all shadow-sm hover:shadow-md"
+                              >
                                 Check Availability
                               </button>
-                              <button className="w-full px-3 py-2 bg-white hover:bg-orange-50 text-orange-600 border-2 border-orange-500 rounded-lg text-[0.8vw] font-medium transition-all hover:scale-[1.02]">
+                              <button 
+                                onClick={() => handleQuickReply("Add to Cart")}
+                                className="w-full px-3 py-2 bg-white hover:bg-orange-50 text-orange-600 border-2 border-orange-500 rounded-lg text-[0.8vw] font-medium transition-all hover:scale-[1.02]"
+                              >
                                 Add to Cart
                               </button>
                             </div>
