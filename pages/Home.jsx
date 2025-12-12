@@ -28,10 +28,7 @@ export default function Home() {
         {/* Navigation Cards */}
         <div className="grid md:grid-cols-3 gap-8">
           {/* User Journey Card */}
-          <div
-            onClick={() => nav("/user")}
-            className="group cursor-pointer bg-white rounded-3xl shadow-xl border-2 border-gray-200 overflow-hidden hover:shadow-2xl transition-all duration-500 hover:-translate-y-3 hover:border-amber-300"
-          >
+          <div className="group bg-white rounded-3xl shadow-xl border-2 border-gray-200 overflow-hidden hover:shadow-2xl transition-all duration-500 hover:-translate-y-3 hover:border-amber-300">
             <div className="bg-gradient-to-br from-red-800 to-amber-600 p-8">
               <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
                 <User className="w-8 h-8 text-white" />
@@ -46,21 +43,36 @@ export default function Home() {
                 Track and analyze user interactions, behavior patterns, purchase
                 history, and loyalty points in one comprehensive dashboard
               </p>
-              <div className="flex items-center text-red-800 font-semibold group-hover:text-amber-600 transition-colors">
-                <span>Explore Journey</span>
-                <svg
-                  className="w-5 h-5 ml-2 group-hover:translate-x-2 transition-transform"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
+
+              {/* Action Buttons */}
+              <div className="flex gap-4">
+                <button
+                  onClick={() => nav("/user")}
+                  className="flex-1 bg-gradient-to-r from-red-800 to-amber-600 hover:from-red-900 hover:to-amber-700 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-300 hover:shadow-lg hover:scale-105 flex items-center justify-center gap-2"
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M13 7l5 5m0 0l-5 5m5-5H6"
-                  />
-                </svg>
+                  <span>Online</span>
+                  <svg
+                    className="w-4 h-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M13 7l5 5m0 0l-5 5m5-5H6"
+                    />
+                  </svg>
+                </button>
+
+                <button
+                  onClick={() => nav("/store")}
+                  className="flex-1 bg-gradient-to-r from-amber-600 to-yellow-500 hover:from-amber-700 hover:to-yellow-600 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-300 hover:shadow-lg hover:scale-105 flex items-center justify-center gap-2"
+                >
+                  <span>In-Store</span>
+                  <Building className="w-4 h-4" />
+                </button>
               </div>
             </div>
           </div>
@@ -119,7 +131,8 @@ export default function Home() {
             </div>
             <div className="p-8">
               <p className="text-gray-600 mb-6 leading-relaxed text-base">
-                Get insights into last month's revenue, transactions, customer growth, and store overview instantly in one dashboard
+                Get insights into last month's revenue, transactions, customer
+                growth, and store overview instantly in one dashboard
               </p>
               <div className="flex items-center text-red-800 font-semibold group-hover:text-red-900 transition-colors">
                 <span>Open Admin</span>
