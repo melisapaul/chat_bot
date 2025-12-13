@@ -723,9 +723,32 @@ export default function MessengerChatbot({ onClose }) {
         );
         setIsTyping(false);
         addAgentMessage(
-          "🏪 CHANNEL SWITCHING: Online → In-Store Kiosk\n\n📋 SESSION TRANSFER DETAILS:\n━━━━━━━━━━━━━━━━━━━━━━━\n🆔 Session ID: #SESSION789456\n👤 Customer: Arjun Sharma\n🏷️ Customer ID: #CUST12345\n\n📦 PRODUCT DETAILS:\n▸ Louis Philippe Formal Shirt\n▸ Size: 40 (Medium)\n▸ Color: White\n▸ SKU: LP-WH-40-001\n▸ Price: ₹1,789\n\n🏪 STORE HANDOFF:\n▸ Location: ABFRL Store South City\n▸ Manager: Sophia\n▸ Status: Available\n\n✅ Ready for in-store assistance",
+          "🏪 CHANNEL SWITCHING: Online → In-Store Kiosk\n\n📋 SESSION TRANSFER DETAILS:\n━━━━━━━━━━━━━━━━━━━━━━━\n🆔 Session ID: #SESSION789456\n👤 Customer: Arjun Bose\n🏷️ Customer ID: #00001\n\n📦 PRODUCT DETAILS:\n▸ Louis Philippe\n▸ Size: 40 (Medium)\n▸ Color: White\n▸ SKU: LP-WH-40-001\n▸ Price: ₹2,199\n\n🏪 STORE HANDOFF:\n▸ Location: ABFRL Store South City\n▸ Manager: Sophia\n▸ Status: Available\n\n✅ Ready for in-store assistance",
           [],
           { title: "Fulfillment Agent", id: "fulfillment_agent" }
+        );
+
+        // Store order details for StoreKeeper notification
+        sessionStorage.setItem(
+          "newOfflineOrder",
+          JSON.stringify({
+            sessionId: "#SESSION789456",
+            userName: "Arjun Bose",
+            userId: "#00001",
+            product: {
+              name: "Louis Philippe",
+              size: "40 (Medium)",
+              color: "White",
+              sku: "LP-WH-40-001",
+              price: "₹2,199",
+            },
+            store: {
+              location: "ABFRL Store South City",
+              manager: "Sophia",
+              status: "Available",
+            },
+            timestamp: new Date().toISOString(),
+          })
         );
       }, 1800);
     } else if (reply === "City Centre Salt Lake") {
@@ -772,9 +795,32 @@ export default function MessengerChatbot({ onClose }) {
         );
         setIsTyping(false);
         addAgentMessage(
-          "🏪 CHANNEL SWITCHING: Online → In-Store Kiosk\n\n📋 SESSION TRANSFER DETAILS:\n━━━━━━━━━━━━━━━━━━━━━━━\n🆔 Session ID: #SESSION890123\n👤 Customer: Arjun Sharma\n🏷️ Customer ID: #CUST12345\n\n📦 PRODUCT DETAILS:\n▸ Louis Philippe Formal Shirt\n▸ Size: 40 (Medium)\n▸ Color: White\n▸ SKU: LP-WH-40-001\n▸ Price: ₹1,789\n\n🏪 STORE HANDOFF:\n▸ Location: City Centre Salt Lake, First Floor\n▸ Manager: Rahul\n▸ Status: Available\n\n✅ Ready for in-store assistance",
+          "🏪 CHANNEL SWITCHING: Online → In-Store Kiosk\n\n📋 SESSION TRANSFER DETAILS:\n━━━━━━━━━━━━━━━━━━━━━━━\n🆔 Session ID: #SESSION789456\n👤 Customer: Arjun Bose\n🏷️ Customer ID: #00001\n\n📦 PRODUCT DETAILS:\n▸ Louis Philippe\n▸ Size: 40 (Medium)\n▸ Color: White\n▸ SKU: LP-WH-40-001\n▸ Price: ₹2,199\n\n🏪 STORE HANDOFF:\n▸ Location: City Centre Salt Lake, First Floor\n▸ Manager: Rahul\n▸ Status: Available\n\n✅ Ready for in-store assistance",
           [],
           { title: "Fulfillment Agent", id: "fulfillment_agent" }
+        );
+
+        // Store order details for StoreKeeper notification
+        sessionStorage.setItem(
+          "newOfflineOrder",
+          JSON.stringify({
+            sessionId: "#SESSION789456",
+            userName: "Arjun Bose",
+            userId: "#00001",
+            product: {
+              name: "Louis Philippe",
+              size: "40 (Medium)",
+              color: "White",
+              sku: "LP-WH-40-001",
+              price: "₹2,199",
+            },
+            store: {
+              location: "City Centre Salt Lake, First Floor",
+              manager: "Rahul",
+              status: "Available",
+            },
+            timestamp: new Date().toISOString(),
+          })
         );
       }, 1800);
     } else if (reply === "Quest Mall") {
@@ -821,9 +867,32 @@ export default function MessengerChatbot({ onClose }) {
         );
         setIsTyping(false);
         addAgentMessage(
-          "🏪 CHANNEL SWITCHING: Online → In-Store Kiosk\n\n📋 SESSION TRANSFER DETAILS:\n━━━━━━━━━━━━━━━━━━━━━━━\n🆔 Session ID: #SESSION456789\n👤 Customer: Arjun Sharma\n🏷️ Customer ID: #CUST12345\n\n📦 PRODUCT DETAILS:\n▸ Louis Philippe Formal Shirt\n▸ Size: 40 (Medium)\n▸ Color: White\n▸ SKU: LP-WH-40-001\n▸ Price: ₹1,789\n\n🏪 STORE HANDOFF:\n▸ Location: Quest Mall, Second Floor\n▸ Manager: Priya\n▸ Status: Limited Stock\n\n⚠️ Note: Limited availability - reserve quickly",
+          "🏪 CHANNEL SWITCHING: Online → In-Store Kiosk\n\n📋 SESSION TRANSFER DETAILS:\n━━━━━━━━━━━━━━━━━━━━━━━\n🆔 Session ID: #SESSION789456\n👤 Customer: Arjun Bose\n🏷️ Customer ID: #00001\n\n📦 PRODUCT DETAILS:\n▸ Louis Philippe\n▸ Size: 40 (Medium)\n▸ Color: White\n▸ SKU: LP-WH-40-001\n▸ Price: ₹2,199\n\n🏪 STORE HANDOFF:\n▸ Location: Quest Mall, Second Floor\n▸ Manager: Priya\n▸ Status: Limited Stock\n\n⚠️ Note: Limited availability - reserve quickly",
           [],
           { title: "Fulfillment Agent", id: "fulfillment_agent" }
+        );
+
+        // Store order details for StoreKeeper notification
+        sessionStorage.setItem(
+          "newOfflineOrder",
+          JSON.stringify({
+            sessionId: "#SESSION789456",
+            userName: "Arjun Bose",
+            userId: "#00001",
+            product: {
+              name: "Louis Philippe",
+              size: "40 (Medium)",
+              color: "White",
+              sku: "LP-WH-40-001",
+              price: "₹2,199",
+            },
+            store: {
+              location: "Quest Mall, Second Floor",
+              manager: "Priya",
+              status: "Limited Stock",
+            },
+            timestamp: new Date().toISOString(),
+          })
         );
       }, 1800);
     } else if (reply === "South City Mall") {
@@ -870,9 +939,32 @@ export default function MessengerChatbot({ onClose }) {
         );
         setIsTyping(false);
         addAgentMessage(
-          "🏪 CHANNEL SWITCHING: Online → In-Store Kiosk\n\n📋 SESSION TRANSFER DETAILS:\n━━━━━━━━━━━━━━━━━━━━━━━\n🆔 Session ID: #SESSION123789\n👤 Customer: Arjun Sharma\n🏷️ Customer ID: #CUST12345\n\n📦 PRODUCT DETAILS:\n▸ Louis Philippe Formal Shirt\n▸ Size: 40 (Medium)\n▸ Color: White\n▸ SKU: LP-WH-40-001\n▸ Price: ₹1,789\n\n🏪 STORE HANDOFF:\n▸ Location: South City Mall, Third Floor\n▸ Manager: Neha\n▸ Status: Available\n\n✅ Ready for in-store assistance",
+          "🏪 CHANNEL SWITCHING: Online → In-Store Kiosk\n\n📋 SESSION TRANSFER DETAILS:\n━━━━━━━━━━━━━━━━━━━━━━━\n🆔 Session ID: #SESSION789456\n👤 Customer: Arjun Bose\n🏷️ Customer ID: #00001\n\n📦 PRODUCT DETAILS:\n▸ Louis Philippe\n▸ Size: 40 (Medium)\n▸ Color: White\n▸ SKU: LP-WH-40-001\n▸ Price: ₹2,199\n\n🏪 STORE HANDOFF:\n▸ Location: South City Mall, Third Floor\n▸ Manager: Neha\n▸ Status: Available\n\n✅ Ready for in-store assistance",
           [],
           { title: "Fulfillment Agent", id: "fulfillment_agent" }
+        );
+
+        // Store order details for StoreKeeper notification
+        sessionStorage.setItem(
+          "newOfflineOrder",
+          JSON.stringify({
+            sessionId: "#SESSION789456",
+            userName: "Arjun Bose",
+            userId: "#00001",
+            product: {
+              name: "Louis Philippe",
+              size: "40 (Medium)",
+              color: "White",
+              sku: "LP-WH-40-001",
+              price: "₹2,199",
+            },
+            store: {
+              location: "South City Mall, Third Floor",
+              manager: "Neha",
+              status: "Available",
+            },
+            timestamp: new Date().toISOString(),
+          })
         );
       }, 1800);
     } else if (reply === "Continue Shopping" || reply === "Done") {

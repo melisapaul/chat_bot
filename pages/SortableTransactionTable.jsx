@@ -250,7 +250,7 @@ export default function StoreDetailsTable({ storeId }) {
             <tbody className="bg-white divide-y divide-gray-100">
               {currentTransactions.map((transaction, idx) => (
                 <tr
-                  key={transaction.id}
+                  key={`${transaction.id}-${idx}`}
                   className={`hover:bg-amber-50 transition-colors ${
                     transaction.isPending
                       ? "bg-yellow-50 border-l-4 border-yellow-400 animate-pulse"
@@ -324,7 +324,7 @@ export default function StoreDetailsTable({ storeId }) {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span className="text-sm font-bold text-gray-900">
-                      ₹{transaction.amount.toFixed(2)}
+                      ₹{Number(transaction.amount || 0).toFixed(2)}
                     </span>
                   </td>
                   <td className="px-6 py-4 text-sm text-gray-600 max-w-xs truncate">

@@ -24,10 +24,11 @@ export default function StoreKeeper() {
       const orderData = sessionStorage.getItem("newOfflineOrder");
       if (orderData) {
         setNewOfflineOrder(JSON.parse(orderData));
-        // Keep the notification for 15 seconds but don't clear sessionStorage
+        // Keep the notification for 10 seconds then remove permanently
         setTimeout(() => {
           setNewOfflineOrder(null);
-        }, 15000); // Hide notification after 15 seconds but keep data
+          sessionStorage.removeItem("newOfflineOrder"); // Permanently remove from storage
+        }, 10000); // Hide notification after 10 seconds and clear data
       }
     };
 
@@ -140,7 +141,7 @@ export default function StoreKeeper() {
             </div>
             <div>
               <h1 className="text-4xl font-bold bg-gradient-to-r from-red-900 via-red-800 to-amber-700 bg-clip-text text-transparent">
-                Store Analytics Dashboard-ABFRL Southcity Store
+                Store Analytics Dashboard-ABFRL South City Store
               </h1>
               <p className="text-sm text-gray-600 mt-1 font-medium">
                 Real-time performance metrics and insights
@@ -148,43 +149,138 @@ export default function StoreKeeper() {
             </div>
           </div>
 
-          {/* New Offline Order Notification */}
+          {/* Enhanced New Offline Order Notification */}
           {newOfflineOrder && (
-            <div className="mb-6 bg-gradient-to-r from-orange-500 to-red-600 rounded-3xl p-6 text-white shadow-xl animate-pulse">
-              <div className="flex items-center gap-4">
-                <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center">
-                  <svg
-                    className="w-8 h-8"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                    />
-                  </svg>
+            <div className="mb-4 bg-gradient-to-r from-orange-500 to-red-600 rounded-2xl p-3 text-white shadow-lg animate-pulse">
+              <div className="space-y-2">
+                {/* Header */}
+                <div className="flex items-center gap-2">
+                  <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
+                    <svg
+                      className="w-4 h-4"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
+                    </svg>
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-bold">
+                      🔔 New In-Store Pickup Request!
+                    </h3>
+                    <p className="text-orange-100 text-sm">
+                      Channel Switching: Online → In-Store
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <h3 className="text-2xl font-bold mb-1">
-                    🔔 New Store Pickup Order!
-                  </h3>
-                  <p className="text-orange-100">
-                    Customer{" "}
-                    <span className="font-bold">
-                      {newOfflineOrder.userName}
-                    </span>{" "}
-                    selected your store for pickup
-                  </p>
-                  <p className="text-sm text-orange-200 mt-2">
-                    Product:{" "}
-                    <span className="font-bold">
-                      {newOfflineOrder.product?.name}
-                    </span>{" "}
-                    - Check pending orders below
-                  </p>
+
+                {/* Customer & Session Details */}
+                <div className="bg-white/10 rounded-lg p-2 backdrop-blur-sm">
+                  <div className="grid grid-cols-3 gap-2 text-xs">
+                    <div>
+                      <h4 className="text-orange-100 uppercase font-semibold mb-1">
+                        Customer
+                      </h4>
+                      <p className="text-white">
+                        <span className="text-orange-200">Name:</span>{" "}
+                        <span className="font-bold">
+                          {newOfflineOrder.userName}
+                        </span>
+                      </p>
+                      <p className="text-white">
+                        <span className="text-orange-200">ID:</span>{" "}
+                        <span className="font-bold">
+                          {newOfflineOrder.userId}
+                        </span>
+                      </p>
+                      <p className="text-white">
+                        <span className="text-orange-200">Session:</span>{" "}
+                        <span className="font-bold">
+                          {newOfflineOrder.sessionId}
+                        </span>
+                      </p>
+                    </div>
+                    <div>
+                      <h4 className="text-orange-100 uppercase font-semibold mb-1">
+                        Product
+                      </h4>
+                      <p className="text-white">
+                        <span className="text-orange-200">Item:</span>{" "}
+                        <span className="font-bold">
+                          {newOfflineOrder.product?.name}
+                        </span>
+                      </p>
+                      <p className="text-white">
+                        <span className="text-orange-200">Size:</span>{" "}
+                        <span className="font-bold">
+                          {newOfflineOrder.product?.size}
+                        </span>
+                      </p>
+                      <p className="text-white">
+                        <span className="text-orange-200">Price:</span>{" "}
+                        <span className="font-bold">
+                          {newOfflineOrder.product?.price}
+                        </span>
+                      </p>
+                    </div>
+                    <div>
+                      <h4 className="text-orange-100 uppercase font-semibold mb-1">
+                        Store
+                      </h4>
+                      <p className="text-white">
+                        <span className="text-orange-200">Location:</span>{" "}
+                        <span className="font-bold">
+                          {newOfflineOrder.store?.location}
+                        </span>
+                      </p>
+                      <p className="text-white">
+                        <span className="text-orange-200">Manager:</span>{" "}
+                        <span className="font-bold">
+                          {newOfflineOrder.store?.manager}
+                        </span>
+                      </p>
+                      <p className="text-white">
+                        <span className="text-orange-200">Status:</span>{" "}
+                        <span className="font-bold">
+                          {newOfflineOrder.store?.status}
+                        </span>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Shopkeeper Guidance */}
+                <div className="bg-yellow-400/20 border border-yellow-400/50 rounded-lg p-2">
+                  <div className="flex items-start gap-2">
+                    <div className="w-5 h-5 bg-yellow-400/30 rounded-full flex items-center justify-center flex-shrink-0">
+                      <span className="text-yellow-100 text-xs">💡</span>
+                    </div>
+                    <div className="text-xs">
+                      <h4 className="text-yellow-100 font-bold mb-1">
+                        📋 Instructions
+                      </h4>
+                      <p className="text-yellow-50 mb-1">
+                        <span className="font-bold">Tell customer:</span> Go to{" "}
+                        <span className="font-bold">Home Page</span> →{" "}
+                        <span className="font-bold">"In-Store"</span> → Login
+                        with email/password
+                      </p>
+                      <p className="text-yellow-50 mb-1">
+                        <span className="font-bold">Then:</span> Resume your
+                        previous conversation and proceed for the further steps
+                      </p>
+                      <p className="text-yellow-50">
+                        <span className="font-bold">Session:</span>{" "}
+                        {newOfflineOrder.sessionId}
+                      </p>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
