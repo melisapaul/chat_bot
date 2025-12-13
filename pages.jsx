@@ -4,6 +4,7 @@ import Home from "./pages/Home";
 import UserJourney from "./pages/UserJourney";
 import StoreKeeper from "./pages/StoreKeeper";
 import Admin from "./pages/Admin";
+import InStoreSession from "./pages/InStoreSession";
 
 export default function Pages() {
   return (
@@ -57,6 +58,7 @@ export default function Pages() {
           <Route path="/user" element={<UserJourney />} />
           <Route path="/store" element={<StoreKeeper />} />
           <Route path="/admin" element={<Admin />} />
+          <Route path="/instore-session" element={<InStoreSession />} />
         </Routes>
       </main>
     </div>

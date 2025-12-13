@@ -9,8 +9,8 @@ export default function Home() {
 
   const handleInStoreLogin = (e) => {
     e.preventDefault();
-    // Redirect to user profile page regardless of credentials
-    nav("/user");
+    // Redirect to in-store chatbot session
+    nav("/instore-session");
   };
 
   const handleInputChange = (e) => {
