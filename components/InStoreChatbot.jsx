@@ -35,6 +35,8 @@ export default function InStoreChatbot({ onClose }) {
 
   const channels = [
     { value: "kiosk", label: "In-Store Kiosk", icon: Store },
+    { value: "phone", label: "Phone", icon: Phone },
+    { value: "chat", label: "Chat", icon: MessageSquare },
   ];
 
   useEffect(() => {
