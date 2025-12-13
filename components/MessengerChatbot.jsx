@@ -413,7 +413,7 @@ export default function MessengerChatbot({ onClose }) {
         } else {
           // First attempt - regular UPI
           addAgentMessage(
-            "💳 UPI Payment\n\nScan QR code or use UPI ID:\nabfrl@paytm\n\nAmount: ₹1,789\n\nWaiting for payment confirmation...",
+            "💳 UPI Payment\n\nScan QR code or use UPI ID:\nabfrl@paytm\n\nAmount: ₹1,879\n\nWaiting for payment confirmation...",
             ["Payment Done", "Try Other Method"],
             { title: "Payment Agent", id: "payment_agent" }
           );
@@ -464,13 +464,34 @@ export default function MessengerChatbot({ onClose }) {
         addAgentLog(
           "PaymentGateway",
           "PaymentAgent",
-          "Payment verified: ₹1,789 received"
+          "Payment verified: ₹1,879 received"
         );
         addAgentLog(
           "PaymentAgent",
           "FulfillmentAgent",
           "Order confirmed - prepare for dispatch"
         );
+
+        // Store online purchase in sessionStorage for UserJourney to display
+        const purchaseData = {
+          orderId: "#ORD789456",
+          product: {
+            id: "p004", // Allen Solly product ID from admin.json
+            name: "Allen Solly Shirt",
+            price: "1,999",
+            size: "40",
+            color: "Blue",
+          },
+          amount: "₹1,999",
+          paymentMethod: selectedPaymentMethod || "UPI",
+          timestamp: new Date().toISOString(),
+          type: "online",
+        };
+        sessionStorage.setItem(
+          "newOnlinePurchase",
+          JSON.stringify(purchaseData)
+        );
+
         setIsTyping(false);
         setMessages((prev) => [
           ...prev,
@@ -499,7 +520,7 @@ export default function MessengerChatbot({ onClose }) {
           addAgentLog(
             "RewardsDB",
             "LoyaltyAgent",
-            "Points earned: 179 | Available coupons: 2 | Tier status updated"
+            "Points earned: 120 | Available coupons: 2 | Tier status updated"
           );
           addAgentLog(
             "LoyaltyAgent",
@@ -1798,7 +1819,7 @@ export default function MessengerChatbot({ onClose }) {
                                   }}
                                   className="px-4 py-2 bg-green-500 text-white rounded text-[0.8vw] font-semibold hover:bg-green-600"
                                 >
-                                  Pay ₹1,789
+                                  Pay ₹1,879
                                 </button>
                               </div>
                             </div>
@@ -2011,7 +2032,7 @@ export default function MessengerChatbot({ onClose }) {
                                 Amount Paid
                               </div>
                               <div className="text-[0.85vw] font-bold text-green-600">
-                                ₹1,789
+                                ₹1,879
                               </div>
                             </div>
                             <div className="bg-white rounded-lg p-3 border border-orange-100">
@@ -2093,11 +2114,11 @@ export default function MessengerChatbot({ onClose }) {
                                 Loyalty Points Earned
                               </span>
                               <p className="text-[0.65vw] text-green-600">
-                                +179 points added to your account
+                                +120 points added to your account
                               </p>
                             </div>
                             <div className="text-[0.7vw] font-bold text-green-700">
-                              179 pts
+                              120 pts
                             </div>
                           </div>
 
@@ -2114,7 +2135,7 @@ export default function MessengerChatbot({ onClose }) {
                               </p>
                             </div>
                             <div className="text-[0.7vw] font-bold text-orange-700">
-                              -₹179
+                              -₹120
                             </div>
                           </div>
 
@@ -2132,36 +2153,6 @@ export default function MessengerChatbot({ onClose }) {
                             </div>
                             <div className="text-[0.7vw] font-bold text-blue-700">
                               Unlocked
-                            </div>
-                          </div>
-                        </div>
-
-                        {/* Final Pricing Summary */}
-                        <div className="bg-gradient-to-r from-gray-50 to-slate-50 border border-gray-200 rounded-lg p-3">
-                          <div className="text-[0.8vw] font-medium text-gray-700 mb-2">
-                            💰 Final Pricing & Savings:
-                          </div>
-                          <div className="space-y-1">
-                            <div className="flex justify-between text-[0.7vw]">
-                              <span className="text-gray-600">
-                                Original Price:
-                              </span>
-                              <span className="text-gray-800">₹1,789</span>
-                            </div>
-                            <div className="flex justify-between text-[0.7vw]">
-                              <span className="text-green-600">
-                                Loyalty Discount:
-                              </span>
-                              <span className="text-green-600">-₹179</span>
-                            </div>
-                            <div className="flex justify-between text-[0.7vw] font-bold border-t border-gray-300 pt-1">
-                              <span className="text-gray-800">
-                                Final Amount:
-                              </span>
-                              <span className="text-green-700">₹1,610</span>
-                            </div>
-                            <div className="text-center text-[0.65vw] text-green-600 font-medium mt-2">
-                              🎉 You saved ₹179 with loyalty rewards!
                             </div>
                           </div>
                         </div>

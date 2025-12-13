@@ -61,10 +61,10 @@ export default function UserJourney() {
     };
   }, [tempPurchases]);
 
-  // Combine regular purchases with temporary purchases
+  // Combine regular purchases with temporary purchases (new ones first)
   const allPurchases = [
-    ...tempPurchases.map((temp) => temp.id),
-    ...user.purchases,
+    ...tempPurchases.map((temp) => temp.id), // New purchases at the top
+    ...user.purchases, // Regular purchases after
   ];
 
   const productMap = {};
@@ -212,95 +212,111 @@ export default function UserJourney() {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {Object.keys(productMap).map((pid) => {
-            const prod = data.products.find((p) => p.id === pid);
-            if (!prod) return null;
+          {Object.keys(productMap)
+            .sort((a, b) => {
+              // Sort new purchases to the top
+              const aIsNew = tempPurchases.some((temp) => temp.id === a);
+              const bIsNew = tempPurchases.some((temp) => temp.id === b);
+              if (aIsNew && !bIsNew) return -1;
+              if (!aIsNew && bIsNew) return 1;
+              return 0;
+            })
+            .map((pid) => {
+              const prod = data.products.find((p) => p.id === pid);
+              if (!prod) return null;
 
-            // Check if this is a new temporary purchase
-            const isNewPurchase = tempPurchases.some((temp) => temp.id === pid);
+              // Check if this is a new temporary purchase
+              const isNewPurchase = tempPurchases.some(
+                (temp) => temp.id === pid
+              );
 
-            return (
-              <div
-                key={pid}
-                className={`group ${
-                  isNewPurchase
-                    ? "bg-green-50 border-green-300 ring-2 ring-green-200"
-                    : "bg-gradient-to-br from-yellow-50 via-amber-50 to-orange-50 border-yellow-200"
-                } rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500 hover:-translate-y-3 border-2`}
-              >
-                <div className="relative overflow-hidden bg-white">
-                  <img
-                    src={prod.image}
-                    alt={prod.name}
-                    className="w-full h-72 object-contain group-hover:scale-105 transition-transform duration-700 p-6"
-                    onError={(e) => {
-                      e.target.src = "/images/mobile.png";
-                    }}
-                  />
-                  <div
-                    className={`absolute top-5 right-5 ${
-                      isNewPurchase
-                        ? "bg-green-600"
-                        : "bg-gradient-to-br from-red-800 to-amber-600"
-                    } text-white rounded-2xl px-5 py-2.5 shadow-xl`}
-                  >
-                    <div className="flex items-center gap-2">
-                      <svg
-                        className="w-4 h-4"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"
-                        />
-                      </svg>
-                      <span className="text-sm font-bold">
-                        x{productMap[pid]}
-                      </span>
+              return (
+                <div
+                  key={pid}
+                  className={`group ${
+                    isNewPurchase
+                      ? "bg-green-50 border-green-300 ring-2 ring-green-200"
+                      : "bg-gradient-to-br from-yellow-50 via-amber-50 to-orange-50 border-yellow-200"
+                  } rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500 hover:-translate-y-3 border-2`}
+                >
+                  <div className="relative overflow-hidden bg-white">
+                    <img
+                      src={prod.image}
+                      alt={prod.name}
+                      className="w-full h-72 object-contain group-hover:scale-105 transition-transform duration-700 p-6"
+                      onError={(e) => {
+                        e.target.src = "/images/mobile.png";
+                      }}
+                    />
+                    <div
+                      className={`absolute top-5 right-5 ${
+                        isNewPurchase
+                          ? "bg-green-600"
+                          : "bg-gradient-to-br from-red-800 to-amber-600"
+                      } text-white rounded-2xl px-5 py-2.5 shadow-xl`}
+                    >
+                      <div className="flex items-center gap-2">
+                        <svg
+                          className="w-4 h-4"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"
+                          />
+                        </svg>
+                        <span className="text-sm font-bold">
+                          x{productMap[pid]}
+                        </span>
+                      </div>
+                    </div>
+                    {isNewPurchase && (
+                      <div className="absolute top-5 left-5 bg-green-500 text-white rounded-2xl px-3 py-1.5 shadow-xl text-xs font-bold">
+                        NEW!
+                      </div>
+                    )}
+                  </div>
+                  <div className="p-7 bg-gradient-to-br from-yellow-50 via-amber-50 to-orange-50">
+                    <h3 className="font-bold text-xl text-gray-900 mb-4 line-clamp-2 min-h-[3.5rem]">
+                      {prod.name}
+                    </h3>
+                    <div className="flex items-center justify-between pt-4 border-t border-gray-100">
+                      <div className="flex flex-col">
+                        <span className="text-xs text-gray-500 mb-1">
+                          Price
+                        </span>
+                        <span className="text-3xl font-bold text-red-800">
+                          ₹
+                          {isNewPurchase && prod.name === "Allen Solly Shirt"
+                            ? "1,879"
+                            : prod.price}
+                        </span>
+                      </div>
+                      <button className="bg-gradient-to-r from-red-800 to-amber-600 hover:from-red-900 hover:to-amber-700 text-white px-6 py-3 rounded-2xl font-bold hover:shadow-xl hover:scale-110 transition-all duration-300 flex items-center gap-2">
+                        <span>View</span>
+                        <svg
+                          className="w-4 h-4"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M9 5l7 7-7 7"
+                          />
+                        </svg>
+                      </button>
                     </div>
                   </div>
-                  {isNewPurchase && (
-                    <div className="absolute top-5 left-5 bg-green-500 text-white rounded-2xl px-3 py-1.5 shadow-xl text-xs font-bold">
-                      NEW!
-                    </div>
-                  )}
                 </div>
-                <div className="p-7 bg-gradient-to-br from-yellow-50 via-amber-50 to-orange-50">
-                  <h3 className="font-bold text-xl text-gray-900 mb-4 line-clamp-2 min-h-[3.5rem]">
-                    {prod.name}
-                  </h3>
-                  <div className="flex items-center justify-between pt-4 border-t border-gray-100">
-                    <div className="flex flex-col">
-                      <span className="text-xs text-gray-500 mb-1">Price</span>
-                      <span className="text-3xl font-bold text-red-800">
-                        ₹{prod.price}
-                      </span>
-                    </div>
-                    <button className="bg-gradient-to-r from-red-800 to-amber-600 hover:from-red-900 hover:to-amber-700 text-white px-6 py-3 rounded-2xl font-bold hover:shadow-xl hover:scale-110 transition-all duration-300 flex items-center gap-2">
-                      <span>View</span>
-                      <svg
-                        className="w-4 h-4"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M9 5l7 7-7 7"
-                        />
-                      </svg>
-                    </button>
-                  </div>
-                </div>
-              </div>
-            );
-          })}
+              );
+            })}
         </div>
       </div>
 
@@ -311,7 +327,10 @@ export default function UserJourney() {
           className="fixed bottom-6 right-6 w-16 h-16 bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white rounded-full shadow-2xl hover:shadow-3xl transition-all flex items-center justify-center z-50 animate-bounce hover:animate-none group"
           title="Open Chat"
         >
-          <MessageCircle size={28} className="group-hover:scale-110 transition-transform" />
+          <MessageCircle
+            size={28}
+            className="group-hover:scale-110 transition-transform"
+          />
         </button>
       )}
 
