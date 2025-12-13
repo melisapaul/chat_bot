@@ -22,13 +22,14 @@ export default function StoreKeeper() {
   useEffect(() => {
     const checkForNewOrder = () => {
       const orderData = sessionStorage.getItem("newOfflineOrder");
-      if (orderData) {
-        setNewOfflineOrder(JSON.parse(orderData));
-        // Keep the notification for 10 seconds then remove permanently
+      if (orderData && !newOfflineOrder) {
+        const parsedOrder = JSON.parse(orderData);
+        setNewOfflineOrder(parsedOrder);
+        // Keep the notification for 45 seconds then remove permanently
         setTimeout(() => {
           setNewOfflineOrder(null);
           sessionStorage.removeItem("newOfflineOrder"); // Permanently remove from storage
-        }, 10000); // Hide notification after 10 seconds and clear data
+        }, 45000); // Hide notification after 45 seconds and clear data
       }
     };
 
@@ -47,7 +48,7 @@ export default function StoreKeeper() {
       clearInterval(interval);
       window.removeEventListener("beforeunload", handleBeforeUnload);
     };
-  }, []);
+  }, [newOfflineOrder]);
 
   const sold = data.storeStats.productsSold.map((item, index) => {
     const product = data.products.find((p) => p.id === item.productId);
@@ -263,20 +264,16 @@ export default function StoreKeeper() {
                     </div>
                     <div className="text-xs">
                       <h4 className="text-yellow-100 font-bold mb-1">
-                        📋 Instructions
+                        📱 Next Steps for Customer
                       </h4>
-                      <p className="text-yellow-50 mb-1">
-                        <span className="font-bold">Tell customer:</span> Go to{" "}
-                        <span className="font-bold">Home Page</span> →{" "}
-                        <span className="font-bold">"In-Store"</span> → Login
-                        with email/password
+                      <p className="text-yellow-50 mb-2">
+                        <span className="font-bold">Let them know:</span> "Just visit our Home Page, click on In-Store, and log in with your email and password."
                       </p>
-                      <p className="text-yellow-50 mb-1">
-                        <span className="font-bold">Then:</span> Resume your
-                        previous conversation and proceed for the further steps
+                      <p className="text-yellow-50 mb-2">
+                        "You'll be able to pick up right where we left off and complete your order!"
                       </p>
-                      <p className="text-yellow-50">
-                        <span className="font-bold">Session:</span>{" "}
+                      <p className="text-yellow-50 bg-yellow-600/30 px-2 py-1 rounded">
+                        <span className="font-bold">Session Code:</span>{" "}
                         {newOfflineOrder.sessionId}
                       </p>
                     </div>

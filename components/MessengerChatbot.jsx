@@ -2926,25 +2926,15 @@ export default function MessengerChatbot({ onClose }) {
                                 {product.price}
                               </div>
 
-                              {/* CTA Buttons */}
-                              <div className="flex flex-col gap-2">
-                                <button
-                                  onClick={() =>
-                                    handleQuickReply("Check Availability")
-                                  }
-                                  className="w-full px-3 py-2 bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white rounded-lg text-[0.8vw] font-medium transition-all shadow-sm hover:shadow-md"
-                                >
-                                  Check Availability
-                                </button>
-                                <button
-                                  onClick={() =>
-                                    handleQuickReply("Add to Cart")
-                                  }
-                                  className="w-full px-3 py-2 bg-white hover:bg-orange-50 text-orange-600 border-2 border-orange-500 rounded-lg text-[0.8vw] font-medium transition-all hover:scale-[1.02]"
-                                >
-                                  Add to Cart
-                                </button>
-                              </div>
+                              {/* CTA Button */}
+                              <button
+                                onClick={() =>
+                                  handleQuickReply("Check Availability")
+                                }
+                                className="w-full px-3 py-2 bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white rounded-lg text-[0.8vw] font-medium transition-all shadow-sm hover:shadow-md"
+                              >
+                                Check Availability
+                              </button>
                             </div>
                           ))}
                         </div>
