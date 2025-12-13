@@ -44,54 +44,27 @@ export default function InStoreChatbot({ onClose }) {
 
       // Initialize with welcome back message
       setTimeout(() => {
-        addAgentLog(
-          "System",
-          "SalesAgent",
-          "Customer session restored from online channel"
-        );
         setLoadingMessage(
           "Retrieving customer data for session #SESSION789456..."
         );
       }, 500);
 
       setTimeout(() => {
-        addAgentLog(
-          "SalesAgent",
-          "SessionDB",
-          "Retrieving customer data for session #SESSION789456"
-        );
         setLoadingMessage(
           "Loading product details and customer information..."
         );
       }, 1000);
 
       setTimeout(() => {
-        addAgentLog(
-          "SessionDB",
-          "SalesAgent",
-          "Customer: Arjun Bose, Product: Louis Philippe ₹2,199"
-        );
-        addAgentLog(
-          "SalesAgent",
-          "User",
-          "Welcome message prepared with session details"
-        );
-
-        // Add to agent timeline
-        setLog((prev) => [
-          ...prev,
-          {
-            agentId: "sales_agent",
-            title: "Sales Agent",
-            action: "Session restoration and welcome message",
-          },
-        ]);
-
         setIsLoading(false);
         addAgentMessage(
+<<<<<<< HEAD
           "Welcome back, Arjun! 👋\n\n🆔 Your Session ID: #SESSION789456\n\n📦 PRODUCT DETAILS:\n▸ Product: Louis Philippe\n▸ Size: 40 (Medium)\n▸ Color: White\n▸ Price: ₹2,199\n\n✅ Your session has been successfully restored from online to in-store. How can I assist you today? You can type 'proceed' to complete the purchase, or 'continue shopping' to browse more products.",
           [],
           { title: "Sales Agent", id: "sales_agent" }
+=======
+          "Welcome back, Arjun! 👋\n\n🆔 Your Session ID: #SESSION789456\n\n📦 PRODUCT DETAILS:\n▸ Product: Louis Philippe\n▸ Size: 40 (Medium)\n▸ Color: White\n▸ Price: ₹2,199\n\n✅ Your session has been successfully restored from online to in-store. How can I assist you today?"
+>>>>>>> 57feeb3109103f5c7a71b06ed352f2cd50e96445
         );
       }, 1800);
 
