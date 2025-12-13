@@ -5,7 +5,7 @@ import { User, Building, Settings, Sparkles } from "lucide-react";
 export default function Home() {
   const nav = useNavigate();
   const [showInStoreLogin, setShowInStoreLogin] = useState(false);
-  const [loginData, setLoginData] = useState({ email: "", password: "" });
+  const [loginData, setLoginData] = useState({ sessionId: "", password: "" });
 
   const handleInStoreLogin = (e) => {
     e.preventDefault();
@@ -196,7 +196,7 @@ export default function Home() {
                       In-Store Login
                     </h3>
                     <p className="text-amber-100 text-sm">
-                      Access your customer profile
+                      Enter your session ID to continue
                     </p>
                   </div>
                 </div>
@@ -225,15 +225,15 @@ export default function Home() {
               <div className="space-y-4">
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-2">
-                    Email Address
+                    Session ID
                   </label>
                   <input
-                    type="email"
-                    name="email"
-                    value={loginData.email}
+                    type="text"
+                    name="sessionId"
+                    value={loginData.sessionId}
                     onChange={handleInputChange}
                     className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-amber-500 focus:outline-none transition-colors"
-                    placeholder="Enter your email"
+                    placeholder="Enter any session ID (e.g., #SESSION123456)"
                     required
                   />
                 </div>
@@ -248,7 +248,7 @@ export default function Home() {
                     value={loginData.password}
                     onChange={handleInputChange}
                     className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-amber-500 focus:outline-none transition-colors"
-                    placeholder="Enter your password"
+                    placeholder="Enter any password"
                     required
                   />
                 </div>
