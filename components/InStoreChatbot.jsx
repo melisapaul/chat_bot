@@ -60,13 +60,9 @@ export default function InStoreChatbot({ onClose }) {
       setTimeout(() => {
         setIsLoading(false);
         addAgentMessage(
-<<<<<<< HEAD
           "Welcome back, Arjun! 👋\n\n🆔 Your Session ID: #SESSION789456\n\n📦 PRODUCT DETAILS:\n▸ Product: Louis Philippe\n▸ Size: 40 (Medium)\n▸ Color: White\n▸ Price: ₹2,199\n\n✅ Your session has been successfully restored from online to in-store. How can I assist you today? You can type 'proceed' to complete the purchase, or 'continue shopping' to browse more products.",
           [],
           { title: "Sales Agent", id: "sales_agent" }
-=======
-          "Welcome back, Arjun! 👋\n\n🆔 Your Session ID: #SESSION789456\n\n📦 PRODUCT DETAILS:\n▸ Product: Louis Philippe\n▸ Size: 40 (Medium)\n▸ Color: White\n▸ Price: ₹2,199\n\n✅ Your session has been successfully restored from online to in-store. How can I assist you today?"
->>>>>>> 57feeb3109103f5c7a71b06ed352f2cd50e96445
         );
       }, 1800);
 
