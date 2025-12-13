@@ -743,11 +743,27 @@ export default function MessengerChatbot({ onClose }) {
           "Session transfer complete - ready for in-store assistance"
         );
         setIsTyping(false);
-        addAgentMessage(
-          "🏪 CHANNEL SWITCHING: Online → In-Store Kiosk\n\n📋 SESSION TRANSFER DETAILS:\n━━━━━━━━━━━━━━━━━━━━━━━\n🆔 Session ID: #SESSION789456\n👤 Customer: Arjun Bose\n🏷️ Customer ID: #00001\n\n📦 PRODUCT DETAILS:\n▸ Louis Philippe\n▸ Size: 40 (Medium)\n▸ Color: White\n▸ SKU: LP-WH-40-001\n▸ Price: ₹2,199\n\n🏪 STORE HANDOFF:\n▸ Location: ABFRL Store South City\n▸ Manager: Sophia\n▸ Status: Available\n\n✅ Ready for in-store assistance",
-          [],
-          { title: "Fulfillment Agent", id: "fulfillment_agent" }
-        );
+        setMessages((prev) => [
+          ...prev,
+          {
+            type: "store-handoff",
+            timestamp: new Date(),
+            agentInfo: { title: "Fulfillment Agent", id: "fulfillment_agent" },
+            storeData: {
+              sessionId: "#SESSION789456",
+              customerName: "Arjun Bose",
+              customerId: "#00001",
+              product: "Louis Philippe",
+              size: "40 (Medium)",
+              color: "White",
+              sku: "LP-WH-40-001",
+              price: "₹2,199",
+              storeName: "ABFRL Store South City",
+              manager: "Sophia",
+              status: "Available"
+            }
+          },
+        ]);
 
         // Store order details for StoreKeeper notification
         sessionStorage.setItem(
@@ -815,11 +831,27 @@ export default function MessengerChatbot({ onClose }) {
           "Session transfer complete - ready for in-store assistance"
         );
         setIsTyping(false);
-        addAgentMessage(
-          "🏪 CHANNEL SWITCHING: Online → In-Store Kiosk\n\n📋 SESSION TRANSFER DETAILS:\n━━━━━━━━━━━━━━━━━━━━━━━\n🆔 Session ID: #SESSION789456\n👤 Customer: Arjun Bose\n🏷️ Customer ID: #00001\n\n📦 PRODUCT DETAILS:\n▸ Louis Philippe\n▸ Size: 40 (Medium)\n▸ Color: White\n▸ SKU: LP-WH-40-001\n▸ Price: ₹2,199\n\n🏪 STORE HANDOFF:\n▸ Location: City Centre Salt Lake, First Floor\n▸ Manager: Rahul\n▸ Status: Available\n\n✅ Ready for in-store assistance",
-          [],
-          { title: "Fulfillment Agent", id: "fulfillment_agent" }
-        );
+        setMessages((prev) => [
+          ...prev,
+          {
+            type: "store-handoff",
+            timestamp: new Date(),
+            agentInfo: { title: "Fulfillment Agent", id: "fulfillment_agent" },
+            storeData: {
+              sessionId: "#SESSION789456",
+              customerName: "Arjun Bose",
+              customerId: "#00001",
+              product: "Louis Philippe",
+              size: "40 (Medium)",
+              color: "White",
+              sku: "LP-WH-40-001",
+              price: "₹2,199",
+              storeName: "City Centre Salt Lake, First Floor",
+              manager: "Rahul",
+              status: "Available"
+            }
+          },
+        ]);
 
         // Store order details for StoreKeeper notification
         sessionStorage.setItem(
@@ -887,11 +919,28 @@ export default function MessengerChatbot({ onClose }) {
           "Session transfer complete - ready for in-store assistance"
         );
         setIsTyping(false);
-        addAgentMessage(
-          "🏪 CHANNEL SWITCHING: Online → In-Store Kiosk\n\n📋 SESSION TRANSFER DETAILS:\n━━━━━━━━━━━━━━━━━━━━━━━\n🆔 Session ID: #SESSION789456\n👤 Customer: Arjun Bose\n🏷️ Customer ID: #00001\n\n📦 PRODUCT DETAILS:\n▸ Louis Philippe\n▸ Size: 40 (Medium)\n▸ Color: White\n▸ SKU: LP-WH-40-001\n▸ Price: ₹2,199\n\n🏪 STORE HANDOFF:\n▸ Location: Quest Mall, Second Floor\n▸ Manager: Priya\n▸ Status: Limited Stock\n\n⚠️ Note: Limited availability - reserve quickly",
-          [],
-          { title: "Fulfillment Agent", id: "fulfillment_agent" }
-        );
+        setMessages((prev) => [
+          ...prev,
+          {
+            type: "store-handoff",
+            timestamp: new Date(),
+            agentInfo: { title: "Fulfillment Agent", id: "fulfillment_agent" },
+            storeData: {
+              sessionId: "#SESSION789456",
+              customerName: "Arjun Bose",
+              customerId: "#00001",
+              product: "Louis Philippe",
+              size: "40 (Medium)",
+              color: "White",
+              sku: "LP-WH-40-001",
+              price: "₹2,199",
+              storeName: "Quest Mall, Second Floor",
+              manager: "Priya",
+              status: "Limited Stock",
+              warning: "Limited availability - reserve quickly"
+            }
+          },
+        ]);
 
         // Store order details for StoreKeeper notification
         sessionStorage.setItem(
@@ -959,11 +1008,27 @@ export default function MessengerChatbot({ onClose }) {
           "Session transfer complete - ready for in-store assistance"
         );
         setIsTyping(false);
-        addAgentMessage(
-          "🏪 CHANNEL SWITCHING: Online → In-Store Kiosk\n\n📋 SESSION TRANSFER DETAILS:\n━━━━━━━━━━━━━━━━━━━━━━━\n🆔 Session ID: #SESSION789456\n👤 Customer: Arjun Bose\n🏷️ Customer ID: #00001\n\n📦 PRODUCT DETAILS:\n▸ Louis Philippe\n▸ Size: 40 (Medium)\n▸ Color: White\n▸ SKU: LP-WH-40-001\n▸ Price: ₹2,199\n\n🏪 STORE HANDOFF:\n▸ Location: South City Mall, Third Floor\n▸ Manager: Neha\n▸ Status: Available\n\n✅ Ready for in-store assistance",
-          [],
-          { title: "Fulfillment Agent", id: "fulfillment_agent" }
-        );
+        setMessages((prev) => [
+          ...prev,
+          {
+            type: "store-handoff",
+            timestamp: new Date(),
+            agentInfo: { title: "Fulfillment Agent", id: "fulfillment_agent" },
+            storeData: {
+              sessionId: "#SESSION789456",
+              customerName: "Arjun Bose",
+              customerId: "#00001",
+              product: "Louis Philippe",
+              size: "40 (Medium)",
+              color: "White",
+              sku: "LP-WH-40-001",
+              price: "₹2,199",
+              storeName: "South City Mall, Third Floor",
+              manager: "Neha",
+              status: "Available"
+            }
+          },
+        ]);
 
         // Store order details for StoreKeeper notification
         sessionStorage.setItem(
@@ -2696,6 +2761,114 @@ export default function MessengerChatbot({ onClose }) {
                               </div>
                             </div>
                           </div>
+                        </div>
+                      </div>
+                      <p className="text-[0.8vw] text-gray-400 mt-1">
+                        {msg.timestamp.toLocaleTimeString([], {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}
+                      </p>
+                    </div>
+                  </div>
+                ) : msg.type === "store-handoff" ? (
+                  // Store Handoff Message with Enhanced UI
+                  <div className="flex justify-start">
+                    <div className="max-w-[95%] w-full">
+                      <div className="bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50 border-2 border-orange-300 rounded-xl rounded-tl-sm p-2.5 shadow-lg">
+                        {/* Agent header */}
+                        <div className="text-[0.65vw] text-gray-600 mb-1.5 font-semibold flex items-center gap-1.5">
+                          <span className="w-6 h-6 bg-gradient-to-r from-orange-500 to-amber-500 rounded-full flex items-center justify-center text-white text-xs">
+                            🏪
+                          </span>
+                          <span>{msg.agentInfo?.title || "Fulfillment Agent"} • {msg.agentInfo?.id || "fulfillment_agent"}</span>
+                        </div>
+
+                        {/* Main Title */}
+                        <div className="bg-gradient-to-r from-orange-500 to-amber-500 text-white rounded-lg p-2 mb-2 shadow-sm">
+                          <h3 className="text-[0.9vw] font-bold flex items-center gap-1.5">
+                            <span className="text-lg">🔄</span>
+                            Channel Switching: Online → In-Store Kiosk
+                          </h3>
+                        </div>
+
+                        {/* Session Info Card */}
+                        <div className="bg-white rounded-lg p-2 mb-2 border border-orange-200 shadow-sm">
+                          <div className="flex items-center gap-1.5 mb-1.5">
+                            <span className="text-sm">📋</span>
+                            <h4 className="text-[0.8vw] font-bold text-orange-600">Session Transfer</h4>
+                          </div>
+                          <div className="grid grid-cols-2 gap-1.5 text-[0.7vw]">
+                            <div className="bg-purple-50 rounded p-1.5">
+                              <span className="text-purple-600 font-semibold">🆔 Session:</span>
+                              <div className="font-mono font-bold text-purple-800 text-[0.65vw]">{msg.storeData?.sessionId}</div>
+                            </div>
+                            <div className="bg-blue-50 rounded p-1.5">
+                              <span className="text-blue-600 font-semibold">👤 Customer:</span>
+                              <div className="font-bold text-blue-800">{msg.storeData?.customerName}</div>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Product Details Card */}
+                        <div className="bg-white rounded-lg p-2 mb-2 border border-orange-200 shadow-sm">
+                          <div className="flex items-center gap-1.5 mb-1.5">
+                            <span className="text-sm">📦</span>
+                            <h4 className="text-[0.8vw] font-bold text-orange-600">Product</h4>
+                          </div>
+                          <div className="text-[0.75vw] space-y-1">
+                            <div className="flex items-center gap-1.5">
+                              <span className="font-semibold text-gray-700">👕</span>
+                              <span className="font-bold text-gray-900">{msg.storeData?.product}</span>
+                            </div>
+                            <div className="flex gap-3 text-[0.7vw]">
+                              <span><span className="text-gray-600">Size:</span> <span className="font-semibold">{msg.storeData?.size}</span></span>
+                              <span><span className="text-gray-600">Color:</span> <span className="font-semibold">{msg.storeData?.color}</span></span>
+                            </div>
+                            <div className="flex items-center justify-between">
+                              <span className="font-mono text-[0.6vw] bg-gray-100 px-1.5 py-0.5 rounded">{msg.storeData?.sku}</span>
+                              <span className="font-bold text-orange-600 text-[0.85vw]">{msg.storeData?.price}</span>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Store Handoff Card */}
+                        <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg p-2 border border-green-300 shadow-sm">
+                          <div className="flex items-center gap-1.5 mb-1.5">
+                            <span className="text-sm">🏪</span>
+                            <h4 className="text-[0.8vw] font-bold text-green-700">Store Handoff</h4>
+                          </div>
+                          <div className="text-[0.75vw] space-y-1">
+                            <div className="flex items-center gap-1.5">
+                              <span className="font-semibold text-gray-700">📍</span>
+                              <span className="font-bold text-gray-900">{msg.storeData?.storeName}</span>
+                            </div>
+                            <div className="flex items-center gap-1.5">
+                              <span className="font-semibold text-gray-700">👨‍💼</span>
+                              <span className="font-bold text-gray-900">{msg.storeData?.manager}</span>
+                            </div>
+                            <div className="flex items-center gap-1.5">
+                              <span className={`font-bold px-2 py-0.5 rounded text-[0.7vw] ${msg.storeData?.status === "Available" ? "bg-green-200 text-green-800" : "bg-orange-200 text-orange-800"}`}>
+                                {msg.storeData?.status === "Available" ? "✅ " : "⚠️ "}{msg.storeData?.status}
+                              </span>
+                            </div>
+                            {msg.storeData?.warning && (
+                              <div className="bg-yellow-100 border-l-2 border-yellow-500 p-1.5 rounded mt-1">
+                                <span className="text-yellow-800 text-[0.7vw] font-semibold">
+                                  ⚡ {msg.storeData.warning}
+                                </span>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+
+                        {/* Ready Badge */}
+                        <div className="mt-2 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-lg p-1.5 text-center shadow-sm">
+                          <span className="text-[0.75vw] font-bold flex items-center justify-center gap-1.5">
+                            <span className="text-sm">✨</span>
+                            Ready for In-Store Assistance!
+                            <span className="text-sm">✨</span>
+                          </span>
                         </div>
                       </div>
                       <p className="text-[0.8vw] text-gray-400 mt-1">
