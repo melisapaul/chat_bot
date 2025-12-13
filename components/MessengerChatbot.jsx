@@ -17,6 +17,8 @@ export default function MessengerChatbot({ onClose }) {
   const [agentLogs, setAgentLogs] = useState([]);
   const [productRound, setProductRound] = useState(1); // Track which set of products to show
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(null); // Track selected payment method
+  const [paymentAttempt, setPaymentAttempt] = useState(1); // Track payment attempt number
+  const [showPaymentFailure, setShowPaymentFailure] = useState(false); // Show payment failure popup
   const messagesEndRef = useRef(null);
   const timelineEndRef = useRef(null);
   const hasInitialized = useRef(false);
@@ -256,15 +258,68 @@ export default function MessengerChatbot({ onClose }) {
         ]);
       }, 1500);
     } else if (reply === "Reserve in Store") {
-      addAgentLog("User", "SalesAgent", `Selected: ${reply}`);
+      addAgentLog("User", "PaymentAgent", `Selected: ${reply}`);
       setTimeout(() => {
+        addAgentLog(
+          "PaymentAgent",
+          "InventoryAgent",
+          "Check store availability for in-store pickup"
+        );
+        addAgentLog(
+          "InventoryAgent",
+          "StoreDB",
+          "Query available stores with stock"
+        );
+        setIsTyping(true);
+      }, 400);
+      setTimeout(() => {
+        addAgentLog(
+          "StoreDB",
+          "InventoryAgent",
+          "Store inventory data retrieved"
+        );
+        addAgentLog(
+          "InventoryAgent",
+          "User",
+          "Presenting available store locations"
+        );
         setIsTyping(false);
         addAgentMessage(
-          "Which store would you like to reserve at?",
-          ["South City Mall (3 pcs)", "Check Other Stores"],
-          { title: "Sales Agent", id: "sales_agent" }
+          "Inventory checked! Choose Buy Online or nearest store.",
+          [],
+          { title: "Inventory Agent", id: "inventory_agent" },
+          "inventory"
         );
-      }, 600);
+      }, 1200);
+    } else if (reply === "Nearest Store") {
+      addAgentLog("User", "InventoryAgent", `Selected: ${reply}`);
+      setTimeout(() => {
+        addAgentLog(
+          "InventoryAgent",
+          "StoreDB",
+          "Querying nearby store locations and availability"
+        );
+        addAgentLog(
+          "StoreDB",
+          "InventoryAgent",
+          "Store location data retrieved"
+        );
+        setIsTyping(true);
+      }, 400);
+      setTimeout(() => {
+        addAgentLog(
+          "InventoryAgent",
+          "User",
+          "Displaying store selection options"
+        );
+        setIsTyping(false);
+        addAgentMessage(
+          "Inventory checked! Choose Buy Online or nearest store.",
+          [],
+          { title: "Inventory Agent", id: "inventory_agent" },
+          "store-selection"
+        );
+      }, 1200);
     } else if (reply === "South City Mall (3 pcs)") {
       addAgentLog("User", "SalesAgent", `Selected: South City Mall`);
       setTimeout(() => {
@@ -340,14 +395,67 @@ export default function MessengerChatbot({ onClose }) {
         );
         addAgentLog("PaymentGateway", "PaymentAgent", "Payment link ready");
         setIsTyping(false);
-        addAgentMessage(
-          "💳 UPI Payment\n\nScan QR code or use UPI ID:\nabfrl@paytm\n\nAmount: ₹1,789\n\nWaiting for payment confirmation...",
-          ["Payment Done", "Try Other Method"],
-          { title: "Payment Agent", id: "payment_agent" }
-        );
+        if (paymentAttempt === 2) {
+          // Second attempt - show UPI form for success
+          addAgentLog("User", "PaymentAgent-2", "Selected UPI payment method");
+          addAgentLog(
+            "PaymentAgent-2",
+            "UPI-Gateway",
+            "Establishing secure UPI connection"
+          );
+          addAgentMessage(
+            "UPI Payment - Second Attempt\n\nLet's try with UPI for a secure payment:",
+            [],
+            { title: "Payment Agent (Retry)", id: "payment_agent_2" },
+            "payment"
+          );
+          setSelectedPaymentMethod("UPI-Second");
+        } else {
+          // First attempt - regular UPI
+          addAgentMessage(
+            "💳 UPI Payment\n\nScan QR code or use UPI ID:\nabfrl@paytm\n\nAmount: ₹1,789\n\nWaiting for payment confirmation...",
+            ["Payment Done", "Try Other Method"],
+            { title: "Payment Agent", id: "payment_agent" }
+          );
+        }
       }, 1200);
+    } else if (reply === "Debit Card") {
+      addAgentLog("User", "PaymentAgent", `Selected payment: ${reply}`);
+      setTimeout(() => {
+        addAgentLog(
+          "PaymentAgent",
+          "PaymentGateway",
+          "Setup debit card payment"
+        );
+        setIsTyping(false);
+        addAgentMessage(
+          "Debit Card Payment Selected:",
+          [],
+          { title: "Payment Agent", id: "payment_agent" },
+          "payment"
+        );
+        setSelectedPaymentMethod("Debit Card");
+      }, 1000);
     } else if (reply === "Payment Done") {
       addAgentLog("User", "PaymentAgent", "Payment confirmation received");
+
+      // Show payment success message for second attempt
+      if (paymentAttempt === 2) {
+        setTimeout(() => {
+          addAgentLog(
+            "UPI-Gateway",
+            "PaymentAgent-2",
+            "Payment verification successful"
+          );
+          addAgentLog(
+            "PaymentAgent-2",
+            "User",
+            "Payment confirmed and processed"
+          );
+          // Payment success message removed as requested
+        }, 500);
+      }
+
       setTimeout(() => {
         setIsTyping(true);
         addAgentLog("PaymentAgent", "PaymentGateway", "Verify payment status");
@@ -523,26 +631,40 @@ export default function MessengerChatbot({ onClose }) {
         );
       }, 800);
     } else if (reply === "Track Order") {
-      addAgentLog("User", "FulfillmentAgent", `Selected: ${reply}`);
+      addAgentLog("User", "PostPurchaseAgent-2", `Selected: ${reply}`);
       setTimeout(() => {
         addAgentLog(
-          "FulfillmentAgent",
+          "PostPurchaseAgent-2",
+          "TrackingSystem",
+          "Accessing order tracking for #ORD789456"
+        );
+        addAgentLog(
+          "TrackingSystem",
           "LogisticsDB",
-          "Query order #ORD789456 status"
+          "Query real-time shipment status"
         );
         setIsTyping(true);
       }, 400);
       setTimeout(() => {
         addAgentLog(
           "LogisticsDB",
-          "FulfillmentAgent",
-          "Order dispatched, in transit"
+          "PostPurchaseAgent-2",
+          "Live tracking data retrieved successfully"
+        );
+        addAgentLog(
+          "PostPurchaseAgent-2",
+          "User",
+          "Presenting detailed tracking information"
         );
         setIsTyping(false);
         addAgentMessage(
-          "📦 Order Status: #ORD789456\n\n✅ Payment confirmed\n✅ Order packed\n🚚 Out for delivery\n\nExpected delivery: Tomorrow by 6 PM\n\nCarrier: BlueDart Express\nTracking ID: BD789456123\n\nYour package is on its way!",
-          ["View Tracking Details", "Contact Delivery", "Done"],
-          { title: "Fulfillment Agent", id: "fulfillment_agent" }
+          "📦 Order Tracking: #ORD789456\n\n✅ Payment Confirmed\n✅ Order Processed\n✅ Packed & Ready\n🚚 Out for Delivery\n\nExpected Delivery: Tomorrow by 6 PM\n\nCarrier: BlueDart Express\nTracking ID: BD789456123\n\n📍 Current Location: In Transit to Delhi\n🚛 Last Update: 2 hours ago",
+          ["Track Live Location", "Contact Delivery Agent", "Done"],
+          {
+            title: "Post Purchase Agent (Tracking)",
+            id: "post_purchase_agent_2",
+          },
+          "tracking"
         );
       }, 1400);
     } else if (reply === "View Invoice") {
@@ -557,6 +679,202 @@ export default function MessengerChatbot({ onClose }) {
           { title: "Payment Agent", id: "payment_agent" }
         );
       }, 800);
+    } else if (reply === "ABFRL Store South City") {
+      addAgentLog(
+        "User",
+        "InventoryAgent (In-Store)",
+        `Selected store: ${reply}`
+      );
+      setTimeout(() => {
+        addAgentLog(
+          "InventoryAgent (In-Store)",
+          "StoreDB",
+          "Validating in-store inventory for ABFRL South City"
+        );
+        addAgentLog(
+          "StoreDB",
+          "InventoryAgent (In-Store)",
+          "Stock confirmed: Size 40 available with Manager Sophia"
+        );
+        setIsTyping(true);
+      }, 400);
+      setTimeout(() => {
+        addAgentLog(
+          "InventoryAgent (In-Store)",
+          "FulfillmentAgent",
+          "Store selection confirmed - initiating in-store fulfillment"
+        );
+        addAgentLog(
+          "FulfillmentAgent",
+          "System",
+          "Generating session details for store handoff"
+        );
+      }, 1000);
+      setTimeout(() => {
+        addAgentLog(
+          "System",
+          "FulfillmentAgent",
+          "Channel switching from online to in-store kiosk"
+        );
+        addAgentLog(
+          "FulfillmentAgent",
+          "User",
+          "Session transfer complete - ready for in-store assistance"
+        );
+        setIsTyping(false);
+        addAgentMessage(
+          "🏪 CHANNEL SWITCHING: Online → In-Store Kiosk\n\n📋 SESSION TRANSFER DETAILS:\n━━━━━━━━━━━━━━━━━━━━━━━\n🆔 Session ID: #SESSION789456\n👤 Customer: Arjun Sharma\n🏷️ Customer ID: #CUST12345\n\n📦 PRODUCT DETAILS:\n▸ Louis Philippe Formal Shirt\n▸ Size: 40 (Medium)\n▸ Color: White\n▸ SKU: LP-WH-40-001\n▸ Price: ₹1,789\n\n🏪 STORE HANDOFF:\n▸ Location: ABFRL Store South City\n▸ Manager: Sophia\n▸ Status: Available\n\n✅ Ready for in-store assistance",
+          [],
+          { title: "Fulfillment Agent", id: "fulfillment_agent" }
+        );
+      }, 1800);
+    } else if (reply === "City Centre Salt Lake") {
+      addAgentLog(
+        "User",
+        "InventoryAgent (In-Store)",
+        `Selected store: ${reply}`
+      );
+      setTimeout(() => {
+        addAgentLog(
+          "InventoryAgent (In-Store)",
+          "StoreDB",
+          "Validating in-store inventory for City Centre Salt Lake"
+        );
+        addAgentLog(
+          "StoreDB",
+          "InventoryAgent (In-Store)",
+          "Stock confirmed: Size 40 available with Manager Rahul"
+        );
+        setIsTyping(true);
+      }, 400);
+      setTimeout(() => {
+        addAgentLog(
+          "InventoryAgent (In-Store)",
+          "FulfillmentAgent",
+          "Store selection confirmed - initiating in-store fulfillment"
+        );
+        addAgentLog(
+          "FulfillmentAgent",
+          "System",
+          "Generating session details for store handoff"
+        );
+      }, 1000);
+      setTimeout(() => {
+        addAgentLog(
+          "System",
+          "FulfillmentAgent",
+          "Channel switching from online to in-store kiosk"
+        );
+        addAgentLog(
+          "FulfillmentAgent",
+          "User",
+          "Session transfer complete - ready for in-store assistance"
+        );
+        setIsTyping(false);
+        addAgentMessage(
+          "🏪 CHANNEL SWITCHING: Online → In-Store Kiosk\n\n📋 SESSION TRANSFER DETAILS:\n━━━━━━━━━━━━━━━━━━━━━━━\n🆔 Session ID: #SESSION890123\n👤 Customer: Arjun Sharma\n🏷️ Customer ID: #CUST12345\n\n📦 PRODUCT DETAILS:\n▸ Louis Philippe Formal Shirt\n▸ Size: 40 (Medium)\n▸ Color: White\n▸ SKU: LP-WH-40-001\n▸ Price: ₹1,789\n\n🏪 STORE HANDOFF:\n▸ Location: City Centre Salt Lake, First Floor\n▸ Manager: Rahul\n▸ Status: Available\n\n✅ Ready for in-store assistance",
+          [],
+          { title: "Fulfillment Agent", id: "fulfillment_agent" }
+        );
+      }, 1800);
+    } else if (reply === "Quest Mall") {
+      addAgentLog(
+        "User",
+        "InventoryAgent (In-Store)",
+        `Selected store: ${reply}`
+      );
+      setTimeout(() => {
+        addAgentLog(
+          "InventoryAgent (In-Store)",
+          "StoreDB",
+          "Validating in-store inventory for Quest Mall"
+        );
+        addAgentLog(
+          "StoreDB",
+          "InventoryAgent (In-Store)",
+          "Stock status: Limited availability with Manager Priya"
+        );
+        setIsTyping(true);
+      }, 400);
+      setTimeout(() => {
+        addAgentLog(
+          "InventoryAgent (In-Store)",
+          "FulfillmentAgent",
+          "Store selection confirmed - initiating in-store fulfillment"
+        );
+        addAgentLog(
+          "FulfillmentAgent",
+          "System",
+          "Generating session details for store handoff"
+        );
+      }, 1000);
+      setTimeout(() => {
+        addAgentLog(
+          "System",
+          "FulfillmentAgent",
+          "Channel switching from online to in-store kiosk"
+        );
+        addAgentLog(
+          "FulfillmentAgent",
+          "User",
+          "Session transfer complete - ready for in-store assistance"
+        );
+        setIsTyping(false);
+        addAgentMessage(
+          "🏪 CHANNEL SWITCHING: Online → In-Store Kiosk\n\n📋 SESSION TRANSFER DETAILS:\n━━━━━━━━━━━━━━━━━━━━━━━\n🆔 Session ID: #SESSION456789\n👤 Customer: Arjun Sharma\n🏷️ Customer ID: #CUST12345\n\n📦 PRODUCT DETAILS:\n▸ Louis Philippe Formal Shirt\n▸ Size: 40 (Medium)\n▸ Color: White\n▸ SKU: LP-WH-40-001\n▸ Price: ₹1,789\n\n🏪 STORE HANDOFF:\n▸ Location: Quest Mall, Second Floor\n▸ Manager: Priya\n▸ Status: Limited Stock\n\n⚠️ Note: Limited availability - reserve quickly",
+          [],
+          { title: "Fulfillment Agent", id: "fulfillment_agent" }
+        );
+      }, 1800);
+    } else if (reply === "South City Mall") {
+      addAgentLog(
+        "User",
+        "InventoryAgent (In-Store)",
+        `Selected store: ${reply}`
+      );
+      setTimeout(() => {
+        addAgentLog(
+          "InventoryAgent (In-Store)",
+          "StoreDB",
+          "Validating in-store inventory for South City Mall"
+        );
+        addAgentLog(
+          "StoreDB",
+          "InventoryAgent (In-Store)",
+          "Stock confirmed: Size 40 available with Manager Neha"
+        );
+        setIsTyping(true);
+      }, 400);
+      setTimeout(() => {
+        addAgentLog(
+          "InventoryAgent (In-Store)",
+          "FulfillmentAgent",
+          "Store selection confirmed - initiating in-store fulfillment"
+        );
+        addAgentLog(
+          "FulfillmentAgent",
+          "System",
+          "Generating session details for store handoff"
+        );
+      }, 1000);
+      setTimeout(() => {
+        addAgentLog(
+          "System",
+          "FulfillmentAgent",
+          "Channel switching from online to in-store kiosk"
+        );
+        addAgentLog(
+          "FulfillmentAgent",
+          "User",
+          "Session transfer complete - ready for in-store assistance"
+        );
+        setIsTyping(false);
+        addAgentMessage(
+          "🏪 CHANNEL SWITCHING: Online → In-Store Kiosk\n\n📋 SESSION TRANSFER DETAILS:\n━━━━━━━━━━━━━━━━━━━━━━━\n🆔 Session ID: #SESSION123789\n👤 Customer: Arjun Sharma\n🏷️ Customer ID: #CUST12345\n\n📦 PRODUCT DETAILS:\n▸ Louis Philippe Formal Shirt\n▸ Size: 40 (Medium)\n▸ Color: White\n▸ SKU: LP-WH-40-001\n▸ Price: ₹1,789\n\n🏪 STORE HANDOFF:\n▸ Location: South City Mall, Third Floor\n▸ Manager: Neha\n▸ Status: Available\n\n✅ Ready for in-store assistance",
+          [],
+          { title: "Fulfillment Agent", id: "fulfillment_agent" }
+        );
+      }, 1800);
     } else if (reply === "Continue Shopping" || reply === "Done") {
       addAgentLog("User", "SalesAgent", `Selected: ${reply}`);
       setTimeout(() => {
@@ -577,10 +895,17 @@ export default function MessengerChatbot({ onClose }) {
         );
         setIsTyping(false);
         addAgentMessage(
-          "💳 Card Payment\n\nRedirecting to secure payment gateway...\n\nAmount: ₹1,789\n\nWe accept:\n• Visa\n• Mastercard\n• American Express\n• RuPay",
-          ["Proceed to Payment", "Try Other Method"],
-          { title: "Payment Agent", id: "payment_agent" }
+          "Choose your card type for secure payment:",
+          [],
+          { title: "Payment Agent", id: "payment_agent" },
+          "payment"
         );
+        // Set to Credit Card for first attempt
+        if (paymentAttempt === 1) {
+          setSelectedPaymentMethod("Credit Card");
+        } else {
+          setSelectedPaymentMethod("Debit Card");
+        }
       }, 1000);
     } else if (reply === "Cash on Delivery") {
       addAgentLog("User", "PaymentAgent", `Selected payment: COD`);
@@ -914,6 +1239,57 @@ export default function MessengerChatbot({ onClose }) {
                 </div>
               )}
 
+              {/* Payment Agent 2 (Retry) */}
+              {agentLogs.some(
+                (log) =>
+                  log.from === "PaymentAgent-2" ||
+                  log.to === "PaymentAgent-2" ||
+                  log.from === "UPI-Gateway" ||
+                  log.to === "UPI-Gateway"
+              ) && (
+                <div className="relative pl-8">
+                  <div className="absolute left-0 top-1 h-3 w-3 bg-green-500 rounded-full shadow-md"></div>
+                  <div className="p-3 bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 rounded-lg border border-green-300 shadow-sm hover:shadow-md transition-shadow">
+                    <div className="flex justify-between items-center mb-2">
+                      <p className="font-bold text-[1.3vw] text-gray-900">
+                        Payment Agent 2
+                      </p>
+                      <span className="text-[0.8vw] bg-green-500 text-white px-2 py-1 rounded-md font-semibold shadow-sm">
+                        payment_agent_2
+                      </span>
+                    </div>
+
+                    {/* Timeline logs */}
+                    <div className="mt-2 space-y-1 border-t border-green-200 pt-2">
+                      {agentLogs
+                        .filter(
+                          (log) =>
+                            log.from === "PaymentAgent-2" ||
+                            log.to === "PaymentAgent-2" ||
+                            log.from === "UPI-Gateway" ||
+                            log.to === "UPI-Gateway" ||
+                            log.from === "System" ||
+                            log.to === "System"
+                        )
+                        .slice(-3)
+                        .map((log, idx) => (
+                          <div
+                            key={idx}
+                            className="flex items-start gap-2 text-[0.75vw] font-mono"
+                          >
+                            <span className="text-gray-400 min-w-[60px]">
+                              {log.timestamp}
+                            </span>
+                            <div className="flex-1 text-gray-700">
+                              {log.message}
+                            </div>
+                          </div>
+                        ))}
+                    </div>
+                  </div>
+                </div>
+              )}
+
               {/* Fulfillment Agent */}
               {agentLogs.some(
                 (log) =>
@@ -1052,33 +1428,35 @@ export default function MessengerChatbot({ onClose }) {
                 </div>
               )}
 
-              {/* Post Purchase Agent */}
+              {/* Post Purchase Agent 2 (Tracking) */}
               {agentLogs.some(
                 (log) =>
-                  log.from === "PostPurchaseAgent" ||
-                  log.to === "PostPurchaseAgent"
+                  log.from === "PostPurchaseAgent-2" ||
+                  log.to === "PostPurchaseAgent-2"
               ) && (
                 <div className="relative pl-8">
-                  <div className="absolute left-0 top-1 h-3 w-3 bg-indigo-500 rounded-full shadow-md"></div>
-                  <div className="p-3 bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50 rounded-lg border border-orange-300 shadow-sm hover:shadow-md transition-shadow">
+                  <div className="absolute left-0 top-1 h-3 w-3 bg-purple-500 rounded-full shadow-md"></div>
+                  <div className="p-3 bg-gradient-to-br from-purple-50 via-indigo-50 to-blue-50 rounded-lg border border-purple-300 shadow-sm hover:shadow-md transition-shadow">
                     <div className="flex justify-between items-center mb-2">
                       <p className="font-bold text-[1.3vw] text-gray-900">
-                        Post Purchase Agent
+                        Post Purchase Agent 2
                       </p>
-                      <span className="text-[0.8vw] bg-indigo-500 text-white px-2 py-1 rounded-md font-semibold shadow-sm">
-                        post_purchase_agent
+                      <span className="text-[0.8vw] bg-purple-500 text-white px-2 py-1 rounded-md font-semibold shadow-sm">
+                        post_purchase_agent_2
                       </span>
                     </div>
 
                     {/* Timeline logs */}
-                    <div className="mt-2 space-y-1 border-t border-orange-200 pt-2">
+                    <div className="mt-2 space-y-1 border-t border-purple-200 pt-2">
                       {agentLogs
                         .filter(
                           (log) =>
-                            log.from === "PostPurchaseAgent" ||
-                            log.to === "PostPurchaseAgent" ||
-                            log.from === "ServiceDB" ||
-                            log.to === "ServiceDB"
+                            log.from === "PostPurchaseAgent-2" ||
+                            log.to === "PostPurchaseAgent-2" ||
+                            log.from === "TrackingSystem" ||
+                            log.to === "TrackingSystem" ||
+                            log.from === "LogisticsDB" ||
+                            log.to === "LogisticsDB"
                         )
                         .slice(-3)
                         .map((log, idx) => (
@@ -1298,6 +1676,41 @@ export default function MessengerChatbot({ onClose }) {
                               </div>
                             </div>
                           </div>
+                        ) : selectedPaymentMethod === "UPI-Second" ? (
+                          /* UPI Payment Form - Second Attempt (Success) */
+                          <div className="bg-green-50 rounded-lg p-4 border border-green-200">
+                            <button
+                              onClick={() => setSelectedPaymentMethod(null)}
+                              className="text-orange-500 text-[0.8vw] mb-3 hover:underline"
+                            >
+                              ← Back to payment methods
+                            </button>
+                            <h3 className="font-bold text-[0.9vw] text-gray-800 mb-3">
+                              💳 Complete UPI Payment - Second Attempt
+                            </h3>
+
+                            <div className="bg-green-100 rounded-md p-3">
+                              <div className="text-[0.75vw] text-gray-600 mb-2">
+                                Enter UPI ID
+                              </div>
+                              <div className="flex gap-2">
+                                <input
+                                  type="text"
+                                  placeholder="username@paytm"
+                                  className="flex-1 px-3 py-2 border border-gray-300 rounded text-[0.8vw]"
+                                />
+                                <button
+                                  onClick={() => {
+                                    // Second attempt with UPI - simulate success
+                                    handleQuickReply("Payment Done");
+                                  }}
+                                  className="px-4 py-2 bg-green-500 text-white rounded text-[0.8vw] font-semibold hover:bg-green-600"
+                                >
+                                  Pay ₹1,789
+                                </button>
+                              </div>
+                            </div>
+                          </div>
                         ) : selectedPaymentMethod === "Credit Card" ? (
                           /* Credit Card Payment Form */
                           <div className="bg-amber-50 rounded-lg p-4 border border-amber-200">
@@ -1345,7 +1758,14 @@ export default function MessengerChatbot({ onClose }) {
                                 </div>
                               </div>
                               <button
-                                onClick={() => handleQuickReply("Payment Done")}
+                                onClick={() => {
+                                  if (paymentAttempt === 1) {
+                                    // First attempt with Credit Card - simulate failure
+                                    setShowPaymentFailure(true);
+                                  } else {
+                                    handleQuickReply("Payment Done");
+                                  }
+                                }}
                                 className="w-full py-2 bg-orange-500 text-white rounded text-[0.8vw] font-semibold hover:bg-orange-600"
                               >
                                 Pay Now
@@ -2025,156 +2445,173 @@ export default function MessengerChatbot({ onClose }) {
 
                         {/* Inventory Message */}
                         <div className="mb-3">
-                          {/* Good News Header */}
-                          <div className="flex items-center gap-2 mb-3 p-2 bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-md">
-                            <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
-                              <span className="text-white text-xs">✓</span>
-                            </div>
-                            <div>
-                              <h4 className="text-[0.9vw] font-bold text-green-800">
-                                Excellent news!
-                              </h4>
-                              <p className="text-[0.75vw] text-green-700">
-                                Size 40 available at multiple locations 🎉
-                              </p>
-                            </div>
-                          </div>
+                          <p className="text-[0.9vw] text-gray-700 mb-4">
+                            Inventory checked! Choose Buy Online or nearest
+                            store.
+                          </p>
 
-                          {/* Inventory Status Cards */}
-                          <div className="space-y-2 mb-3">
-                            <div className="text-[0.8vw] font-medium text-gray-700 mb-1">
-                              📍 Stock Availability:
+                          {/* Purchase Method Selection */}
+                          <div className="bg-gray-50 rounded-xl p-4 border border-gray-200">
+                            <div className="flex items-center gap-2 mb-4">
+                              <span className="text-2xl">📦</span>
+                              <h3 className="font-bold text-[1.1vw] text-gray-800">
+                                Choose Purchase Method
+                              </h3>
                             </div>
 
-                            {/* Online Stock */}
-                            <div className="flex items-center justify-between p-2 bg-gradient-to-r from-blue-50 to-cyan-50 border border-blue-200 rounded-md">
-                              <div className="flex items-center gap-2">
-                                <div className="w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center">
-                                  <span className="text-white text-xs">🌐</span>
+                            <div className="grid grid-cols-2 gap-2">
+                              <button
+                                onClick={() => handleQuickReply("Ship to Home")}
+                                className="bg-gradient-to-br from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white rounded-md p-2.5 flex flex-col items-center gap-1.5 transition-all shadow-md hover:shadow-lg hover:scale-105"
+                              >
+                                <div className="w-6 h-6 bg-white/20 rounded-full flex items-center justify-center">
+                                  <span className="text-sm">🛒</span>
                                 </div>
-                                <div>
-                                  <span className="text-[0.8vw] font-semibold text-blue-800">
-                                    Online Warehouse
-                                  </span>
-                                  <p className="text-[0.65vw] text-blue-600">
-                                    Ships nationwide
-                                  </p>
+                                <div className="text-center">
+                                  <div className="font-bold text-[0.75vw] mb-0">
+                                    Buy Online
+                                  </div>
+                                  <div className="text-[0.65vw] text-green-100">
+                                    Home Delivery
+                                  </div>
                                 </div>
-                              </div>
-                              <div className="text-right">
-                                <div className="text-[0.8vw] font-bold text-blue-800">
-                                  12 pieces
-                                </div>
-                                <div className="text-[0.6vw] px-1.5 py-0.5 bg-green-100 text-green-700 rounded-full font-medium">
-                                  In Stock
-                                </div>
-                              </div>
-                            </div>
+                              </button>
 
-                            {/* South City Mall */}
-                            <div className="flex items-center justify-between p-2 bg-gradient-to-r from-orange-50 to-amber-50 border border-orange-200 rounded-md">
-                              <div className="flex items-center gap-2">
-                                <div className="w-5 h-5 bg-orange-500 rounded-full flex items-center justify-center">
-                                  <span className="text-white text-xs">🏪</span>
+                              <button
+                                onClick={() =>
+                                  handleQuickReply("Nearest Store")
+                                }
+                                className="bg-gradient-to-br from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white rounded-md p-2.5 flex flex-col items-center gap-1.5 transition-all shadow-md hover:shadow-lg hover:scale-105"
+                              >
+                                <div className="w-6 h-6 bg-white/20 rounded-full flex items-center justify-center">
+                                  <span className="text-sm">🏪</span>
                                 </div>
-                                <div>
-                                  <span className="text-[0.8vw] font-semibold text-orange-800">
-                                    South City Mall
-                                  </span>
-                                  <p className="text-[0.65vw] text-orange-600">
-                                    3.2 km • 10 mins drive
-                                  </p>
+                                <div className="text-center">
+                                  <div className="font-bold text-[0.75vw] mb-0">
+                                    Nearest Store
+                                  </div>
+                                  <div className="text-[0.65vw] text-orange-100">
+                                    Store Pickup
+                                  </div>
                                 </div>
-                              </div>
-                              <div className="text-right">
-                                <div className="text-[0.8vw] font-bold text-orange-800">
-                                  3 pieces
-                                </div>
-                                <div className="text-[0.6vw] px-1.5 py-0.5 bg-yellow-100 text-yellow-700 rounded-full font-medium">
-                                  Limited
-                                </div>
-                              </div>
+                              </button>
                             </div>
-
-                            {/* City Centre Salt Lake */}
-                            <div className="flex items-center justify-between p-2 bg-gradient-to-r from-gray-50 to-slate-50 border border-gray-200 rounded-md opacity-75">
-                              <div className="flex items-center gap-2">
-                                <div className="w-5 h-5 bg-gray-400 rounded-full flex items-center justify-center">
-                                  <span className="text-white text-xs">🏬</span>
-                                </div>
-                                <div>
-                                  <span className="text-[0.8vw] font-semibold text-gray-600">
-                                    City Centre Salt Lake
-                                  </span>
-                                  <p className="text-[0.65vw] text-gray-500">
-                                    5.1 km • 15 mins drive
-                                  </p>
-                                </div>
-                              </div>
-                              <div className="text-right">
-                                <div className="text-[0.8vw] font-bold text-gray-600">
-                                  0 pieces
-                                </div>
-                                <div className="text-[0.6vw] px-1.5 py-0.5 bg-red-100 text-red-700 rounded-full font-medium">
-                                  Out of Stock
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-
-                          {/* Call to Action */}
-                          <div className="text-center p-1.5 bg-gradient-to-r from-purple-50 to-indigo-50 border border-purple-200 rounded-md">
-                            <p className="text-[0.75vw] font-medium text-purple-800">
-                              How would you like to proceed?
-                            </p>
                           </div>
                         </div>
+                      </div>
+                      <p className="text-[0.8vw] text-gray-400 mt-1">
+                        {msg.timestamp.toLocaleTimeString([], {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}
+                      </p>
+                    </div>
+                  </div>
+                ) : msg.type === "store-selection" ? (
+                  // Store Selection Message
+                  <div className="flex justify-start">
+                    <div className="max-w-[95%] w-full">
+                      <div className="bg-white border border-orange-200 rounded-2xl rounded-tl-sm p-5 shadow-md">
+                        {/* Agent header */}
+                        <div className="text-[0.75vw] text-gray-500 mb-3 font-medium">
+                          {msg.agentInfo?.title || "Inventory Agent"} •{" "}
+                          {msg.agentInfo?.id || "inventory_agent"}
+                        </div>
 
-                        {/* Purchase Method Selection */}
-                        <div className="bg-gray-50 rounded-xl p-4 border border-gray-200">
-                          <div className="flex items-center gap-2 mb-4">
-                            <span className="text-2xl">📦</span>
-                            <h3 className="font-bold text-[1.1vw] text-gray-800">
-                              Choose Purchase Method
-                            </h3>
-                          </div>
+                        <div className="mb-4">
+                          <p className="text-[0.9vw] text-gray-700 mb-4">
+                            Inventory checked! Choose Buy Online or nearest
+                            store.
+                          </p>
 
-                          <div className="grid grid-cols-2 gap-2">
-                            <button
-                              onClick={() => handleQuickReply("Ship to Home")}
-                              className="bg-gradient-to-br from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white rounded-md p-2.5 flex flex-col items-center gap-1.5 transition-all shadow-md hover:shadow-lg hover:scale-105"
-                            >
-                              <div className="w-6 h-6 bg-white/20 rounded-full flex items-center justify-center">
-                                <span className="text-sm">🛒</span>
-                              </div>
-                              <div className="text-center">
-                                <div className="font-bold text-[0.75vw] mb-0">
-                                  Buy Online
-                                </div>
-                                <div className="text-[0.65vw] text-green-100">
-                                  Home Delivery
-                                </div>
-                              </div>
-                            </button>
+                          {/* Store Selection Section */}
+                          <div className="mb-4">
+                            <div className="flex items-center gap-2 mb-3">
+                              <span className="text-[0.9vw]">🏪</span>
+                              <h4 className="text-[0.9vw] font-bold text-gray-800">
+                                Select Store for Pickup
+                              </h4>
+                            </div>
 
-                            <button
-                              onClick={() =>
-                                handleQuickReply("Reserve in Store")
-                              }
-                              className="bg-gradient-to-br from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white rounded-md p-2.5 flex flex-col items-center gap-1.5 transition-all shadow-md hover:shadow-lg hover:scale-105"
-                            >
-                              <div className="w-6 h-6 bg-white/20 rounded-full flex items-center justify-center">
-                                <span className="text-sm">🏪</span>
-                              </div>
-                              <div className="text-center">
-                                <div className="font-bold text-[0.75vw] mb-0">
-                                  Nearest Store
+                            <div className="space-y-3">
+                              {/* ABFRL Store South City */}
+                              <div
+                                onClick={() =>
+                                  handleQuickReply("ABFRL Store South City")
+                                }
+                                className="flex items-center justify-between p-3 border-2 border-orange-200 rounded-lg hover:border-orange-300 cursor-pointer transition-all hover:shadow-md bg-white"
+                              >
+                                <div>
+                                  <h5 className="text-[0.85vw] font-semibold text-gray-800">
+                                    ABFRL Store South City
+                                  </h5>
+                                  <p className="text-[0.7vw] text-gray-600">
+                                    Manager Sophia
+                                  </p>
                                 </div>
-                                <div className="text-[0.65vw] text-orange-100">
-                                  Store Pickup
-                                </div>
+                                <span className="px-3 py-1 bg-green-100 text-green-700 text-[0.7vw] font-semibold rounded-full">
+                                  Available
+                                </span>
                               </div>
-                            </button>
+
+                              {/* City Centre Salt Lake */}
+                              <div
+                                onClick={() =>
+                                  handleQuickReply("City Centre Salt Lake")
+                                }
+                                className="flex items-center justify-between p-3 border-2 border-orange-200 rounded-lg hover:border-orange-300 cursor-pointer transition-all hover:shadow-md bg-white"
+                              >
+                                <div>
+                                  <h5 className="text-[0.85vw] font-semibold text-gray-800">
+                                    City Centre Salt Lake, First Floor
+                                  </h5>
+                                  <p className="text-[0.7vw] text-gray-600">
+                                    Manager Rahul
+                                  </p>
+                                </div>
+                                <span className="px-3 py-1 bg-green-100 text-green-700 text-[0.7vw] font-semibold rounded-full">
+                                  Available
+                                </span>
+                              </div>
+
+                              {/* Quest Mall */}
+                              <div
+                                onClick={() => handleQuickReply("Quest Mall")}
+                                className="flex items-center justify-between p-3 border-2 border-orange-200 rounded-lg hover:border-orange-300 cursor-pointer transition-all hover:shadow-md bg-white"
+                              >
+                                <div>
+                                  <h5 className="text-[0.85vw] font-semibold text-gray-800">
+                                    Quest Mall, Second Floor
+                                  </h5>
+                                  <p className="text-[0.7vw] text-gray-600">
+                                    Manager Priya
+                                  </p>
+                                </div>
+                                <span className="px-3 py-1 bg-orange-100 text-orange-700 text-[0.7vw] font-semibold rounded-full">
+                                  Limited
+                                </span>
+                              </div>
+
+                              {/* South City Mall */}
+                              <div
+                                onClick={() =>
+                                  handleQuickReply("South City Mall")
+                                }
+                                className="flex items-center justify-between p-3 border-2 border-orange-200 rounded-lg hover:border-orange-300 cursor-pointer transition-all hover:shadow-md bg-white"
+                              >
+                                <div>
+                                  <h5 className="text-[0.85vw] font-semibold text-gray-800">
+                                    South City Mall, Third Floor
+                                  </h5>
+                                  <p className="text-[0.7vw] text-gray-600">
+                                    Manager Neha
+                                  </p>
+                                </div>
+                                <span className="px-3 py-1 bg-green-100 text-green-700 text-[0.7vw] font-semibold rounded-full">
+                                  Available
+                                </span>
+                              </div>
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -2539,6 +2976,65 @@ export default function MessengerChatbot({ onClose }) {
           </div>
         </div>
       </div>
+
+      {/* Payment Failure Popup */}
+      {showPaymentFailure && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-2xl p-6 max-w-md mx-4 shadow-2xl">
+            <div className="text-center">
+              <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <span className="text-3xl">❌</span>
+              </div>
+              <h3 className="text-xl font-bold text-gray-800 mb-2">
+                Payment Failed
+              </h3>
+              <p className="text-gray-600 mb-6">
+                Your credit card payment could not be processed. Please try with
+                a different payment method.
+              </p>
+              <button
+                onClick={() => {
+                  setShowPaymentFailure(false);
+                  setPaymentAttempt(2);
+                  setSelectedPaymentMethod(null);
+                  // Trigger new payment agent message with proper agent logs
+                  setTimeout(() => {
+                    addAgentLog(
+                      "System",
+                      "PaymentAgent-2",
+                      "Activating backup payment processor"
+                    );
+                    addAgentLog(
+                      "PaymentAgent-2",
+                      "PaymentGateway",
+                      "Initialize alternative payment methods"
+                    );
+                    addAgentLog(
+                      "PaymentGateway",
+                      "PaymentAgent-2",
+                      "Alternative payment options ready"
+                    );
+                    addAgentLog(
+                      "PaymentAgent-2",
+                      "User",
+                      "Presenting retry payment options"
+                    );
+                    addAgentMessage(
+                      "Let's try again with a different payment method:\n\nTotal amount: ₹1,789\nDelivery: ₹0 (Free)\n━━━━━━━━━━━━\nGrand Total: ₹1,789",
+                      ["UPI", "Debit Card", "Cash on Delivery"],
+                      { title: "Payment Agent (Retry)", id: "payment_agent_2" },
+                      "payment"
+                    );
+                  }, 500);
+                }}
+                className="bg-orange-500 hover:bg-orange-600 text-white px-8 py-3 rounded-lg font-semibold transition-colors"
+              >
+                Try Again
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
