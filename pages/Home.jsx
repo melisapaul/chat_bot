@@ -61,10 +61,10 @@ export default function Home() {
               </p>
 
               {/* Action Buttons */}
-              <div className="flex gap-4">
+              <div className="flex gap-3 justify-center">
                 <button
                   onClick={() => nav("/user")}
-                  className="flex-1 bg-gradient-to-r from-red-800 to-amber-600 hover:from-red-900 hover:to-amber-700 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-300 hover:shadow-lg hover:scale-105 flex items-center justify-center gap-2"
+                  className="bg-gradient-to-r from-red-800 to-amber-600 hover:from-red-900 hover:to-amber-700 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-300 hover:shadow-lg hover:scale-105 flex items-center justify-center gap-2 text-sm"
                 >
                   <span>Online</span>
                   <svg
@@ -84,9 +84,9 @@ export default function Home() {
 
                 <button
                   onClick={() => setShowInStoreLogin(true)}
-                  className="flex-1 bg-gradient-to-r from-amber-600 to-yellow-500 hover:from-amber-700 hover:to-yellow-600 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-300 hover:shadow-lg hover:scale-105 flex items-center justify-center gap-2"
+                  className="bg-gradient-to-r from-amber-600 to-yellow-500 hover:from-amber-700 hover:to-yellow-600 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-300 hover:shadow-lg hover:scale-105 flex items-center justify-center gap-2 text-sm"
                 >
-                  <span>In-Store</span>
+                  <span>In-Store Kiosk</span>
                   <Building className="w-4 h-4" />
                 </button>
               </div>

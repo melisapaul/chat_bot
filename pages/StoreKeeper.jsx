@@ -176,7 +176,7 @@ export default function StoreKeeper() {
                       🔔 New In-Store Pickup Request!
                     </h3>
                     <p className="text-orange-100 text-sm">
-                      Channel Switching: Online → In-Store
+                      Channel Switching: Online → In-Store Kiosk
                     </p>
                   </div>
                 </div>
@@ -267,7 +267,7 @@ export default function StoreKeeper() {
                         📱 Next Steps for Customer
                       </h4>
                       <p className="text-yellow-50 mb-2">
-                        <span className="font-bold">Let them know:</span> "Just visit our Home Page, click on In-Store, and log in with your email and password."
+                        <span className="font-bold">Let them know:</span> "Just visit our Home Page, click on In-Store Kiosk, and log in with your email and password."
                       </p>
                       <p className="text-yellow-50 mb-2">
                         "You'll be able to pick up right where we left off and complete your order!"
