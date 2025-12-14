@@ -44,7 +44,7 @@ export default function Home() {
         {/* Navigation Cards */}
         <div className="grid md:grid-cols-3 gap-8">
           {/* User Journey Card */}
-          <div className="group bg-white rounded-3xl shadow-xl border-2 border-gray-200 overflow-hidden hover:shadow-2xl transition-all duration-500 hover:-translate-y-3 hover:border-amber-300">
+          <div className="group bg-white rounded-3xl shadow-xl border-2 border-gray-200 overflow-hidden hover:shadow-2xl transition-all duration-500 hover:-translate-y-3 hover:border-amber-300 flex flex-col h-full">
             <div className="bg-gradient-to-br from-red-800 to-amber-600 p-8">
               <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
                 <User className="w-8 h-8 text-white" />
@@ -54,17 +54,17 @@ export default function Home() {
               </h3>
               <div className="w-16 h-1 bg-white/30 rounded-full"></div>
             </div>
-            <div className="p-8">
+            <div className="p-8 flex-1 flex flex-col justify-between">
               <p className="text-gray-600 mb-6 leading-relaxed text-base">
                 Track and analyze user interactions, behavior patterns, purchase
                 history, and loyalty points in one comprehensive dashboard
               </p>
 
               {/* Action Buttons */}
-              <div className="flex gap-3 justify-center">
+              <div className="flex gap-3 justify-start">
                 <button
-                  onClick={() => nav("/user")}
-                  className="bg-gradient-to-r from-red-800 to-amber-600 hover:from-red-900 hover:to-amber-700 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-300 hover:shadow-lg hover:scale-105 flex items-center justify-center gap-2 text-sm"
+                  onClick={() => nav("/store")}
+                  className="bg-transparent border-2 border-red-400 text-red-700 font-semibold py-2 px-4 rounded-lg transition-all duration-300 hover:bg-red-50 hover:border-red-500 hover:scale-105 flex items-center justify-center gap-2 text-sm"
                 >
                   <span>Online</span>
                   <svg
@@ -84,7 +84,7 @@ export default function Home() {
 
                 <button
                   onClick={() => setShowInStoreLogin(true)}
-                  className="bg-gradient-to-r from-amber-600 to-yellow-500 hover:from-amber-700 hover:to-yellow-600 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-300 hover:shadow-lg hover:scale-105 flex items-center justify-center gap-2 text-sm"
+                  className="bg-transparent border-2 border-red-400 text-red-700 font-semibold py-2 px-4 rounded-lg transition-all duration-300 hover:bg-red-50 hover:border-red-500 hover:scale-105 flex items-center justify-center gap-2 text-sm"
                 >
                   <span>In-Store Kiosk</span>
                   <Building className="w-4 h-4" />
@@ -96,7 +96,7 @@ export default function Home() {
           {/* Store Keeper Card */}
           <div
             onClick={() => nav("/store")}
-            className="group cursor-pointer bg-white rounded-3xl shadow-xl border-2 border-gray-200 overflow-hidden hover:shadow-2xl transition-all duration-500 hover:-translate-y-3 hover:border-amber-300"
+            className="group cursor-pointer bg-white rounded-3xl shadow-xl border-2 border-gray-200 overflow-hidden hover:shadow-2xl transition-all duration-500 hover:-translate-y-3 hover:border-amber-300 flex flex-col h-full"
           >
             <div className="bg-gradient-to-br from-amber-600 to-yellow-500 p-8">
               <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
@@ -107,26 +107,31 @@ export default function Home() {
               </h3>
               <div className="w-16 h-1 bg-white/30 rounded-full"></div>
             </div>
-            <div className="p-8">
+            <div className="p-8 flex-1 flex flex-col justify-between">
               <p className="text-gray-600 mb-6 leading-relaxed text-base">
                 Manage inventory levels, track orders, monitor store operations,
                 and analyze performance metrics efficiently
               </p>
-              <div className="flex items-center text-amber-700 font-semibold group-hover:text-amber-800 transition-colors">
-                <span>Manage Store</span>
-                <svg
-                  className="w-5 h-5 ml-2 group-hover:translate-x-2 transition-transform"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
+              <div className="flex gap-3 justify-start">
+                <button
+                  onClick={() => nav("/store")}
+                  className="bg-transparent border-2 border-red-400 text-red-700 font-semibold py-2 px-4 rounded-lg transition-all duration-300 hover:bg-red-50 hover:border-red-500 hover:scale-105 flex items-center gap-2 text-sm"
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M13 7l5 5m0 0l-5 5m5-5H6"
-                  />
-                </svg>
+                  <span>Manage Store</span>
+                  <svg
+                    className="w-5 h-5 ml-0 transition-transform"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M13 7l5 5m0 0l-5 5m5-5H6"
+                    />
+                  </svg>
+                </button>
               </div>
             </div>
           </div>
@@ -134,7 +139,7 @@ export default function Home() {
           {/* Admin Panel Card */}
           <div
             onClick={() => nav("/admin")}
-            className="group cursor-pointer bg-white rounded-3xl shadow-xl border-2 border-gray-200 overflow-hidden hover:shadow-2xl transition-all duration-500 hover:-translate-y-3 hover:border-red-300"
+            className="group cursor-pointer bg-white rounded-3xl shadow-xl border-2 border-gray-200 overflow-hidden hover:shadow-2xl transition-all duration-500 hover:-translate-y-3 hover:border-red-300 flex flex-col h-full"
           >
             <div className="bg-gradient-to-br from-red-900 to-red-700 p-8">
               <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
@@ -145,26 +150,31 @@ export default function Home() {
               </h3>
               <div className="w-16 h-1 bg-white/30 rounded-full"></div>
             </div>
-            <div className="p-8">
+            <div className="p-8 flex-1 flex flex-col justify-between">
               <p className="text-gray-600 mb-6 leading-relaxed text-base">
                 Get insights into last month's revenue, transactions, customer
                 growth, and store overview instantly in one dashboard
               </p>
-              <div className="flex items-center text-red-800 font-semibold group-hover:text-red-900 transition-colors">
-                <span>Open Admin</span>
-                <svg
-                  className="w-5 h-5 ml-2 group-hover:translate-x-2 transition-transform"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
+              <div className="flex gap-3 justify-start">
+                <button
+                  onClick={() => nav("/admin")}
+                  className="bg-transparent border-2 border-red-400 text-red-700 font-semibold py-2 px-4 rounded-lg transition-all duration-300 hover:bg-red-50 hover:border-red-500 hover:scale-105 flex items-center gap-2 text-sm"
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M13 7l5 5m0 0l-5 5m5-5H6"
-                  />
-                </svg>
+                  <span>Open Admin</span>
+                  <svg
+                    className="w-5 h-5 ml-0 transition-transform"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M13 7l5 5m0 0l-5 5m5-5H6"
+                    />
+                  </svg>
+                </button>
               </div>
             </div>
           </div>
@@ -225,15 +235,15 @@ export default function Home() {
               <div className="space-y-4">
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-2">
-                    Gmail ID
+                    User ID
                   </label>
                   <input
-                    type="email"
+                    type="text"
                     name="sessionId"
                     value={loginData.sessionId}
                     onChange={handleInputChange}
                     className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-amber-500 focus:outline-none transition-colors"
-                    placeholder="Enter your Gmail ID (e.g., user@gmail.com)"
+                    placeholder="Enter your User ID (e.g., 12345 or abcd)"
                     required
                   />
                 </div>

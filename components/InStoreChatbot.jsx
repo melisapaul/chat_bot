@@ -25,6 +25,8 @@ export default function InStoreChatbot({ onClose }) {
   const hasInitialized = useRef(false);
   const paymentFlowStartedRef = useRef(false);
   const paymentTimeoutsRef = useRef([]);
+  const fulfillmentMessageShownRef = useRef(false);
+  const loyaltyMessageShownRef = useRef(false);
 
   const clearPaymentTimeouts = () => {
     for (const timeoutId of paymentTimeoutsRef.current) {
@@ -33,9 +35,7 @@ export default function InStoreChatbot({ onClose }) {
     paymentTimeoutsRef.current = [];
   };
 
-  const channels = [
-    { value: "kiosk", label: "In-Store Kiosk", icon: Store },
-  ];
+  const channels = [{ value: "kiosk", label: "In-Store Kiosk", icon: Store }];
 
   useEffect(() => {
     if (!hasInitialized.current) {
@@ -44,7 +44,11 @@ export default function InStoreChatbot({ onClose }) {
 
       // Add initial agent log with staggered delays (1 second apart for visible timestamps)
       setTimeout(() => {
-        addAgentLog("System", "SalesAgent", "Session transfer initiated from online channel");
+        addAgentLog(
+          "System",
+          "SalesAgent",
+          "Session transfer initiated from online channel"
+        );
       }, 500);
 
       setTimeout(() => {
@@ -54,7 +58,11 @@ export default function InStoreChatbot({ onClose }) {
       }, 1500);
 
       setTimeout(() => {
-        addAgentLog("SalesAgent", "SessionDB", "Fetching session #SESSION789456");
+        addAgentLog(
+          "SalesAgent",
+          "SessionDB",
+          "Fetching session #SESSION789456"
+        );
       }, 2500);
 
       setTimeout(() => {
@@ -64,16 +72,24 @@ export default function InStoreChatbot({ onClose }) {
       }, 3500);
 
       setTimeout(() => {
-        addAgentLog("SessionDB", "SalesAgent", "Customer: Arjun Bose, Product: Louis Philippe Shirt");
+        addAgentLog(
+          "SessionDB",
+          "SalesAgent",
+          "Customer: Arjun Bose, Product: Louis Philippe Shirt"
+        );
       }, 4500);
 
       setTimeout(() => {
-        addAgentLog("SalesAgent", "User", "Session restored, greeting customer");
+        addAgentLog(
+          "SalesAgent",
+          "User",
+          "Session restored, greeting customer"
+        );
       }, 5500);
 
       setTimeout(() => {
         setIsLoading(false);
-        
+
         // Add Sales Agent to the log timeline
         setLog((prev) => [
           ...prev,
@@ -83,7 +99,7 @@ export default function InStoreChatbot({ onClose }) {
             action: "Session restored from online channel",
           },
         ]);
-        
+
         addAgentMessage(
           "🎉 WELCOME BACK, ARJUN! 🎉\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n🆔 Your Session ID: #SESSION789456\n\n📦 PRODUCT DETAILS:\n▸ Product: Louis Philippe\n▸ Size: 40 (Medium)\n▸ Color: White\n▸ Price: ₹2,199\n\n✅ Great news! Your online session has been seamlessly transferred to our in-store system.\n\nHave you already picked up your product from the store? If so, I'd be happy to help you complete the purchase right away. Otherwise, feel free to explore more options or let me know how I can assist you today!",
           [],
@@ -97,11 +113,12 @@ export default function InStoreChatbot({ onClose }) {
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+  }, [messages, log, agentLogs]);
 
+  // Ensure timeline scrolls when new timeline entries are added (log)
   useEffect(() => {
     timelineEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [agentLogs]);
+  }, [agentLogs, log]);
 
   const addAgentLog = (from, to, message) => {
     setAgentLogs((prev) => [
@@ -239,15 +256,22 @@ export default function InStoreChatbot({ onClose }) {
 
       paymentTimeoutsRef.current.push(
         setTimeout(() => {
-          setIsTyping(false);
-          setIsLoading(false);
-          addAgentMessage(
-            "🎉 PAYMENT SUCCESSFUL!\n\n🧾 Receipt: #RCP789456\n💳 Method: " +
-              (selectedPaymentMethod || reply) +
-              "\n💰 Amount: ₹2,199\n🛍️ Product: Louis Philippe Shirt\n🆔 Session: #SESSION789456\n\n📦 Your purchase is complete! Thank you for shopping with ABFRL.",
-            [],
-            { title: "Fulfillment Agent", id: "fulfillment_agent" }
-          );
+          // Only add the fulfillment message here if it wasn't already added
+          if (!fulfillmentMessageShownRef.current) {
+            fulfillmentMessageShownRef.current = true;
+            setIsTyping(false);
+            setIsLoading(false);
+            addAgentMessage(
+              "🎉 PAYMENT SUCCESSFUL!\n\n🧾 Receipt: #RCP789456\n💳 Method: " +
+                (selectedPaymentMethod || reply) +
+                "\n💰 Amount: ₹2,199\n🛍️ Product: Louis Philippe Shirt\n🆔 Session: #SESSION789456\n\n📦 Your purchase is complete! Thank you for shopping with ABFRL.",
+              [],
+              { title: "Fulfillment Agent", id: "fulfillment_agent" }
+            );
+          } else {
+            setIsTyping(false);
+            setIsLoading(false);
+          }
         }, 10500)
       );
 
@@ -273,6 +297,7 @@ export default function InStoreChatbot({ onClose }) {
                 "Points earned: 120 | Available coupons: 2 | Tier status updated",
             },
           ]);
+          // timeline entry added; loyalty message will be shown after process completes
         }, 13500)
       );
 
@@ -293,19 +318,30 @@ export default function InStoreChatbot({ onClose }) {
             "User",
             "Rewards processed and applied to account"
           );
-          setIsTyping(true);
+          // Only show typing here if the loyalty message hasn't already been shown
+          if (!loyaltyMessageShownRef.current) {
+            setIsTyping(true);
+          } else {
+            setIsTyping(false);
+          }
         }, 16500)
       );
 
       paymentTimeoutsRef.current.push(
         setTimeout(() => {
-          setIsTyping(false);
-          addAgentMessage(
-            "🎁 Loyalty Rewards Applied!\n\nYour rewards have been processed and applied\n\n🏆 Loyalty Benefits Applied:\n\n✅ Loyalty Points Earned\n+120 points added to your account\n120 pts\n\n🎟️ Coupon Applied\nFIRST10 - 10% discount applied\n-₹120\n\n🎯 Personalized Offer\nFree delivery on next 3 orders\nUnlocked",
-            [],
-            { title: "Loyalty Agent", id: "loyalty_agent" },
-            "loyalty"
-          );
+          // Only add the loyalty message here if it wasn't already added
+          if (!loyaltyMessageShownRef.current) {
+            loyaltyMessageShownRef.current = true;
+            setIsTyping(false);
+            addAgentMessage(
+              "🎁 Loyalty Rewards Applied!\n\nYour rewards have been processed and applied\n\n🏆 Loyalty Benefits Applied:\n\n✅ Loyalty Points Earned\n+120 points added to your account\n120 pts\n\n🎟️ Coupon Applied\nFIRST10 - 10% discount applied\n-₹120\n\n🎯 Personalized Offer\nFree delivery on next 3 orders\nUnlocked",
+              [],
+              { title: "Loyalty Agent", id: "loyalty_agent" },
+              "loyalty"
+            );
+          } else {
+            setIsTyping(false);
+          }
         }, 18000)
       );
 
@@ -342,7 +378,11 @@ export default function InStoreChatbot({ onClose }) {
       lowerReply.includes("pay now") ||
       lowerReply.includes("checkout")
     ) {
-      addAgentLog("User", "SalesAgent", `Customer wants to proceed with purchase`);
+      addAgentLog(
+        "User",
+        "SalesAgent",
+        `Customer wants to proceed with purchase`
+      );
       setIsTyping(true);
       setIsLoading(true);
       setLoadingMessage("Initiating in-store payment process...");
@@ -360,13 +400,19 @@ export default function InStoreChatbot({ onClose }) {
       }, 1500);
 
       setTimeout(() => {
-        addAgentLog("PaymentAgent", "POS-System", "Display payment method options");
+        addAgentLog(
+          "PaymentAgent",
+          "POS-System",
+          "Display payment method options"
+        );
       }, 3000);
 
       setTimeout(() => {
         // Only add to log if not already present
         setLog((prev) => {
-          const hasPaymentAgent = prev.some(item => item.agentId === "payment_agent");
+          const hasPaymentAgent = prev.some(
+            (item) => item.agentId === "payment_agent"
+          );
           if (hasPaymentAgent) return prev;
           return [
             ...prev,
@@ -377,7 +423,7 @@ export default function InStoreChatbot({ onClose }) {
             },
           ];
         });
-        
+
         setIsTyping(false);
         setIsLoading(false);
         setSelectedPaymentMethod(null); // Reset payment method
@@ -481,11 +527,7 @@ export default function InStoreChatbot({ onClose }) {
         setIsLoading(false);
         addAgentMessage(
           "✅ STOCK STATUS:\n\n📦 Louis Philippe (Size 40)\n🏪 Store: ABFRL South City\n📊 Available: 2 pieces in stock\n👤 Manager: Sophia\n\n🔍 Would you like to see the actual product or need any assistance?",
-          [
-            "Show Me the Product",
-            "Try Different Size",
-            "Speak with Manager",
-          ],
+          ["Show Me the Product", "Try Different Size", "Speak with Manager"],
           { title: "Inventory Agent", id: "inventory_agent" }
         );
       }, 7500);
@@ -586,11 +628,7 @@ export default function InStoreChatbot({ onClose }) {
         setIsLoading(false);
         addAgentMessage(
           "I understand. Is there anything else I can help you with regarding your session or product inquiry?",
-          [
-            "Check Other Products",
-            "Speak with Manager",
-            "Exit",
-          ],
+          ["Check Other Products", "Speak with Manager", "Exit"],
           { title: "Sales Agent", id: "sales_agent" }
         );
       }, 1000);
@@ -669,21 +707,49 @@ export default function InStoreChatbot({ onClose }) {
             {/* Agent Cards with embedded logs */}
             {log.map((a, i) => {
               // Get logs related to this agent
-              const agentName = a.title.replace(' Agent', 'Agent').replace(' ', '').replace('(Sophia)', '').trim();
+              const agentName = a.title
+                .replace(" Agent", "Agent")
+                .replace(" ", "")
+                .replace("(Sophia)", "")
+                .trim();
               const relatedLogs = agentLogs.filter(
-                (logEntry) => 
-                  logEntry.from.toLowerCase().includes(agentName.toLowerCase().replace(' ', '')) ||
-                  logEntry.to.toLowerCase().includes(agentName.toLowerCase().replace(' ', '')) ||
+                (logEntry) =>
+                  logEntry.from
+                    .toLowerCase()
+                    .includes(agentName.toLowerCase().replace(" ", "")) ||
+                  logEntry.to
+                    .toLowerCase()
+                    .includes(agentName.toLowerCase().replace(" ", "")) ||
                   logEntry.from.includes(a.agentId) ||
                   logEntry.to.includes(a.agentId) ||
-                  (a.agentId === 'sales_agent' && (logEntry.from === 'SalesAgent' || logEntry.to === 'SalesAgent' || logEntry.from === 'System' || logEntry.to === 'User')) ||
-                  (a.agentId === 'payment_agent' && (logEntry.from === 'PaymentAgent' || logEntry.to === 'PaymentAgent' || logEntry.from === 'POS-System' || logEntry.to === 'POS-System')) ||
-                  (a.agentId === 'fulfillment_agent' && (logEntry.from === 'FulfillmentAgent' || logEntry.to === 'FulfillmentAgent')) ||
-                  (a.agentId === 'loyalty_agent' && (logEntry.from === 'LoyaltyAgent' || logEntry.to === 'LoyaltyAgent' || logEntry.from === 'RewardsDB' || logEntry.to === 'RewardsDB')) ||
-                  (a.agentId === 'inventory_agent' && (logEntry.from === 'InventoryAgent' || logEntry.to === 'InventoryAgent' || logEntry.from === 'StoreDB' || logEntry.to === 'StoreDB')) ||
-                  (a.agentId === 'store_manager' && (logEntry.from === 'StoreManager' || logEntry.to === 'StoreManager'))
+                  (a.agentId === "sales_agent" &&
+                    (logEntry.from === "SalesAgent" ||
+                      logEntry.to === "SalesAgent" ||
+                      logEntry.from === "System" ||
+                      logEntry.to === "User")) ||
+                  (a.agentId === "payment_agent" &&
+                    (logEntry.from === "PaymentAgent" ||
+                      logEntry.to === "PaymentAgent" ||
+                      logEntry.from === "POS-System" ||
+                      logEntry.to === "POS-System")) ||
+                  (a.agentId === "fulfillment_agent" &&
+                    (logEntry.from === "FulfillmentAgent" ||
+                      logEntry.to === "FulfillmentAgent")) ||
+                  (a.agentId === "loyalty_agent" &&
+                    (logEntry.from === "LoyaltyAgent" ||
+                      logEntry.to === "LoyaltyAgent" ||
+                      logEntry.from === "RewardsDB" ||
+                      logEntry.to === "RewardsDB")) ||
+                  (a.agentId === "inventory_agent" &&
+                    (logEntry.from === "InventoryAgent" ||
+                      logEntry.to === "InventoryAgent" ||
+                      logEntry.from === "StoreDB" ||
+                      logEntry.to === "StoreDB")) ||
+                  (a.agentId === "store_manager" &&
+                    (logEntry.from === "StoreManager" ||
+                      logEntry.to === "StoreManager"))
               );
-              
+
               return (
                 <div key={`agent-${i}`} className="relative pl-8">
                   <div className="absolute left-0 top-1 h-3 w-3 bg-orange-500 rounded-full shadow-md"></div>
@@ -695,46 +761,63 @@ export default function InStoreChatbot({ onClose }) {
                           {a.title}
                         </p>
                         {a.action && (
-                          <p className="text-[0.85vw] text-gray-500">{a.action}</p>
+                          <p className="text-[0.85vw] text-gray-500">
+                            {a.action}
+                          </p>
                         )}
                       </div>
                       <span className="text-[0.8vw] bg-orange-500 text-white px-2 py-1 rounded-md font-semibold shadow-sm">
                         {a.agentId}
                       </span>
                     </div>
-                    
+
                     {/* Agent Logs */}
                     {relatedLogs.length > 0 && (
                       <div className="mt-3 space-y-1 border-t border-gray-100 pt-3">
                         {relatedLogs.map((logEntry, logIdx) => (
-                          <div key={`log-${i}-${logIdx}`} className="text-[0.85vw]">
+                          <div
+                            key={`log-${i}-${logIdx}`}
+                            className="text-[0.85vw]"
+                          >
                             {/* From → To line */}
                             <div className="flex gap-3">
                               <span className="text-gray-400 font-mono whitespace-nowrap">
-                                {logEntry.timestamp.toLocaleTimeString('en-US', { 
-                                  hour: '2-digit', 
-                                  minute: '2-digit', 
-                                  second: '2-digit',
-                                  hour12: false
-                                })}
+                                {logEntry.timestamp.toLocaleTimeString(
+                                  "en-US",
+                                  {
+                                    hour: "2-digit",
+                                    minute: "2-digit",
+                                    second: "2-digit",
+                                    hour12: false,
+                                  }
+                                )}
                               </span>
                               <div className="flex-1">
-                                <span className="text-orange-600 font-medium">{logEntry.from}</span>
+                                <span className="text-orange-600 font-medium">
+                                  {logEntry.from}
+                                </span>
                                 <span className="text-gray-400 mx-1">→</span>
-                                <span className="text-amber-600 font-medium">{logEntry.to}</span>
+                                <span className="text-amber-600 font-medium">
+                                  {logEntry.to}
+                                </span>
                               </div>
                             </div>
                             {/* Message line */}
                             <div className="flex gap-3 mt-0.5">
                               <span className="text-gray-400 font-mono whitespace-nowrap">
-                                {logEntry.timestamp.toLocaleTimeString('en-US', { 
-                                  hour: '2-digit', 
-                                  minute: '2-digit', 
-                                  second: '2-digit',
-                                  hour12: false
-                                })}
+                                {logEntry.timestamp.toLocaleTimeString(
+                                  "en-US",
+                                  {
+                                    hour: "2-digit",
+                                    minute: "2-digit",
+                                    second: "2-digit",
+                                    hour12: false,
+                                  }
+                                )}
                               </span>
-                              <p className="text-gray-600 font-mono flex-1">{logEntry.message}</p>
+                              <p className="text-gray-600 font-mono flex-1">
+                                {logEntry.message}
+                              </p>
                             </div>
                           </div>
                         ))}
@@ -832,7 +915,9 @@ export default function InStoreChatbot({ onClose }) {
                 // User message - right side
                 <div className="flex justify-end mb-3 animate-fade-in">
                   <div className="bg-gradient-to-r from-orange-500 to-amber-500 text-white p-3 rounded-2xl rounded-tr-sm shadow-lg max-w-[70%]">
-                    <p className="text-[1.1vw] font-medium tracking-wide">{msg.text}</p>
+                    <p className="text-[1.1vw] font-medium tracking-wide">
+                      {msg.text}
+                    </p>
                   </div>
                 </div>
               ) : msg.type === "payment" ? (
@@ -873,7 +958,9 @@ export default function InStoreChatbot({ onClose }) {
                           </button>
 
                           <button
-                            onClick={() => setSelectedPaymentMethod("Credit Card")}
+                            onClick={() =>
+                              setSelectedPaymentMethod("Credit Card")
+                            }
                             className="bg-white hover:bg-blue-50 border-2 border-blue-200 hover:border-blue-400 rounded-lg p-3 flex flex-col items-center gap-2 transition-all shadow-sm hover:shadow-md"
                           >
                             <div className="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center">
@@ -885,7 +972,9 @@ export default function InStoreChatbot({ onClose }) {
                           </button>
 
                           <button
-                            onClick={() => setSelectedPaymentMethod("Debit Card")}
+                            onClick={() =>
+                              setSelectedPaymentMethod("Debit Card")
+                            }
                             className="bg-white hover:bg-green-50 border-2 border-green-200 hover:border-green-400 rounded-lg p-3 flex flex-col items-center gap-2 transition-all shadow-sm hover:shadow-md"
                           >
                             <div className="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center">
@@ -910,11 +999,11 @@ export default function InStoreChatbot({ onClose }) {
                         </div>
                       </div>
                     ) : selectedPaymentMethod === "UPI" ? (
-                      /* UPI Payment Form */
-                      <div className="bg-purple-50 rounded-lg p-4 border border-purple-200">
+                      /* UPI Payment Form - Yellow/Orange theme */
+                      <div className="bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50 rounded-lg p-4 border border-orange-200">
                         <button
                           onClick={() => setSelectedPaymentMethod(null)}
-                          className="text-orange-500 text-[0.9vw] mb-3 hover:underline font-medium"
+                          className="text-orange-600 text-[0.9vw] mb-3 hover:underline font-medium"
                         >
                           ← Back to payment methods
                         </button>
@@ -922,8 +1011,8 @@ export default function InStoreChatbot({ onClose }) {
                           Complete UPI Payment
                         </h3>
 
-                        <div className="bg-purple-100 rounded-md p-3">
-                          <div className="text-[0.85vw] text-gray-600 mb-2">
+                        <div className="bg-gradient-to-r from-orange-100 to-amber-100 rounded-md p-3 border border-orange-200">
+                          <div className="text-[0.85vw] text-orange-700 mb-2">
                             Enter UPI ID
                           </div>
                           <div className="flex gap-2">
@@ -933,15 +1022,18 @@ export default function InStoreChatbot({ onClose }) {
                               className="flex-1 px-3 py-2 border border-gray-300 rounded text-[0.9vw]"
                             />
                             <button
-                              onClick={() => handleQuickReply("Payment Completed")}
-                              className="px-4 py-2 bg-orange-500 text-white rounded text-[0.9vw] font-semibold hover:bg-orange-600 transition-all"
+                              onClick={() =>
+                                handleQuickReply("Payment Completed")
+                              }
+                              className="px-4 py-2 bg-gradient-to-r from-orange-500 to-amber-600 text-white rounded text-[0.9vw] font-semibold hover:from-orange-600 hover:to-amber-700 transition-all"
                             >
                               Pay ₹2,199
                             </button>
                           </div>
                         </div>
                       </div>
-                    ) : selectedPaymentMethod === "Credit Card" || selectedPaymentMethod === "Debit Card" ? (
+                    ) : selectedPaymentMethod === "Credit Card" ||
+                      selectedPaymentMethod === "Debit Card" ? (
                       /* Card Payment Form */
                       <div className="bg-blue-50 rounded-lg p-4 border border-blue-200">
                         <button
@@ -988,7 +1080,9 @@ export default function InStoreChatbot({ onClose }) {
                             </div>
                           </div>
                           <button
-                            onClick={() => handleQuickReply("Payment Completed")}
+                            onClick={() =>
+                              handleQuickReply("Payment Completed")
+                            }
                             className="w-full py-2 bg-orange-500 text-white rounded text-[0.9vw] font-semibold hover:bg-orange-600 transition-all"
                           >
                             Pay ₹2,199
@@ -1023,7 +1117,9 @@ export default function InStoreChatbot({ onClose }) {
                             </div>
                           </div>
                           <button
-                            onClick={() => handleQuickReply("Payment Completed")}
+                            onClick={() =>
+                              handleQuickReply("Payment Completed")
+                            }
                             className="w-full py-2 bg-orange-500 text-white rounded text-[0.9vw] font-semibold hover:bg-orange-600 transition-all"
                           >
                             Confirm Cash Payment
@@ -1053,7 +1149,7 @@ export default function InStoreChatbot({ onClose }) {
                       <p className="text-[0.8vw] text-orange-600 mb-2 font-medium">
                         Your rewards have been processed and applied
                       </p>
-                      
+
                       <div className="space-y-2">
                         {/* Loyalty Points */}
                         <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg p-2 border border-green-200 flex items-center justify-between">
@@ -1068,7 +1164,9 @@ export default function InStoreChatbot({ onClose }) {
                               </div>
                             </div>
                           </div>
-                          <span className="text-[0.9vw] font-bold text-green-600">120 pts</span>
+                          <span className="text-[0.9vw] font-bold text-green-600">
+                            120 pts
+                          </span>
                         </div>
 
                         {/* Coupon Applied */}
@@ -1084,7 +1182,9 @@ export default function InStoreChatbot({ onClose }) {
                               </div>
                             </div>
                           </div>
-                          <span className="text-[0.9vw] font-bold text-orange-600">-₹120</span>
+                          <span className="text-[0.9vw] font-bold text-orange-600">
+                            -₹120
+                          </span>
                         </div>
 
                         {/* Personalized Offer */}
@@ -1100,7 +1200,9 @@ export default function InStoreChatbot({ onClose }) {
                               </div>
                             </div>
                           </div>
-                          <span className="text-[0.75vw] font-bold text-amber-700 bg-amber-200 px-2 py-1 rounded">Unlocked</span>
+                          <span className="text-[0.75vw] font-bold text-amber-700 bg-amber-200 px-2 py-1 rounded">
+                            Unlocked
+                          </span>
                         </div>
                       </div>
                     </div>
@@ -1128,7 +1230,9 @@ export default function InStoreChatbot({ onClose }) {
                       <span className="text-white text-sm">💬</span>
                     </div>
                     <h3 className="font-semibold text-[1vw] text-gray-900 tracking-tight">
-                      {msg.agentInfo ? msg.agentInfo.title : "In-Store Assistant"}
+                      {msg.agentInfo
+                        ? msg.agentInfo.title
+                        : "In-Store Assistant"}
                     </h3>
                   </div>
 
