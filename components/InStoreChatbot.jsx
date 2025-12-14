@@ -35,8 +35,6 @@ export default function InStoreChatbot({ onClose }) {
 
   const channels = [
     { value: "kiosk", label: "In-Store Kiosk", icon: Store },
-    { value: "phone", label: "Phone", icon: Phone },
-    { value: "chat", label: "Chat", icon: MessageSquare },
   ];
 
   useEffect(() => {
@@ -44,27 +42,54 @@ export default function InStoreChatbot({ onClose }) {
       setIsLoading(true);
       setLoadingMessage("Restoring customer session from online channel...");
 
-      // Initialize with welcome back message
+      // Add initial agent log with staggered delays (1 second apart for visible timestamps)
+      setTimeout(() => {
+        addAgentLog("System", "SalesAgent", "Session transfer initiated from online channel");
+      }, 500);
+
       setTimeout(() => {
         setLoadingMessage(
           "Retrieving customer data for session #SESSION789456..."
         );
-      }, 500);
+      }, 1500);
+
+      setTimeout(() => {
+        addAgentLog("SalesAgent", "SessionDB", "Fetching session #SESSION789456");
+      }, 2500);
 
       setTimeout(() => {
         setLoadingMessage(
           "Loading product details and customer information..."
         );
-      }, 1000);
+      }, 3500);
+
+      setTimeout(() => {
+        addAgentLog("SessionDB", "SalesAgent", "Customer: Arjun Bose, Product: Louis Philippe Shirt");
+      }, 4500);
+
+      setTimeout(() => {
+        addAgentLog("SalesAgent", "User", "Session restored, greeting customer");
+      }, 5500);
 
       setTimeout(() => {
         setIsLoading(false);
+        
+        // Add Sales Agent to the log timeline
+        setLog((prev) => [
+          ...prev,
+          {
+            agentId: "sales_agent",
+            title: "Sales Agent",
+            action: "Session restored from online channel",
+          },
+        ]);
+        
         addAgentMessage(
-          "Welcome back, Arjun! 👋\n\n🆔 Your Session ID: #SESSION789456\n\n📦 PRODUCT DETAILS:\n▸ Product: Louis Philippe\n▸ Size: 40 (Medium)\n▸ Color: White\n▸ Price: ₹2,199\n\n✅ Your session has been successfully restored from online to in-store. How can I assist you today? You can type 'proceed' to complete the purchase, or 'continue shopping' to browse more products.",
+          "🎉 WELCOME BACK, ARJUN! 🎉\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n🆔 Your Session ID: #SESSION789456\n\n📦 PRODUCT DETAILS:\n▸ Product: Louis Philippe\n▸ Size: 40 (Medium)\n▸ Color: White\n▸ Price: ₹2,199\n\n✅ Great news! Your online session has been seamlessly transferred to our in-store system.\n\nHave you already picked up your product from the store? If so, I'd be happy to help you complete the purchase right away. Otherwise, feel free to explore more options or let me know how I can assist you today!",
           [],
           { title: "Sales Agent", id: "sales_agent" }
         );
-      }, 1800);
+      }, 6500);
 
       hasInitialized.current = true;
     }
@@ -156,17 +181,27 @@ export default function InStoreChatbot({ onClose }) {
       paymentTimeoutsRef.current.push(
         setTimeout(() => {
           addAgentLog("PaymentAgent", "POS-System", `Verify payment status`);
+        }, 1500)
+      );
+
+      paymentTimeoutsRef.current.push(
+        setTimeout(() => {
           addAgentLog(
             "POS-System",
             "PaymentAgent",
             `Payment verified: ₹2,199 received`
           );
+        }, 3000)
+      );
+
+      paymentTimeoutsRef.current.push(
+        setTimeout(() => {
           addAgentLog(
             "PaymentAgent",
             "FulfillmentAgent",
             "Order confirmed - prepare for dispatch"
           );
-        }, 1000)
+        }, 4500)
       );
 
       paymentTimeoutsRef.current.push(
@@ -179,18 +214,27 @@ export default function InStoreChatbot({ onClose }) {
               action: "Order confirmed - processing loyalty rewards",
             },
           ]);
+        }, 6000)
+      );
 
+      paymentTimeoutsRef.current.push(
+        setTimeout(() => {
           addAgentLog(
             "FulfillmentAgent",
             "FulfillmentAgent",
             "Order confirmed - prepare for dispatch"
           );
+        }, 7500)
+      );
+
+      paymentTimeoutsRef.current.push(
+        setTimeout(() => {
           addAgentLog(
             "FulfillmentAgent",
             "LoyaltyAgent",
             "Order completed - processing loyalty rewards"
           );
-        }, 2000)
+        }, 9000)
       );
 
       paymentTimeoutsRef.current.push(
@@ -204,7 +248,7 @@ export default function InStoreChatbot({ onClose }) {
             [],
             { title: "Fulfillment Agent", id: "fulfillment_agent" }
           );
-        }, 2500)
+        }, 10500)
       );
 
       // Loyalty Agent activation
@@ -215,7 +259,11 @@ export default function InStoreChatbot({ onClose }) {
             "RewardsDB",
             "Calculate loyalty points for order #RCP789456"
           );
+        }, 12000)
+      );
 
+      paymentTimeoutsRef.current.push(
+        setTimeout(() => {
           setLog((prev) => [
             ...prev,
             {
@@ -225,7 +273,7 @@ export default function InStoreChatbot({ onClose }) {
                 "Points earned: 120 | Available coupons: 2 | Tier status updated",
             },
           ]);
-        }, 3200)
+        }, 13500)
       );
 
       paymentTimeoutsRef.current.push(
@@ -235,14 +283,18 @@ export default function InStoreChatbot({ onClose }) {
             "LoyaltyAgent",
             "Points earned: 120 | Available coupons: 2 | Tier status updated"
           );
+        }, 15000)
+      );
+
+      paymentTimeoutsRef.current.push(
+        setTimeout(() => {
           addAgentLog(
             "LoyaltyAgent",
             "User",
             "Rewards processed and applied to account"
           );
-
           setIsTyping(true);
-        }, 4000)
+        }, 16500)
       );
 
       paymentTimeoutsRef.current.push(
@@ -250,11 +302,34 @@ export default function InStoreChatbot({ onClose }) {
           setIsTyping(false);
           addAgentMessage(
             "🎁 Loyalty Rewards Applied!\n\nYour rewards have been processed and applied\n\n🏆 Loyalty Benefits Applied:\n\n✅ Loyalty Points Earned\n+120 points added to your account\n120 pts\n\n🎟️ Coupon Applied\nFIRST10 - 10% discount applied\n-₹120\n\n🎯 Personalized Offer\nFree delivery on next 3 orders\nUnlocked",
-            ["View Rewards", "Continue Shopping", "Exit Store"],
+            [],
             { title: "Loyalty Agent", id: "loyalty_agent" },
             "loyalty"
           );
-        }, 5200)
+        }, 18000)
+      );
+
+      // Final thank you message
+      paymentTimeoutsRef.current.push(
+        setTimeout(() => {
+          addAgentLog(
+            "SalesAgent",
+            "User",
+            "Session completed - Thank you for shopping!"
+          );
+          setIsTyping(true);
+        }, 19500)
+      );
+
+      paymentTimeoutsRef.current.push(
+        setTimeout(() => {
+          setIsTyping(false);
+          addAgentMessage(
+            "🙏 Thank You, Arjun!\n\nIt was a pleasure assisting you today at ABFRL South City.\n\n💝 We truly appreciate your trust in us!\n\n🛍️ Your Order Summary:\n• Louis Philippe Shirt - ₹2,199\n• Loyalty Points Earned: 120\n• Savings: ₹120\n\n📱 Your e-receipt has been sent to your registered email.\n\n✨ We look forward to seeing you again soon!\n\nHave a wonderful day! 🌟",
+            ["Start New Session", "Exit Store"],
+            { title: "Sales Agent", id: "sales_agent" }
+          );
+        }, 21000)
       );
     }
     // Handle payment/purchase related queries
@@ -282,8 +357,13 @@ export default function InStoreChatbot({ onClose }) {
           "PaymentAgent",
           "Initiate in-store purchase for Louis Philippe"
         );
+      }, 1500);
+
+      setTimeout(() => {
         addAgentLog("PaymentAgent", "POS-System", "Display payment method options");
-        
+      }, 3000);
+
+      setTimeout(() => {
         // Only add to log if not already present
         setLog((prev) => {
           const hasPaymentAgent = prev.some(item => item.agentId === "payment_agent");
@@ -307,7 +387,7 @@ export default function InStoreChatbot({ onClose }) {
           { title: "Payment Agent", id: "payment_agent" },
           "payment"
         );
-      }, 2500);
+      }, 4500);
     } else if (
       lowerReply.includes("continue shopping") ||
       lowerReply.includes("browse") ||
@@ -324,6 +404,9 @@ export default function InStoreChatbot({ onClose }) {
           "InventoryAgent",
           "Show available products for in-store browsing"
         );
+      }, 1500);
+
+      setTimeout(() => {
         setLog((prev) => [
           ...prev,
           {
@@ -332,6 +415,9 @@ export default function InStoreChatbot({ onClose }) {
             action: "Fetching in-store product catalog",
           },
         ]);
+      }, 3000);
+
+      setTimeout(() => {
         setIsTyping(false);
         setIsLoading(false);
         addAgentMessage(
@@ -344,7 +430,7 @@ export default function InStoreChatbot({ onClose }) {
           ],
           { title: "Inventory Agent", id: "inventory_agent" }
         );
-      }, 1500);
+      }, 4500);
     } else if (reply === "Check Product Availability") {
       addAgentLog("User", "SalesAgent", `Selected: ${reply}`);
       setLoadingMessage("Checking inventory for Louis Philippe...");
@@ -355,13 +441,16 @@ export default function InStoreChatbot({ onClose }) {
           "InventoryAgent",
           "Check Louis Philippe stock in current store"
         );
+      }, 1500);
+
+      setTimeout(() => {
         addAgentLog(
           "InventoryAgent",
           "StoreDB",
           "Query ABFRL South City inventory"
         );
         setLoadingMessage("Verifying stock levels...");
-      }, 500);
+      }, 3000);
 
       setTimeout(() => {
         addAgentLog(
@@ -369,6 +458,9 @@ export default function InStoreChatbot({ onClose }) {
           "InventoryAgent",
           "Louis Philippe Size 40: Available (2 pieces)"
         );
+      }, 4500);
+
+      setTimeout(() => {
         addAgentLog(
           "InventoryAgent",
           "SalesAgent",
@@ -382,6 +474,9 @@ export default function InStoreChatbot({ onClose }) {
             action: "Stock verification completed",
           },
         ]);
+      }, 6000);
+
+      setTimeout(() => {
         setIsTyping(false);
         setIsLoading(false);
         addAgentMessage(
@@ -393,7 +488,7 @@ export default function InStoreChatbot({ onClose }) {
           ],
           { title: "Inventory Agent", id: "inventory_agent" }
         );
-      }, 2000);
+      }, 7500);
     } else if (reply === "Speak with Store Manager") {
       addAgentLog("User", "SalesAgent", `Selected: ${reply}`);
       setLoadingMessage("Connecting you with store manager...");
@@ -404,11 +499,17 @@ export default function InStoreChatbot({ onClose }) {
           "StoreManager",
           "Customer requesting manager assistance"
         );
+      }, 1500);
+
+      setTimeout(() => {
         addAgentLog(
           "StoreManager",
           "SalesAgent",
           "Manager Sophia will assist the customer"
         );
+      }, 3000);
+
+      setTimeout(() => {
         setLog((prev) => [
           ...prev,
           {
@@ -417,6 +518,9 @@ export default function InStoreChatbot({ onClose }) {
             action: "Personal customer assistance",
           },
         ]);
+      }, 4500);
+
+      setTimeout(() => {
         setIsTyping(false);
         setIsLoading(false);
         addAgentMessage(
@@ -429,7 +533,7 @@ export default function InStoreChatbot({ onClose }) {
           ],
           { title: "Store Manager (Sophia)", id: "store_manager" }
         );
-      }, 1800);
+      }, 6000);
     } else if (reply === "Show Me the Product") {
       addAgentLog("User", "InventoryAgent", `Selected: ${reply}`);
       setLoadingMessage("Locating product for demonstration...");
@@ -440,11 +544,17 @@ export default function InStoreChatbot({ onClose }) {
           "StoreStaff",
           "Customer wants to see Louis Philippe shirt"
         );
+      }, 1500);
+
+      setTimeout(() => {
         addAgentLog(
           "StoreStaff",
           "InventoryAgent",
           "Bringing product to customer location"
         );
+      }, 3000);
+
+      setTimeout(() => {
         setLog((prev) => [
           ...prev,
           {
@@ -453,6 +563,9 @@ export default function InStoreChatbot({ onClose }) {
             action: "Product presentation service",
           },
         ]);
+      }, 4500);
+
+      setTimeout(() => {
         setIsTyping(false);
         setIsLoading(false);
         addAgentMessage(
@@ -465,7 +578,7 @@ export default function InStoreChatbot({ onClose }) {
           ],
           { title: "Store Staff", id: "store_staff" }
         );
-      }, 2000);
+      }, 6000);
     } else {
       // Handle other replies
       setTimeout(() => {
@@ -498,15 +611,15 @@ export default function InStoreChatbot({ onClose }) {
   };
 
   return (
-    <div className="h-screen top_section flex bg-gradient-to-br from-orange-100 via-yellow-100 to-amber-100 text-gray-800 font-sans text-[1.4vw] leading-[1.8vh]">
+    <div className="h-screen top_section flex bg-gradient-to-br from-orange-100 via-yellow-100 to-amber-100 text-gray-800 font-sans text-[1.4vw] leading-relaxed tracking-wide">
       {/* LEFT - Agent Timeline */}
       <div className="w-1/3 bottom_section overflow-y-auto border-r border-orange-300 bg-white shadow-lg">
         <header className="left_scroll min-h-[20%] max-h-[20%] p-4 border-b border-orange-300 bg-gradient-to-r from-orange-500 via-amber-500 to-yellow-500 flex justify-between items-center shadow-lg">
           <div>
-            <h1 className="text-[2vw] font-bold flex items-center text-white drop-shadow-md">
+            <h1 className="text-[2vw] font-extrabold flex items-center text-white drop-shadow-lg tracking-tight">
               ⚡ Agent Timeline
             </h1>
-            <p className="text-[1vw] text-orange-100 mt-2">
+            <p className="text-[1vw] text-orange-100 mt-2 font-medium tracking-wide">
               Live Orchestration Log
             </p>
           </div>
@@ -655,10 +768,10 @@ export default function InStoreChatbot({ onClose }) {
       <div className="bottom_section w-2/3 flex flex-col bg-white">
         <header className="min-h-[20%] max-h-[20%] p-4 border-b border-orange-300 bg-gradient-to-r from-orange-500 via-amber-500 to-yellow-500 flex justify-between items-center shadow-lg">
           <div>
-            <h1 className="text-[2vw] font-bold flex items-center text-white drop-shadow-md">
+            <h1 className="text-[2vw] font-extrabold flex items-center text-white drop-shadow-lg tracking-tight">
               🤖 AI Orchestrator
             </h1>
-            <p className="text-[1vw] text-orange-100 mt-2">
+            <p className="text-[1vw] text-orange-100 mt-2 font-medium tracking-wide">
               In-store multi-agent automation
             </p>
           </div>
@@ -719,23 +832,23 @@ export default function InStoreChatbot({ onClose }) {
                 // User message - right side
                 <div className="flex justify-end mb-3 animate-fade-in">
                   <div className="bg-gradient-to-r from-orange-500 to-amber-500 text-white p-3 rounded-2xl rounded-tr-sm shadow-lg max-w-[70%]">
-                    <p className="text-[1.1vw] font-medium">{msg.text}</p>
+                    <p className="text-[1.1vw] font-medium tracking-wide">{msg.text}</p>
                   </div>
                 </div>
               ) : msg.type === "payment" ? (
                 // Payment message with method selection
-                <div className="bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50 p-2 rounded-xl border border-orange-200 shadow-lg hover:shadow-xl transition-shadow duration-300 animate-fade-in mb-3">
-                  <div className="flex items-center mb-2 border-b border-orange-200 pb-1">
-                    <div className="h-10 w-10 rounded-lg flex justify-center items-center bg-gradient-to-br from-orange-500 to-amber-500 mr-3 shadow-md">
-                      <span className="text-white text-lg">💳</span>
+                <div className="bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50 p-2 rounded-lg border border-orange-200 shadow-sm hover:shadow-md transition-shadow duration-300 animate-fade-in mb-2">
+                  <div className="flex items-center mb-1.5 border-b border-orange-200 pb-1">
+                    <div className="h-7 w-7 rounded-md flex justify-center items-center bg-gradient-to-br from-orange-500 to-amber-500 mr-2 shadow-sm">
+                      <span className="text-white text-sm">💳</span>
                     </div>
-                    <h3 className="font-bold text-[1.4vw] text-gray-900">
+                    <h3 className="font-semibold text-[1vw] text-gray-900 tracking-tight">
                       {msg.agentInfo ? msg.agentInfo.title : "Payment Agent"}
                     </h3>
                   </div>
 
-                  <div className="pl-8 mb-2">
-                    <p className="text-gray-800 mb-3 text-[1.1vw] leading-relaxed whitespace-pre-line">
+                  <div className="pl-6 mb-1.5">
+                    <p className="text-gray-700 mb-2 text-[0.9vw] leading-relaxed whitespace-pre-line font-medium">
                       {msg.text}
                     </p>
 
@@ -922,22 +1035,22 @@ export default function InStoreChatbot({ onClose }) {
                 </div>
               ) : msg.type === "loyalty" ? (
                 // Loyalty message with rewards display - Orange/Amber theme
-                <div className="bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50 p-2 rounded-xl border-2 border-orange-300 shadow-lg hover:shadow-xl transition-shadow duration-300 animate-fade-in mb-3">
-                  <div className="flex items-center mb-2 border-b border-orange-200 pb-1">
-                    <div className="h-10 w-10 rounded-lg flex justify-center items-center bg-gradient-to-br from-orange-500 to-amber-500 mr-3 shadow-md">
-                      <span className="text-white text-lg">🎁</span>
+                <div className="bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50 p-2 rounded-lg border-2 border-orange-300 shadow-sm hover:shadow-md transition-shadow duration-300 animate-fade-in mb-2">
+                  <div className="flex items-center mb-1.5 border-b border-orange-200 pb-1">
+                    <div className="h-7 w-7 rounded-md flex justify-center items-center bg-gradient-to-br from-orange-500 to-amber-500 mr-2 shadow-sm">
+                      <span className="text-white text-sm">🎁</span>
                     </div>
-                    <h3 className="font-bold text-[1.4vw] text-orange-800">
+                    <h3 className="font-semibold text-[1vw] text-orange-800 tracking-tight">
                       {msg.agentInfo ? msg.agentInfo.title : "Loyalty Agent"}
                     </h3>
                   </div>
 
-                  <div className="pl-8 mb-2">
-                    <div className="bg-gradient-to-r from-orange-100 to-amber-100 rounded-lg p-3 mb-3 border border-orange-200">
-                      <h4 className="text-[1.1vw] font-bold text-orange-700 mb-2">
+                  <div className="pl-6 mb-1.5">
+                    <div className="bg-gradient-to-r from-orange-100 to-amber-100 rounded-md p-2 mb-2 border border-orange-200">
+                      <h4 className="text-[0.9vw] font-bold text-orange-700 mb-1.5 tracking-tight">
                         🎁 Loyalty Rewards Applied!
                       </h4>
-                      <p className="text-[0.9vw] text-orange-600 mb-3">
+                      <p className="text-[0.8vw] text-orange-600 mb-2 font-medium">
                         Your rewards have been processed and applied
                       </p>
                       
@@ -1009,18 +1122,18 @@ export default function InStoreChatbot({ onClose }) {
                 </div>
               ) : (
                 // Agent message - left side with header
-                <div className="bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50 p-2 rounded-xl border border-orange-200 shadow-lg hover:shadow-xl transition-shadow duration-300 animate-fade-in mb-3">
-                  <div className="flex items-center mb-2 border-b border-orange-200 pb-1">
-                    <div className="h-10 w-10 rounded-lg flex justify-center items-center bg-gradient-to-br from-orange-500 to-amber-500 mr-3 shadow-md">
-                      <span className="text-white text-lg">💬</span>
+                <div className="bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50 p-2 rounded-lg border border-orange-200 shadow-sm hover:shadow-md transition-shadow duration-300 animate-fade-in mb-2">
+                  <div className="flex items-center mb-1.5 border-b border-orange-200 pb-1">
+                    <div className="h-7 w-7 rounded-md flex justify-center items-center bg-gradient-to-br from-orange-500 to-amber-500 mr-2 shadow-sm">
+                      <span className="text-white text-sm">💬</span>
                     </div>
-                    <h3 className="font-bold text-[1.4vw] text-gray-900">
+                    <h3 className="font-semibold text-[1vw] text-gray-900 tracking-tight">
                       {msg.agentInfo ? msg.agentInfo.title : "In-Store Assistant"}
                     </h3>
                   </div>
 
-                  <div className="pl-8 mb-2">
-                    <p className="text-gray-800 mb-2 text-[1.1vw] leading-relaxed whitespace-pre-line">
+                  <div className="pl-6 mb-1.5">
+                    <p className="text-gray-700 mb-1.5 text-[0.9vw] leading-relaxed whitespace-pre-line font-medium">
                       {msg.text}
                     </p>
 
@@ -1045,24 +1158,24 @@ export default function InStoreChatbot({ onClose }) {
 
           {/* Typing Indicator */}
           {isTyping && (
-            <div className="bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50 p-2 rounded-xl border border-orange-200 shadow-lg animate-fade-in">
-              <div className="flex items-center mb-2 border-b border-orange-200 pb-1">
-                <div className="h-10 w-10 rounded-lg flex justify-center items-center bg-gradient-to-br from-orange-500 to-amber-500 mr-3 shadow-md">
-                  <span className="text-white text-lg">💬</span>
+            <div className="bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50 p-2 rounded-lg border border-orange-200 shadow-sm animate-fade-in">
+              <div className="flex items-center mb-1.5 border-b border-orange-200 pb-1">
+                <div className="h-7 w-7 rounded-md flex justify-center items-center bg-gradient-to-br from-orange-500 to-amber-500 mr-2 shadow-sm">
+                  <span className="text-white text-sm">💬</span>
                 </div>
-                <h3 className="font-bold text-[1.4vw] text-gray-900">
+                <h3 className="font-bold text-[1vw] text-gray-900">
                   Assistant
                 </h3>
               </div>
-              <div className="pl-8 flex items-center gap-2">
+              <div className="pl-6 flex items-center gap-2">
                 <div className="flex gap-1">
-                  <div className="w-2 h-2 bg-orange-400 rounded-full animate-bounce"></div>
+                  <div className="w-1.5 h-1.5 bg-orange-400 rounded-full animate-bounce"></div>
                   <div
-                    className="w-2 h-2 bg-orange-400 rounded-full animate-bounce"
+                    className="w-1.5 h-1.5 bg-orange-400 rounded-full animate-bounce"
                     style={{ animationDelay: "0.1s" }}
                   ></div>
                   <div
-                    className="w-2 h-2 bg-orange-400 rounded-full animate-bounce"
+                    className="w-1.5 h-1.5 bg-orange-400 rounded-full animate-bounce"
                     style={{ animationDelay: "0.2s" }}
                   ></div>
                 </div>

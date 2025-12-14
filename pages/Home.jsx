@@ -225,15 +225,15 @@ export default function Home() {
               <div className="space-y-4">
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-2">
-                    Session ID
+                    Gmail ID
                   </label>
                   <input
-                    type="text"
+                    type="email"
                     name="sessionId"
                     value={loginData.sessionId}
                     onChange={handleInputChange}
                     className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-amber-500 focus:outline-none transition-colors"
-                    placeholder="Enter any session ID (e.g., #SESSION123456)"
+                    placeholder="Enter your Gmail ID (e.g., user@gmail.com)"
                     required
                   />
                 </div>

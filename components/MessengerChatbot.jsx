@@ -151,12 +151,12 @@ export default function MessengerChatbot({ onClose }) {
     ) {
       addAgentLog(
         "SalesAgent",
-        "RecommendationAgent2",
+        "RecommendationAgent",
         "Fetching additional product recommendations..."
       );
       setTimeout(() => {
         addAgentLog(
-          "RecommendationAgent2",
+          "RecommendationAgent",
           "Database",
           "Fetching additional recommendations..."
         );
@@ -164,11 +164,11 @@ export default function MessengerChatbot({ onClose }) {
       setTimeout(() => {
         addAgentLog(
           "Database",
-          "RecommendationAgent2",
+          "RecommendationAgent",
           "Additional 3 SKUs prepared [SKU401:Van Heusen, SKU502:Arrow, SKU603:Adidas]"
         );
         addAgentLog(
-          "RecommendationAgent2",
+          "RecommendationAgent",
           "SalesAgent",
           "Second batch of products ready"
         );
@@ -185,7 +185,7 @@ export default function MessengerChatbot({ onClose }) {
             round: 2,
             agentInfo: {
               title: "Recommendation Agent",
-              id: "recommendation_agent_2",
+              id: "recommendation_agent",
             },
           },
         ]);
@@ -1134,11 +1134,16 @@ export default function MessengerChatbot({ onClose }) {
       <div className="h-screen flex">
         {/* LEFT - Agent Timeline */}
         <div className="w-1/3 bg-white border-r border-orange-300 flex flex-col shadow-lg">
-          <header className="min-h-[20%] max-h-[20%] p-4 border-b border-orange-300 bg-gradient-to-r from-orange-500 via-amber-500 to-yellow-500 shadow-lg">
-            <div className="flex justify-between items-start mb-2">
-              <h1 className="text-[2vw] font-bold text-white drop-shadow-md flex items-center">
-                ⚡ Agent Timeline
-              </h1>
+          <header className="min-h-[20%] max-h-[20%] p-6 border-b border-orange-300 bg-gradient-to-r from-orange-500 via-amber-500 to-yellow-500 shadow-lg flex flex-col justify-center">
+            <div className="flex justify-between items-start">
+              <div>
+                <h1 className="text-[2vw] font-bold text-white drop-shadow-md flex items-center gap-2">
+                  <span className="text-[2.2vw]">⚡</span> Agent Timeline
+                </h1>
+                <p className="text-[1vw] text-orange-100 mt-1 font-medium tracking-wide">
+                  Live Orchestration Log
+                </p>
+              </div>
               <button
                 onClick={onClose}
                 className="text-white hover:bg-white/20 rounded-full p-2 transition-all"
@@ -1158,9 +1163,6 @@ export default function MessengerChatbot({ onClose }) {
                 </svg>
               </button>
             </div>
-            <p className="text-[1vw] text-orange-100 mt-2">
-              Live Orchestration Log
-            </p>
           </header>
 
           {/* Agent Timeline Content */}
@@ -1256,52 +1258,7 @@ export default function MessengerChatbot({ onClose }) {
                             log.from === "RecommendationAgent" ||
                             log.to === "RecommendationAgent"
                         )
-                        .slice(-3)
-                        .map((log, idx) => (
-                          <div
-                            key={idx}
-                            className="flex items-start gap-2 text-[0.75vw] font-mono"
-                          >
-                            <span className="text-gray-400 min-w-[60px]">
-                              {log.timestamp}
-                            </span>
-                            <div className="flex-1 text-gray-700">
-                              {log.message}
-                            </div>
-                          </div>
-                        ))}
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* Second Recommendation Agent */}
-              {agentLogs.some(
-                (log) =>
-                  log.from === "RecommendationAgent2" ||
-                  log.to === "RecommendationAgent2"
-              ) && (
-                <div className="relative pl-8">
-                  <div className="absolute left-0 top-1 h-3 w-3 bg-amber-600 rounded-full shadow-md"></div>
-                  <div className="p-3 bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50 rounded-lg border border-orange-300 shadow-sm hover:shadow-md transition-shadow">
-                    <div className="flex justify-between items-center mb-2">
-                      <p className="font-bold text-[1.3vw] text-gray-900">
-                        Recommendation Agent
-                      </p>
-                      <span className="text-[0.8vw] bg-amber-600 text-white px-2 py-1 rounded-md font-semibold shadow-sm">
-                        recommendation_agent_2
-                      </span>
-                    </div>
-
-                    {/* Timeline logs */}
-                    <div className="mt-2 space-y-1 border-t border-orange-200 pt-2">
-                      {agentLogs
-                        .filter(
-                          (log) =>
-                            log.from === "RecommendationAgent2" ||
-                            log.to === "RecommendationAgent2"
-                        )
-                        .slice(-3)
+                        .slice(-6)
                         .map((log, idx) => (
                           <div
                             key={idx}

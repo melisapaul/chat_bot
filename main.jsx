@@ -45,7 +45,6 @@ createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <BrowserRouter>
       <Pages />
-      <ChatWidget />
     </BrowserRouter>
   </React.StrictMode>
 );
