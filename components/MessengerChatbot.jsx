@@ -1139,33 +1139,35 @@ export default function MessengerChatbot({ onClose }) {
       <div className="h-screen flex">
         {/* LEFT - Agent Timeline */}
         <div className="w-1/3 bg-white border-r border-orange-300 flex flex-col shadow-lg">
-          <header className="min-h-[20%] max-h-[20%] p-6 border-b border-orange-300 bg-gradient-to-r from-orange-500 via-amber-500 to-yellow-500 shadow-lg flex flex-col justify-center">
-            <div className="flex justify-between items-start">
+          <header className="min-h-[20%] max-h-[20%] p-5 border-b border-orange-300 bg-gradient-to-r from-orange-500 via-amber-500 to-yellow-500 shadow-lg flex flex-col justify-center">
+            <div className="flex justify-between items-center">
               <div>
-                <h1 className="text-[2vw] font-extrabold text-white drop-shadow-lg flex items-center gap-2 tracking-tight">
-                  <span className="text-[2.2vw]">⚡</span> Agent Timeline
+                <h1 className="text-[2vw] font-extrabold text-white drop-shadow-lg flex items-center gap-3 tracking-tight">
+                  <span className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-gradient-to-br from-orange-100 via-amber-200 to-yellow-300 text-orange-600 shadow-md">
+                    ⚡
+                  </span>
+                  Agent Timeline
                 </h1>
-                <p className="text-[1vw] text-orange-100 mt-2 font-medium tracking-wide">
+                <p className="text-[1vw] text-orange-50/95 mt-2 font-medium tracking-wide">
                   Live Orchestration Log
                 </p>
               </div>
               <button
                 onClick={onClose}
-                className="text-white hover:bg-white/20 rounded-full p-2 transition-all"
+                className="flex items-center gap-3 px-5 py-3 rounded-2xl bg-gradient-to-r from-rose-600 via-orange-500 to-amber-500 text-white text-[0.95vw] font-semibold shadow-lg border border-white/30 transition-transform hover:scale-[1.02]"
               >
-                <svg
-                  className="w-6 h-6"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
+                <span className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-white/15 text-white">
+                  <svg
+                    className="w-4 h-4"
+                    fill="none"
+                    stroke="currentColor"
                     strokeWidth={2}
-                    d="M6 18L18 6M6 6l12 12"
-                  />
-                </svg>
+                    viewBox="0 0 24 24"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+                  </svg>
+                </span>
+                Back
               </button>
             </div>
           </header>
@@ -1641,7 +1643,7 @@ export default function MessengerChatbot({ onClose }) {
         {/* RIGHT - Messenger Chat */}
         <div className="w-2/3 flex flex-col bg-white">
           {/* Header */}
-          <header className="min-h-[20%] max-h-[20%] p-4 border-b border-orange-300 bg-gradient-to-r from-orange-500 via-amber-500 to-yellow-500 flex items-center justify-between shadow-lg">
+          <header className="min-h-[20%] max-h-[20%] p-5 border-b border-orange-300 bg-gradient-to-r from-orange-500 via-amber-500 to-yellow-500 flex items-center justify-between shadow-lg">
             <div className="flex items-center gap-4">
               <div className="relative">
                 <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-md">
@@ -1653,24 +1655,30 @@ export default function MessengerChatbot({ onClose }) {
                 <h1 className="text-[2vw] font-extrabold text-white drop-shadow-lg flex items-center tracking-tight">
                   AI Orchestrator
                 </h1>
-                <div className="flex items-center gap-3 text-[1vw] text-orange-100 mt-2 font-medium tracking-wide">
-                  <div className="flex items-center gap-1">
-                    <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
-                    <span>Active</span>
-                  </div>
-                  <span>•</span>
-                  <div className="flex items-center gap-1">
-                    {React.createElement(
-                      channels.find((c) => c.value === channel)?.icon || Globe,
-                      { size: 14 }
-                    )}
-                    <span>
-                      Channel:{" "}
-                      {channels.find((c) => c.value === channel)?.label}
-                    </span>
-                  </div>
-                </div>
+                <p className="text-[0.95vw] text-orange-100/95 mt-1 font-medium tracking-wide">
+                  In-store multi-agent automation
+                </p>
               </div>
+            </div>
+            <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2 px-4 py-2 bg-white text-orange-600 rounded-2xl border border-white/70 shadow-md">
+                {React.createElement(
+                  channels.find((c) => c.value === channel)?.icon || Globe,
+                  { size: 18, color: "#DD5A08" }
+                )}
+                <span className="text-[0.95vw] font-semibold tracking-wide">
+                  {channels.find((c) => c.value === channel)?.label || "Web"}
+                </span>
+              </div>
+              <div className="px-4 py-2 rounded-2xl bg-gradient-to-r from-amber-400 to-yellow-400 text-white text-[0.95vw] font-semibold shadow-md border border-white/40">
+                Status: <span className="font-extrabold">Active</span>
+              </div>
+              <button
+                onClick={onClose}
+                className="flex items-center justify-center w-10 h-10 rounded-full bg-white/15 text-white border border-white/30 shadow-md transition-transform hover:scale-105"
+              >
+                <X size={18} strokeWidth={2.5} />
+              </button>
             </div>
           </header>
 
