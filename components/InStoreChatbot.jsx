@@ -365,6 +365,12 @@ export default function InStoreChatbot({ onClose }) {
             ["Start New Session", "Exit Store"],
             { title: "Sales Agent", id: "sales_agent" }
           );
+          // Signal StoreKeeper to show the hardcoded demo transaction for this session
+          try {
+            sessionStorage.setItem("showDemoTransaction", "true");
+          } catch (e) {
+            // ignore sessionStorage errors (e.g., private mode)
+          }
         }, 21000)
       );
     }
@@ -879,6 +885,11 @@ export default function InStoreChatbot({ onClose }) {
                   </button>
                 );
               })}
+            </div>
+
+            <div className="text-[0.9vw] bg-white/20 backdrop-blur-sm px-3 py-1 rounded-lg border border-orange-200 shadow-md">
+              Session:{" "}
+              <span className="text-white font-bold">#SESSION789456</span>
             </div>
 
             <div className="text-[1vw] bg-white/20 backdrop-blur-sm px-3 py-1 rounded-lg border border-orange-200 shadow-md">

@@ -1374,58 +1374,12 @@ export default function MessengerChatbot({ onClose }) {
                             log.from === "PaymentGateway" ||
                             log.to === "PaymentGateway" ||
                             log.from === "CartDB" ||
-                            log.to === "CartDB"
-                        )
-                        .slice(-3)
-                        .map((log, idx) => (
-                          <div
-                            key={idx}
-                            className="flex items-start gap-2 text-[0.75vw] font-mono"
-                          >
-                            <span className="text-gray-400 min-w-[60px]">
-                              {log.timestamp}
-                            </span>
-                            <div className="flex-1 text-gray-700">
-                              {log.message}
-                            </div>
-                          </div>
-                        ))}
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* Payment Agent 2 (Retry) */}
-              {agentLogs.some(
-                (log) =>
-                  log.from === "PaymentAgent-2" ||
-                  log.to === "PaymentAgent-2" ||
-                  log.from === "UPI-Gateway" ||
-                  log.to === "UPI-Gateway"
-              ) && (
-                <div className="relative pl-8">
-                  <div className="absolute left-0 top-1 h-3 w-3 bg-green-500 rounded-full shadow-md"></div>
-                  <div className="p-3 bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 rounded-lg border border-green-300 shadow-sm hover:shadow-md transition-shadow">
-                    <div className="flex justify-between items-center mb-2">
-                      <p className="font-bold text-[1.25vw] text-gray-900">
-                        Payment Agent 2
-                      </p>
-                      <span className="text-[0.8vw] bg-green-500 text-white px-2 py-1 rounded-md font-semibold shadow-sm">
-                        payment_agent_2
-                      </span>
-                    </div>
-
-                    {/* Timeline logs */}
-                    <div className="mt-2 space-y-1 border-t border-green-200 pt-2">
-                      {agentLogs
-                        .filter(
-                          (log) =>
+                            log.to === "CartDB" ||
+                            // Include retry agent logs under the primary Payment Agent card
                             log.from === "PaymentAgent-2" ||
                             log.to === "PaymentAgent-2" ||
                             log.from === "UPI-Gateway" ||
-                            log.to === "UPI-Gateway" ||
-                            log.from === "System" ||
-                            log.to === "System"
+                            log.to === "UPI-Gateway"
                         )
                         .slice(-3)
                         .map((log, idx) => (
@@ -1445,6 +1399,8 @@ export default function MessengerChatbot({ onClose }) {
                   </div>
                 </div>
               )}
+
+              {/* PaymentAgent-2 logs are merged into the primary Payment Agent card above */}
 
               {/* Fulfillment Agent */}
               {agentLogs.some(

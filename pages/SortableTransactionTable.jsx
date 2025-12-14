@@ -10,6 +10,7 @@ const getStatusClasses = (status) => {
     case "In Progress":
       return "bg-yellow-100 text-yellow-800";
     case "Complete":
+    case "Completed":
       return "bg-green-100 text-green-800";
     default:
       return "bg-gray-100 text-gray-800";
@@ -35,6 +36,7 @@ export default function StoreDetailsTable({ storeId }) {
     // Clear orders when page is about to unload (refresh/close)
     const handleBeforeUnload = () => {
       sessionStorage.removeItem("newOfflineOrder");
+      sessionStorage.removeItem("showDemoTransaction");
     };
 
     window.addEventListener("beforeunload", handleBeforeUnload);
@@ -124,8 +126,30 @@ export default function StoreDetailsTable({ storeId }) {
       };
     });
 
-    // Combine pending orders with regular transactions, pending orders first
-    const combined = [...pendingOfflineOrders, ...regularTransactions];
+    // Show hardcoded demo transaction only when the chatbot sets the flag
+    const showDemo = sessionStorage.getItem("showDemoTransaction") === "true";
+    const demoTransaction = {
+      id: "PENDING_2025-12-14T14:22:46.238Z",
+      date: "2025-12-14T14:22:46.238Z",
+      userId: "#0001",
+      userName: "Arjun Bose",
+      productName: "Louis Philippe",
+      qty: 1,
+      mode: "Offline",
+      storeName: "ABFRL South City Store",
+      orderStatus: "Completed",
+      amount: Number(2199),
+      userAddress: "29 Main Street, City 9",
+      userPhone: "555-1029",
+      isPending: false,
+    };
+
+    // Combine demo (only when flagged), pending orders, then regular transactions
+    const combined = [
+      ...(showDemo ? [demoTransaction] : []),
+      ...pendingOfflineOrders,
+      ...regularTransactions,
+    ];
     // Deduplicate by id (preserve first occurrence)
     const seen = new Set();
     const deduped = [];

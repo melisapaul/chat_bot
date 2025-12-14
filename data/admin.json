@@ -3055,7 +3055,7 @@
       "date": "2025-12-27",
       "mode": "Offline",
       "amount": 899,
-      "orderStatus": "New",
+      "orderStatus": "Complete",
       "storeId": "sk15"
     },
     {
@@ -3693,7 +3693,7 @@
       "date": "2025-12-21",
       "mode": "Online",
       "amount": 2999,
-      "orderStatus": "In Progress"
+      "orderStatus": "Complete"
     },
     {
       "id": "10127",
@@ -4579,7 +4579,7 @@
       "date": "2025-12-20",
       "mode": "Offline",
       "amount": 5999,
-      "orderStatus": "In Progress",
+      "orderStatus": "Complete",
       "storeId": "sk3"
     },
     {
@@ -4809,7 +4809,7 @@
       "date": "2025-12-24",
       "mode": "Offline",
       "amount": 1599,
-      "orderStatus": "In Progress",
+      "orderStatus": "Complete",
       "storeId": "sk7"
     },
     {
@@ -5006,7 +5006,7 @@
       "date": "2025-12-18",
       "mode": "Offline",
       "amount": 1699,
-      "orderStatus": "In Progress",
+      "orderStatus": "Complete",
       "storeId": "sk10"
     },
     {
@@ -5348,7 +5348,7 @@
       "date": "2025-12-28",
       "mode": "Offline",
       "amount": 1999,
-      "orderStatus": "New",
+      "orderStatus": "Complete",
       "storeId": "sk2"
     },
     {

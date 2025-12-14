@@ -465,11 +465,11 @@ export default function Admin() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         <div className="bg-white border border-gray-200 rounded-3xl p-6 shadow-xl hover:shadow-2xl transition-shadow">
           <div className="text-sm text-gray-500 mb-2">No of Customer</div>
-          <div className="text-4xl font-bold text-red-800">13000</div>
+          <div className="text-4xl font-bold text-red-800">13547</div>
         </div>
         <div className="bg-white border border-gray-200 rounded-3xl p-6 shadow-xl hover:shadow-2xl transition-shadow">
           <div className="text-sm text-gray-500 mb-2">No of Product Sold</div>
-          <div className="text-4xl font-bold text-amber-600">52000</div>
+          <div className="text-4xl font-bold text-amber-600">52064</div>
         </div>
         <div className="bg-white border border-gray-200 rounded-3xl p-6 shadow-xl hover:shadow-2xl transition-shadow">
           <div className="text-sm text-gray-500 mb-2">No of Retail Stores</div>
