@@ -63,7 +63,7 @@ export default function Home() {
               {/* Action Buttons */}
               <div className="flex gap-3 justify-start">
                 <button
-                  onClick={() => nav("/store")}
+                  onClick={() => nav("/user")}
                   className="bg-transparent border-2 border-red-400 text-red-700 font-semibold py-2 px-4 rounded-lg transition-all duration-300 hover:bg-red-50 hover:border-red-500 hover:scale-105 flex items-center justify-center gap-2 text-sm"
                 >
                   <span>Online</span>

@@ -35,45 +35,59 @@ export default function StoreDetailsTable({ storeId }) {
     // Clear orders when page is about to unload (refresh/close)
     const handleBeforeUnload = () => {
       sessionStorage.removeItem("newOfflineOrder");
-      sessionStorage.removeItem("instoreOrderAdded");
     };
 
     window.addEventListener("beforeunload", handleBeforeUnload);
 
-    // Check if we should add the hardcoded in-store order
-    const shouldAddInstoreOrder =
-      sessionStorage.getItem("newOfflineOrder") &&
-      !sessionStorage.getItem("instoreOrderAdded");
+    const checkForPendingOrders = () => {
+      const orderData = sessionStorage.getItem("newOfflineOrder");
+      if (orderData) {
+        const order = JSON.parse(orderData);
+        const orderId = `PENDING_${order.timestamp || Date.now()}`;
 
-    if (shouldAddInstoreOrder) {
-      // Create hardcoded Louis Philippe transaction - only once
-      const hardcodedTransaction = {
-        id: `PENDING_${new Date().toISOString()}`,
-        date: new Date().toISOString().split("T")[0],
-        userId: "#00001",
-        productId: "p004", // Louis Philippe product ID
-        qty: 1,
-        mode: "Offline",
-        storeId: "sk1",
-        orderStatus: "In Progress",
-        amount: 2199, // Louis Philippe price
-        userName: "Arjun Bose",
-        productName: "Louis Philippe",
-        userAddress: "29 Main Street, City 9",
-        userPhone: "555-1029",
-        storeName: "ABFRL Store South City",
-        isPending: true,
-        isHardcoded: true, // Flag to identify hardcoded orders
-      };
+        // Check if this order already exists in our pending orders
+        const existingOrder = pendingOfflineOrders.find(
+          (pending) => pending.id === orderId
+        );
 
-      setPendingOfflineOrders([hardcodedTransaction]);
-      sessionStorage.setItem("instoreOrderAdded", "true"); // Prevent re-adding
-    }
+        if (!existingOrder) {
+          // Create a transaction-like object for the pending order
+          const pendingTransaction = {
+            id: orderId,
+            date: order.date || new Date().toISOString().split("T")[0],
+            userId: order.userId,
+            productId: order.product?.id,
+            qty: order.qty || 1,
+            mode: order.mode || "Offline",
+            storeId: order.store?.id,
+            orderStatus: order.orderStatus || "In Progress",
+            amount: Number(order.product?.price || 0),
+            userName: order.userName,
+            productName: order.product?.name,
+            userAddress: order.userAddress || "29 Main Street, City 9",
+            userPhone: order.userPhone || "555-1029",
+            storeName:
+              order.store?.store_name ||
+              order.store?.location ||
+              "ABFRL South City Store",
+            isPending: true, // Flag to identify pending orders
+          };
+
+          // Add to existing pending orders instead of replacing
+          setPendingOfflineOrders((prev) => [pendingTransaction, ...prev]);
+        }
+      }
+    };
+
+    checkForPendingOrders();
+    // Check every 2 seconds for new orders
+    const interval = setInterval(checkForPendingOrders, 2000);
 
     return () => {
+      clearInterval(interval);
       window.removeEventListener("beforeunload", handleBeforeUnload);
     };
-  }, []); // Empty dependency to run only once
+  }, [pendingOfflineOrders]);
 
   // 1. Filter transactions based on the storeId prop
   const filteredTransactions = useMemo(() => {
@@ -111,7 +125,17 @@ export default function StoreDetailsTable({ storeId }) {
     });
 
     // Combine pending orders with regular transactions, pending orders first
-    return [...pendingOfflineOrders, ...regularTransactions];
+    const combined = [...pendingOfflineOrders, ...regularTransactions];
+    // Deduplicate by id (preserve first occurrence)
+    const seen = new Set();
+    const deduped = [];
+    for (const item of combined) {
+      if (!item || !item.id) continue;
+      if (seen.has(item.id)) continue;
+      seen.add(item.id);
+      deduped.push(item);
+    }
+    return deduped;
   }, [filteredTransactions, pendingOfflineOrders]); // Updated dependencies
 
   // 3. Sort the *enriched* data
@@ -239,7 +263,7 @@ export default function StoreDetailsTable({ storeId }) {
             <tbody className="bg-white divide-y divide-gray-100">
               {currentTransactions.map((transaction, idx) => (
                 <tr
-                  key={`${transaction.id}-${idx}`}
+                  key={transaction.id}
                   className={`hover:bg-amber-50 transition-colors ${
                     transaction.isPending
                       ? "bg-yellow-50 border-l-4 border-yellow-400 animate-pulse"

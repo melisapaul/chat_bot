@@ -30,12 +30,14 @@ export default function ChatbotInteraction({ onClose }) {
   // Helper function to get specific loading message based on agent
   const getAgentLoadingMessage = (agentId) => {
     const messages = {
-      recommendation_agent: "Analyzing preferences and finding best products...",
-      inventory_agent: "Finding in inventory and checking stock availability...",
+      recommendation_agent:
+        "Analyzing preferences and finding best products...",
+      inventory_agent:
+        "Finding in inventory and checking stock availability...",
       payment_agent: "Processing payment and verifying transaction...",
       fulfillment_agent: "Arranging delivery and scheduling slot...",
       loyalty_agent: "Calculating rewards and applying offers...",
-      post_purchase_agent: "Preparing feedback form and assistance options..."
+      post_purchase_agent: "Preparing feedback form and assistance options...",
     };
     return messages[agentId] || "Processing...";
   };
@@ -214,12 +216,22 @@ export default function ChatbotInteraction({ onClose }) {
   const updateProfiles = (storeOverride = null) => {
     // This would normally update the backend data
     // For demo purposes, we'll save to localStorage for the user profile to pick up
+    const storeObj = storeOverride || selectedStore || {};
     const purchaseInfo = {
       type: purchaseType,
       product: selectedProduct,
-      store: storeOverride || selectedStore,
-      userId: "00001",
+      store: {
+        ...storeObj,
+        // normalize store name field used by the table
+        store_name:
+          storeObj.store_name || storeObj.location || "ABFRL South City Store",
+      },
+      // use hashed-style user id to match other components
+      userId: "#0001",
       userName: "Arjun Bose",
+      // include numeric price if available
+      amount: Number(selectedProduct?.price || selectedProduct?.amount || 2199),
+      orderStatus: "In Progress",
       timestamp: new Date().toISOString(),
     };
 
@@ -631,8 +643,8 @@ export default function ChatbotInteraction({ onClose }) {
                       >
                         {p.image && (
                           <div className="mb-3 rounded-lg overflow-hidden bg-gray-100">
-                            <img 
-                              src={p.image} 
+                            <img
+                              src={p.image}
                               alt={p.name}
                               className="w-full h-40 object-cover"
                             />
@@ -669,75 +681,79 @@ export default function ChatbotInteraction({ onClose }) {
                         </p>
                       </div>
                     ))}
-                    
+
                     {/* MORE PRODUCTS */}
-                    {showMoreProducts && agent.output?.moreProducts && agent.output.moreProducts.map((p) => (
-                      <div
-                        key={p.id}
-                        className={`p-3 rounded-xl cursor-pointer border transition-all duration-300 ${
-                          selectedProduct?.id === p.id
-                            ? "bg-gradient-to-br from-orange-500 to-amber-500 text-white border-orange-500 shadow-lg scale-105"
-                            : "bg-white border-orange-300 hover:border-orange-500 hover:shadow-md hover:scale-102"
-                        }`}
-                        onClick={() => {
-                          setSelectedProduct(p);
-                          nextAgent();
-                        }}
-                      >
-                        {p.image && (
-                          <div className="mb-3 rounded-lg overflow-hidden bg-gray-100">
-                            <img 
-                              src={p.image} 
-                              alt={p.name}
-                              className="w-full h-40 object-cover"
-                            />
-                          </div>
-                        )}
-                        <div className="flex justify-between mb-2">
-                          <p
-                            className={`font-bold text-[1.1vw] ${
-                              selectedProduct?.id === p.id
-                                ? "text-white"
-                                : "text-gray-900"
-                            }`}
-                          >
-                            {p.name}
-                          </p>
-                          <span
-                            className={`px-2 py-1 rounded-lg font-bold ${
-                              selectedProduct?.id === p.id
-                                ? "bg-white/20 text-white"
-                                : "bg-gradient-to-r from-orange-500 to-amber-500 text-white"
-                            }`}
-                          >
-                            ₹{p.price.toLocaleString()}
-                          </span>
-                        </div>
-                        <p
-                          className={`text-[1vw] ${
+                    {showMoreProducts &&
+                      agent.output?.moreProducts &&
+                      agent.output.moreProducts.map((p) => (
+                        <div
+                          key={p.id}
+                          className={`p-3 rounded-xl cursor-pointer border transition-all duration-300 ${
                             selectedProduct?.id === p.id
-                              ? "text-orange-100"
-                              : "text-gray-600"
+                              ? "bg-gradient-to-br from-orange-500 to-amber-500 text-white border-orange-500 shadow-lg scale-105"
+                              : "bg-white border-orange-300 hover:border-orange-500 hover:shadow-md hover:scale-102"
                           }`}
+                          onClick={() => {
+                            setSelectedProduct(p);
+                            nextAgent();
+                          }}
                         >
-                          {p.reason}
-                        </p>
-                      </div>
-                    ))}
+                          {p.image && (
+                            <div className="mb-3 rounded-lg overflow-hidden bg-gray-100">
+                              <img
+                                src={p.image}
+                                alt={p.name}
+                                className="w-full h-40 object-cover"
+                              />
+                            </div>
+                          )}
+                          <div className="flex justify-between mb-2">
+                            <p
+                              className={`font-bold text-[1.1vw] ${
+                                selectedProduct?.id === p.id
+                                  ? "text-white"
+                                  : "text-gray-900"
+                              }`}
+                            >
+                              {p.name}
+                            </p>
+                            <span
+                              className={`px-2 py-1 rounded-lg font-bold ${
+                                selectedProduct?.id === p.id
+                                  ? "bg-white/20 text-white"
+                                  : "bg-gradient-to-r from-orange-500 to-amber-500 text-white"
+                              }`}
+                            >
+                              ₹{p.price.toLocaleString()}
+                            </span>
+                          </div>
+                          <p
+                            className={`text-[1vw] ${
+                              selectedProduct?.id === p.id
+                                ? "text-orange-100"
+                                : "text-gray-600"
+                            }`}
+                          >
+                            {p.reason}
+                          </p>
+                        </div>
+                      ))}
                   </div>
                 )}
-                
+
                 {/* SEE MORE BUTTON */}
-                {agent.output?.products && agent.output?.moreProducts && !showMoreProducts && (
-                  <div className="mt-4 flex justify-center">
-                    <button
-                      className="px-6 py-3 bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white font-bold rounded-lg shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105 text-[1vw]"
-                      onClick={() => setShowMoreProducts(true)}
-                    >
-                      See More Products
-                    </button>
-                  </div>
-                )}
+                {agent.output?.products &&
+                  agent.output?.moreProducts &&
+                  !showMoreProducts && (
+                    <div className="mt-4 flex justify-center">
+                      <button
+                        className="px-6 py-3 bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white font-bold rounded-lg shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105 text-[1vw]"
+                        onClick={() => setShowMoreProducts(true)}
+                      >
+                        See More Products
+                      </button>
+                    </div>
+                  )}
 
                 {/* INVENTORY */}
                 {agent.agentId === "inventory_agent" &&
@@ -928,47 +944,55 @@ export default function ChatbotInteraction({ onClose }) {
                         </label>
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                           <button
-                            onClick={() => setPaymentMethod('upi')}
+                            onClick={() => setPaymentMethod("upi")}
                             className="bg-white hover:bg-gradient-to-br hover:from-orange-100 hover:to-amber-100 border-2 border-orange-300 hover:border-orange-500 p-4 rounded-xl transition-all duration-300 flex flex-col items-center gap-3 shadow-md hover:shadow-lg hover:scale-105"
                           >
                             <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-full flex items-center justify-center shadow-md">
                               <span className="text-white text-2xl">📱</span>
                             </div>
-                            <span className="font-bold text-gray-800 text-[1vw]">UPI</span>
+                            <span className="font-bold text-gray-800 text-[1vw]">
+                              UPI
+                            </span>
                           </button>
-                          
+
                           <button
-                            onClick={() => setPaymentMethod('credit')}
+                            onClick={() => setPaymentMethod("credit")}
                             className="bg-white hover:bg-gradient-to-br hover:from-orange-100 hover:to-amber-100 border-2 border-orange-300 hover:border-orange-500 p-4 rounded-xl transition-all duration-300 flex flex-col items-center gap-3 shadow-md hover:shadow-lg hover:scale-105"
                           >
                             <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center shadow-md">
                               <span className="text-white text-2xl">💳</span>
                             </div>
-                            <span className="font-bold text-gray-800 text-[1vw]">Credit Card</span>
+                            <span className="font-bold text-gray-800 text-[1vw]">
+                              Credit Card
+                            </span>
                           </button>
-                          
+
                           <button
-                            onClick={() => setPaymentMethod('debit')}
+                            onClick={() => setPaymentMethod("debit")}
                             className="bg-white hover:bg-gradient-to-br hover:from-orange-100 hover:to-amber-100 border-2 border-orange-300 hover:border-orange-500 p-4 rounded-xl transition-all duration-300 flex flex-col items-center gap-3 shadow-md hover:shadow-lg hover:scale-105"
                           >
                             <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center shadow-md">
                               <span className="text-white text-2xl">💳</span>
                             </div>
-                            <span className="font-bold text-gray-800 text-[1vw]">Debit Card</span>
+                            <span className="font-bold text-gray-800 text-[1vw]">
+                              Debit Card
+                            </span>
                           </button>
-                          
+
                           <button
-                            onClick={() => setPaymentMethod('cod')}
+                            onClick={() => setPaymentMethod("cod")}
                             className="bg-white hover:bg-gradient-to-br hover:from-orange-100 hover:to-amber-100 border-2 border-orange-300 hover:border-orange-500 p-4 rounded-xl transition-all duration-300 flex flex-col items-center gap-3 shadow-md hover:shadow-lg hover:scale-105"
                           >
                             <div className="w-12 h-12 bg-gradient-to-br from-orange-500 to-amber-500 rounded-full flex items-center justify-center shadow-md">
                               <span className="text-white text-2xl">💵</span>
                             </div>
-                            <span className="font-bold text-gray-800 text-[1vw]">Cash on Delivery</span>
+                            <span className="font-bold text-gray-800 text-[1vw]">
+                              Cash on Delivery
+                            </span>
                           </button>
                         </div>
                       </div>
-                    ) : paymentMethod === 'upi' ? (
+                    ) : paymentMethod === "upi" ? (
                       <div>
                         <button
                           onClick={() => setPaymentMethod(null)}
@@ -1008,7 +1032,8 @@ export default function ChatbotInteraction({ onClose }) {
                           </div>
                         </div>
                       </div>
-                    ) : paymentMethod === 'credit' || paymentMethod === 'debit' ? (
+                    ) : paymentMethod === "credit" ||
+                      paymentMethod === "debit" ? (
                       <div>
                         <button
                           onClick={() => setPaymentMethod(null)}
@@ -1017,11 +1042,15 @@ export default function ChatbotInteraction({ onClose }) {
                           ← Back to payment methods
                         </button>
                         <label className="block text-gray-800 mb-3 text-[1.1vw] font-bold bg-gradient-to-r from-orange-600 via-amber-600 to-yellow-600 bg-clip-text text-transparent">
-                          Enter {paymentMethod === 'credit' ? 'Credit' : 'Debit'} Card Details
+                          Enter{" "}
+                          {paymentMethod === "credit" ? "Credit" : "Debit"} Card
+                          Details
                         </label>
                         <div className="bg-gradient-to-br from-orange-100 via-amber-100 to-yellow-100 p-4 rounded-lg border border-orange-300 shadow-inner space-y-3">
                           <div>
-                            <label className="block text-gray-700 mb-2 text-[0.9vw] font-medium">Card Number</label>
+                            <label className="block text-gray-700 mb-2 text-[0.9vw] font-medium">
+                              Card Number
+                            </label>
                             <input
                               placeholder="1234 5678 9012 3456"
                               className="w-full p-3 bg-white border border-orange-200 rounded text-gray-800 placeholder-gray-500 outline-none focus:border-orange-400 focus:ring-2 focus:ring-orange-200 transition-all"
@@ -1029,14 +1058,18 @@ export default function ChatbotInteraction({ onClose }) {
                           </div>
                           <div className="grid grid-cols-2 gap-3">
                             <div>
-                              <label className="block text-gray-700 mb-2 text-[0.9vw] font-medium">Expiry Date</label>
+                              <label className="block text-gray-700 mb-2 text-[0.9vw] font-medium">
+                                Expiry Date
+                              </label>
                               <input
                                 placeholder="MM/YY"
                                 className="w-full p-3 bg-white border border-orange-200 rounded text-gray-800 placeholder-gray-500 outline-none focus:border-orange-400 focus:ring-2 focus:ring-orange-200 transition-all"
                               />
                             </div>
                             <div>
-                              <label className="block text-gray-700 mb-2 text-[0.9vw] font-medium">CVV</label>
+                              <label className="block text-gray-700 mb-2 text-[0.9vw] font-medium">
+                                CVV
+                              </label>
                               <input
                                 placeholder="123"
                                 type="password"
@@ -1060,7 +1093,7 @@ export default function ChatbotInteraction({ onClose }) {
                           </button>
                         </div>
                       </div>
-                    ) : paymentMethod === 'cod' ? (
+                    ) : paymentMethod === "cod" ? (
                       <div>
                         <button
                           onClick={() => setPaymentMethod(null)}
@@ -1075,8 +1108,12 @@ export default function ChatbotInteraction({ onClose }) {
                           <div className="flex items-center gap-3 mb-4">
                             <span className="text-4xl">💵</span>
                             <div>
-                              <p className="text-gray-800 font-semibold text-[1vw]">Pay when you receive your order</p>
-                              <p className="text-gray-600 text-[0.9vw]">No advance payment required</p>
+                              <p className="text-gray-800 font-semibold text-[1vw]">
+                                Pay when you receive your order
+                              </p>
+                              <p className="text-gray-600 text-[0.9vw]">
+                                No advance payment required
+                              </p>
                             </div>
                           </div>
                           <button

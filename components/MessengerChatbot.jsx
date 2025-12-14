@@ -765,31 +765,41 @@ export default function MessengerChatbot({ onClose }) {
               price: "₹2,199",
               storeName: "ABFRL Store South City",
               manager: "Sophia",
-              status: "Available"
-            }
+              status: "Available",
+            },
           },
         ]);
 
-        // Store order details for StoreKeeper notification
+        // Store a hardcoded completed transaction for StoreKeeper (transient)
+        // This is intentionally hardcoded so it appears in StoreKeeper and
+        // will be removed on refresh (sessionStorage).
         sessionStorage.setItem(
           "newOfflineOrder",
           JSON.stringify({
+            // exact timestamp requested for pending ID
+            timestamp: "2025-12-14T14:22:46.238Z",
+            date: "2025-12-14",
             sessionId: "#SESSION789456",
             userName: "Arjun Bose",
-            userId: "#00001",
+            userId: "#0001",
             product: {
+              id: "p004",
               name: "Louis Philippe",
               size: "40 (Medium)",
               color: "White",
               sku: "LP-WH-40-001",
-              price: "₹2,199",
+              // numeric amount for table rendering
+              price: 2199,
             },
             store: {
-              location: "ABFRL Store South City",
+              id: "sk1",
+              store_name: "ABFRL South City Store",
               manager: "Sophia",
               status: "Available",
             },
-            timestamp: new Date().toISOString(),
+            orderStatus: "In Progress",
+            userAddress: "29 Main Street, City 9",
+            userPhone: "555-1029",
           })
         );
       }, delay(1.4));
@@ -853,8 +863,8 @@ export default function MessengerChatbot({ onClose }) {
               price: "₹2,199",
               storeName: "City Centre Salt Lake, First Floor",
               manager: "Rahul",
-              status: "Available"
-            }
+              status: "Available",
+            },
           },
         ]);
 
@@ -942,8 +952,8 @@ export default function MessengerChatbot({ onClose }) {
               storeName: "Quest Mall, Second Floor",
               manager: "Priya",
               status: "Limited Stock",
-              warning: "Limited availability - reserve quickly"
-            }
+              warning: "Limited availability - reserve quickly",
+            },
           },
         ]);
 
@@ -1030,8 +1040,8 @@ export default function MessengerChatbot({ onClose }) {
               price: "₹2,199",
               storeName: "South City Mall, Third Floor",
               manager: "Neha",
-              status: "Available"
-            }
+              status: "Available",
+            },
           },
         ]);
 
@@ -1164,7 +1174,11 @@ export default function MessengerChatbot({ onClose }) {
                     strokeWidth={2}
                     viewBox="0 0 24 24"
                   >
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M15 19l-7-7 7-7"
+                    />
                   </svg>
                 </span>
                 Back
@@ -1181,7 +1195,7 @@ export default function MessengerChatbot({ onClose }) {
               )}
 
               {/* Sales Agent - Master Agent */}
-                <div className="relative pl-8">
+              <div className="relative pl-8">
                 <div className="absolute left-0 top-1 h-3 w-3 bg-orange-500 rounded-full shadow-md"></div>
                 <div className="p-3 bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50 rounded-lg border border-orange-300 shadow-sm hover:shadow-md transition-shadow">
                   <div className="flex justify-between items-center mb-2">
@@ -1691,7 +1705,9 @@ export default function MessengerChatbot({ onClose }) {
                   <div className="flex justify-end">
                     <div className="max-w-[70%]">
                       <div className="bg-gradient-to-br from-orange-500 to-amber-500 text-white rounded-2xl rounded-tr-sm px-5 py-3 shadow-md">
-                        <p className="text-[1vw] font-medium leading-relaxed whitespace-pre-wrap">{msg.text}</p>
+                        <p className="text-[1vw] font-medium leading-relaxed whitespace-pre-wrap">
+                          {msg.text}
+                        </p>
                       </div>
                       <p className="text-[0.8vw] text-gray-400 mt-1 text-right">
                         {msg.timestamp.toLocaleTimeString([], {
@@ -2751,7 +2767,10 @@ export default function MessengerChatbot({ onClose }) {
                           <span className="w-6 h-6 bg-gradient-to-r from-orange-500 to-amber-500 rounded-full flex items-center justify-center text-white text-xs">
                             🏪
                           </span>
-                          <span>{msg.agentInfo?.title || "Fulfillment Agent"} • {msg.agentInfo?.id || "fulfillment_agent"}</span>
+                          <span>
+                            {msg.agentInfo?.title || "Fulfillment Agent"} •{" "}
+                            {msg.agentInfo?.id || "fulfillment_agent"}
+                          </span>
                         </div>
 
                         {/* Main Title */}
@@ -2766,16 +2785,26 @@ export default function MessengerChatbot({ onClose }) {
                         <div className="bg-white rounded-lg p-2 mb-2 border border-orange-200 shadow-sm">
                           <div className="flex items-center gap-1.5 mb-1.5">
                             <span className="text-sm">📋</span>
-                            <h4 className="text-[0.8vw] font-bold text-orange-600">Session Transfer</h4>
+                            <h4 className="text-[0.8vw] font-bold text-orange-600">
+                              Session Transfer
+                            </h4>
                           </div>
                           <div className="grid grid-cols-2 gap-1.5 text-[0.7vw]">
                             <div className="bg-purple-50 rounded p-1.5">
-                              <span className="text-purple-600 font-semibold">🆔 Session:</span>
-                              <div className="font-mono font-bold text-purple-800 text-[0.65vw]">{msg.storeData?.sessionId}</div>
+                              <span className="text-purple-600 font-semibold">
+                                🆔 Session:
+                              </span>
+                              <div className="font-mono font-bold text-purple-800 text-[0.65vw]">
+                                {msg.storeData?.sessionId}
+                              </div>
                             </div>
                             <div className="bg-blue-50 rounded p-1.5">
-                              <span className="text-blue-600 font-semibold">👤 Customer:</span>
-                              <div className="font-bold text-blue-800">{msg.storeData?.customerName}</div>
+                              <span className="text-blue-600 font-semibold">
+                                👤 Customer:
+                              </span>
+                              <div className="font-bold text-blue-800">
+                                {msg.storeData?.customerName}
+                              </div>
                             </div>
                           </div>
                         </div>
@@ -2784,20 +2813,40 @@ export default function MessengerChatbot({ onClose }) {
                         <div className="bg-white rounded-lg p-2 mb-2 border border-orange-200 shadow-sm">
                           <div className="flex items-center gap-1.5 mb-1.5">
                             <span className="text-sm">📦</span>
-                            <h4 className="text-[0.8vw] font-bold text-orange-600">Product</h4>
+                            <h4 className="text-[0.8vw] font-bold text-orange-600">
+                              Product
+                            </h4>
                           </div>
                           <div className="text-[0.75vw] space-y-1">
                             <div className="flex items-center gap-1.5">
-                              <span className="font-semibold text-gray-700">👕</span>
-                              <span className="font-bold text-gray-900">{msg.storeData?.product}</span>
+                              <span className="font-semibold text-gray-700">
+                                👕
+                              </span>
+                              <span className="font-bold text-gray-900">
+                                {msg.storeData?.product}
+                              </span>
                             </div>
                             <div className="flex gap-3 text-[0.7vw]">
-                              <span><span className="text-gray-600">Size:</span> <span className="font-semibold">{msg.storeData?.size}</span></span>
-                              <span><span className="text-gray-600">Color:</span> <span className="font-semibold">{msg.storeData?.color}</span></span>
+                              <span>
+                                <span className="text-gray-600">Size:</span>{" "}
+                                <span className="font-semibold">
+                                  {msg.storeData?.size}
+                                </span>
+                              </span>
+                              <span>
+                                <span className="text-gray-600">Color:</span>{" "}
+                                <span className="font-semibold">
+                                  {msg.storeData?.color}
+                                </span>
+                              </span>
                             </div>
                             <div className="flex items-center justify-between">
-                              <span className="font-mono text-[0.6vw] bg-gray-100 px-1.5 py-0.5 rounded">{msg.storeData?.sku}</span>
-                              <span className="font-bold text-orange-600 text-[0.85vw]">{msg.storeData?.price}</span>
+                              <span className="font-mono text-[0.6vw] bg-gray-100 px-1.5 py-0.5 rounded">
+                                {msg.storeData?.sku}
+                              </span>
+                              <span className="font-bold text-orange-600 text-[0.85vw]">
+                                {msg.storeData?.price}
+                              </span>
                             </div>
                           </div>
                         </div>
@@ -2806,20 +2855,39 @@ export default function MessengerChatbot({ onClose }) {
                         <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg p-2 border border-green-300 shadow-sm">
                           <div className="flex items-center gap-1.5 mb-1.5">
                             <span className="text-sm">🏪</span>
-                            <h4 className="text-[0.8vw] font-bold text-green-700">Store Handoff</h4>
+                            <h4 className="text-[0.8vw] font-bold text-green-700">
+                              Store Handoff
+                            </h4>
                           </div>
                           <div className="text-[0.75vw] space-y-1">
                             <div className="flex items-center gap-1.5">
-                              <span className="font-semibold text-gray-700">📍</span>
-                              <span className="font-bold text-gray-900">{msg.storeData?.storeName}</span>
+                              <span className="font-semibold text-gray-700">
+                                📍
+                              </span>
+                              <span className="font-bold text-gray-900">
+                                {msg.storeData?.storeName}
+                              </span>
                             </div>
                             <div className="flex items-center gap-1.5">
-                              <span className="font-semibold text-gray-700">👨‍💼</span>
-                              <span className="font-bold text-gray-900">{msg.storeData?.manager}</span>
+                              <span className="font-semibold text-gray-700">
+                                👨‍💼
+                              </span>
+                              <span className="font-bold text-gray-900">
+                                {msg.storeData?.manager}
+                              </span>
                             </div>
                             <div className="flex items-center gap-1.5">
-                              <span className={`font-bold px-2 py-0.5 rounded text-[0.7vw] ${msg.storeData?.status === "Available" ? "bg-green-200 text-green-800" : "bg-orange-200 text-orange-800"}`}>
-                                {msg.storeData?.status === "Available" ? "✅ " : "⚠️ "}{msg.storeData?.status}
+                              <span
+                                className={`font-bold px-2 py-0.5 rounded text-[0.7vw] ${
+                                  msg.storeData?.status === "Available"
+                                    ? "bg-green-200 text-green-800"
+                                    : "bg-orange-200 text-orange-800"
+                                }`}
+                              >
+                                {msg.storeData?.status === "Available"
+                                  ? "✅ "
+                                  : "⚠️ "}
+                                {msg.storeData?.status}
                               </span>
                             </div>
                             {msg.storeData?.warning && (
@@ -3086,7 +3154,9 @@ export default function MessengerChatbot({ onClose }) {
                   <div className="flex justify-start">
                     <div className="max-w-[70%]">
                       <div className="bg-white border border-orange-200 rounded-2xl rounded-tl-sm px-5 py-3 shadow-md">
-                        <p className="text-[1vw] text-gray-800 font-medium leading-relaxed whitespace-pre-wrap">{msg.text}</p>
+                        <p className="text-[1vw] text-gray-800 font-medium leading-relaxed whitespace-pre-wrap">
+                          {msg.text}
+                        </p>
                       </div>
                       <p className="text-[0.8vw] text-gray-400 mt-1">
                         {msg.timestamp.toLocaleTimeString([], {
@@ -3172,23 +3242,7 @@ export default function MessengerChatbot({ onClose }) {
               </button>
             </div>
 
-            {/* Channel Switcher */}
-            <div className="flex items-center gap-3 bg-orange-50 rounded-lg p-2 border border-orange-200">
-              <span className="text-[0.9vw] text-gray-600 font-medium">
-                Channel:
-              </span>
-              <select
-                value={channel}
-                onChange={(e) => setChannel(e.target.value)}
-                className="flex-1 text-[0.9vw] bg-white border border-orange-300 rounded-lg px-3 py-2 outline-none focus:border-orange-500 text-gray-700 cursor-pointer font-medium shadow-sm hover:shadow transition-all"
-              >
-                {channels.map((ch) => (
-                  <option key={ch.value} value={ch.value}>
-                    {ch.label}
-                  </option>
-                ))}
-              </select>
-            </div>
+            {/* Channel Switcher removed as requested */}
           </div>
         </div>
       </div>
