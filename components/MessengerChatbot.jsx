@@ -22,6 +22,8 @@ export default function MessengerChatbot({ onClose }) {
   const messagesEndRef = useRef(null);
   const timelineEndRef = useRef(null);
   const hasInitialized = useRef(false);
+  const STEP_DELAY = 1300;
+  const delay = (step = 1) => step * STEP_DELAY;
 
   const channels = [
     { value: "web", label: "Web", icon: Globe },
@@ -91,7 +93,7 @@ export default function MessengerChatbot({ onClose }) {
       setTimeout(() => {
         setIsTyping(false);
         handleAgentResponse(inputValue);
-      }, 1500);
+      }, delay(1.2));
     }
   };
 
@@ -114,7 +116,7 @@ export default function MessengerChatbot({ onClose }) {
           "Database",
           "Searching product catalog..."
         );
-      }, 300);
+      }, delay(0.25));
       setTimeout(() => {
         addAgentLog(
           "Database",
@@ -126,7 +128,7 @@ export default function MessengerChatbot({ onClose }) {
           "SalesAgent",
           "First 3 products matched, returning recommendations. Type 'show more' for additional options."
         );
-      }, 600);
+      }, delay(0.5));
       setTimeout(() => {
         setIsTyping(false);
         // Show first round of products only
@@ -143,7 +145,7 @@ export default function MessengerChatbot({ onClose }) {
             },
           },
         ]);
-      }, 900);
+      }, delay(0.7));
     } else if (
       lowerMsg.includes("show more") ||
       lowerMsg.includes("more product") ||
@@ -160,7 +162,7 @@ export default function MessengerChatbot({ onClose }) {
           "Database",
           "Fetching additional recommendations..."
         );
-      }, 300);
+      }, delay(0.25));
       setTimeout(() => {
         addAgentLog(
           "Database",
@@ -172,7 +174,7 @@ export default function MessengerChatbot({ onClose }) {
           "SalesAgent",
           "Second batch of products ready"
         );
-      }, 600);
+      }, delay(0.5));
       setTimeout(() => {
         setIsTyping(false);
         // Show second round of products
@@ -189,7 +191,7 @@ export default function MessengerChatbot({ onClose }) {
             },
           },
         ]);
-      }, 900);
+      }, delay(0.7));
     } else if (lowerMsg.includes("price") || lowerMsg.includes("cost")) {
       addAgentLog(
         "SalesAgent",
@@ -202,7 +204,7 @@ export default function MessengerChatbot({ onClose }) {
           "SalesAgent",
           "Price range: ₹1,699-₹2,850"
         );
-      }, 400);
+      }, delay(0.3));
       addAgentMessage(
         "Our shirts range from ₹1,699 to ₹2,850. Would you like to filter by price?",
         ["Under ₹2000", "₹2000-₹3000", "All Prices"],
@@ -235,7 +237,7 @@ export default function MessengerChatbot({ onClose }) {
           "StoreDB",
           "Query stores in Kolkata region with size 40"
         );
-      }, 800);
+      }, delay(1));
       setTimeout(() => {
         addAgentLog(
           "StoreDB",
@@ -256,7 +258,7 @@ export default function MessengerChatbot({ onClose }) {
             agentInfo: { title: "Inventory Agent", id: "inventory_agent" },
           },
         ]);
-      }, 1500);
+      }, delay(2));
     } else if (reply === "Reserve in Store") {
       addAgentLog("User", "PaymentAgent", `Selected: ${reply}`);
       setTimeout(() => {
@@ -271,7 +273,7 @@ export default function MessengerChatbot({ onClose }) {
           "Query available stores with stock"
         );
         setIsTyping(true);
-      }, 400);
+      }, delay(1));
       setTimeout(() => {
         addAgentLog(
           "StoreDB",
@@ -290,7 +292,7 @@ export default function MessengerChatbot({ onClose }) {
           { title: "Inventory Agent", id: "inventory_agent" },
           "inventory"
         );
-      }, 1200);
+      }, delay(2));
     } else if (reply === "Nearest Store") {
       addAgentLog("User", "InventoryAgent", `Selected: ${reply}`);
       setTimeout(() => {
@@ -305,7 +307,7 @@ export default function MessengerChatbot({ onClose }) {
           "Store location data retrieved"
         );
         setIsTyping(true);
-      }, 400);
+      }, delay(1));
       setTimeout(() => {
         addAgentLog(
           "InventoryAgent",
@@ -319,7 +321,7 @@ export default function MessengerChatbot({ onClose }) {
           { title: "Inventory Agent", id: "inventory_agent" },
           "store-selection"
         );
-      }, 1200);
+      }, delay(2));
     } else if (reply === "South City Mall (3 pcs)") {
       addAgentLog("User", "SalesAgent", `Selected: South City Mall`);
       setTimeout(() => {
@@ -334,7 +336,7 @@ export default function MessengerChatbot({ onClose }) {
           "InventoryAgent",
           "Reserve Raymond Shirt size 40 at South City Mall"
         );
-      }, 800);
+      }, delay(1));
       setTimeout(() => {
         setIsTyping(true);
         addAgentLog(
@@ -342,7 +344,7 @@ export default function MessengerChatbot({ onClose }) {
           "StoreDB",
           "Creating reservation for Arjun at South City Mall"
         );
-      }, 1400);
+      }, delay(2));
       setTimeout(() => {
         addAgentLog(
           "StoreDB",
@@ -360,7 +362,7 @@ export default function MessengerChatbot({ onClose }) {
           ["Pay Now", "Pay at Store", "Get Directions"],
           { title: "Sales Agent", id: "sales_agent" }
         );
-      }, 2200);
+      }, delay(3));
     } else if (reply === "Add to Cart") {
       addAgentLog("User", "SalesAgent", `Selected: ${reply}`);
       setTimeout(() => {
@@ -372,7 +374,7 @@ export default function MessengerChatbot({ onClose }) {
           ["Checkout Now", "Continue Shopping", "View Cart"],
           { title: "Payment Agent", id: "payment_agent" }
         );
-      }, 1000);
+      }, delay(2));
     } else if (reply === "Checkout Now" || reply === "Pay Now") {
       addAgentLog("User", "SalesAgent", `Selected: ${reply}`);
       setTimeout(() => {
@@ -384,7 +386,7 @@ export default function MessengerChatbot({ onClose }) {
           ["UPI", "Credit/Debit Card", "Cash on Delivery"],
           { title: "Payment Agent", id: "payment_agent" }
         );
-      }, 1000);
+      }, delay(2));
     } else if (reply === "UPI") {
       addAgentLog("User", "PaymentAgent", `Selected payment: ${reply}`);
       setTimeout(() => {
@@ -418,7 +420,7 @@ export default function MessengerChatbot({ onClose }) {
             { title: "Payment Agent", id: "payment_agent" }
           );
         }
-      }, 1200);
+      }, delay(2));
     } else if (reply === "Debit Card") {
       addAgentLog("User", "PaymentAgent", `Selected payment: ${reply}`);
       setTimeout(() => {
@@ -435,7 +437,7 @@ export default function MessengerChatbot({ onClose }) {
           "payment"
         );
         setSelectedPaymentMethod("Debit Card");
-      }, 1000);
+      }, delay(2));
     } else if (reply === "Payment Done") {
       addAgentLog("User", "PaymentAgent", "Payment confirmation received");
 
@@ -453,13 +455,16 @@ export default function MessengerChatbot({ onClose }) {
             "Payment confirmed and processed"
           );
           // Payment success message removed as requested
-        }, 500);
+        }, delay(1));
       }
+
+      const verifyStep = paymentAttempt === 2 ? 2 : 1;
+      const confirmStep = verifyStep + 1;
 
       setTimeout(() => {
         setIsTyping(true);
         addAgentLog("PaymentAgent", "PaymentGateway", "Verify payment status");
-      }, 400);
+      }, delay(verifyStep));
       setTimeout(() => {
         addAgentLog(
           "PaymentGateway",
@@ -514,7 +519,7 @@ export default function MessengerChatbot({ onClose }) {
             "RewardsDB",
             "Calculate loyalty points for order #ORD789456"
           );
-        }, 2200);
+        }, delay(2));
 
         setTimeout(() => {
           addAgentLog(
@@ -548,7 +553,7 @@ export default function MessengerChatbot({ onClose }) {
               "ServiceDB",
               "Setup post-purchase services for order #ORD789456"
             );
-          }, 1600);
+          }, delay(1));
 
           setTimeout(() => {
             addAgentLog(
@@ -572,9 +577,9 @@ export default function MessengerChatbot({ onClose }) {
                 },
               },
             ]);
-          }, 2800);
-        }, 3400);
-      }, 1800);
+          }, delay(2));
+        }, delay(3));
+      }, delay(confirmStep));
     } else if (reply === "Ship to Home") {
       addAgentLog("User", "SalesAgent", `Selected: ${reply}`);
       setTimeout(() => {
@@ -593,7 +598,7 @@ export default function MessengerChatbot({ onClose }) {
             agentInfo: { title: "Payment Agent", id: "payment_agent" },
           },
         ]);
-      }, 1000);
+      }, delay(0.8));
     } else if (reply.includes("Kolkata") || reply.includes("Mall")) {
       addAgentLog("User", "SalesAgent", `Selected: ${reply}`);
       setTimeout(() => {
@@ -607,7 +612,7 @@ export default function MessengerChatbot({ onClose }) {
           "StoreDB",
           "Query stores in Kolkata region"
         );
-      }, 400);
+      }, delay(0.3));
       setTimeout(() => {
         addAgentLog(
           "StoreDB",
@@ -625,7 +630,7 @@ export default function MessengerChatbot({ onClose }) {
           ["Kolkata City Centre", "South Mall Store", "Buy Online"],
           { title: "Inventory Agent", id: "inventory_agent" }
         );
-      }, 1200);
+      }, delay(0.9));
     } else if (reply === "Pay at Store") {
       addAgentLog("User", "PaymentAgent", `Selected: ${reply}`);
       setTimeout(() => {
@@ -640,7 +645,7 @@ export default function MessengerChatbot({ onClose }) {
           ["Get Directions", "Call Store", "Done"],
           { title: "Fulfillment Agent", id: "fulfillment_agent" }
         );
-      }, 1000);
+      }, delay(0.8));
     } else if (reply === "Get Directions") {
       addAgentLog("User", "FulfillmentAgent", `Selected: ${reply}`);
       setTimeout(() => {
@@ -650,7 +655,7 @@ export default function MessengerChatbot({ onClose }) {
           ["Open in Maps", "Call Store", "Done"],
           { title: "Fulfillment Agent", id: "fulfillment_agent" }
         );
-      }, 800);
+      }, delay(0.6));
     } else if (reply === "Track Order") {
       addAgentLog("User", "PostPurchaseAgent-2", `Selected: ${reply}`);
       setTimeout(() => {
@@ -665,7 +670,7 @@ export default function MessengerChatbot({ onClose }) {
           "Query real-time shipment status"
         );
         setIsTyping(true);
-      }, 400);
+      }, delay(0.3));
       setTimeout(() => {
         addAgentLog(
           "LogisticsDB",
@@ -687,7 +692,7 @@ export default function MessengerChatbot({ onClose }) {
           },
           "tracking"
         );
-      }, 1400);
+      }, delay(1.1));
     } else if (reply === "View Invoice") {
       addAgentLog("User", "PaymentAgent", `Selected: ${reply}`);
       setTimeout(() => {
@@ -699,7 +704,7 @@ export default function MessengerChatbot({ onClose }) {
           ["Download PDF", "Email Invoice", "Done"],
           { title: "Payment Agent", id: "payment_agent" }
         );
-      }, 800);
+      }, delay(0.6));
     } else if (reply === "ABFRL Store South City") {
       addAgentLog(
         "User",
@@ -718,7 +723,7 @@ export default function MessengerChatbot({ onClose }) {
           "Stock confirmed: Size 40 available with Manager Sophia"
         );
         setIsTyping(true);
-      }, 400);
+      }, delay(0.3));
       setTimeout(() => {
         addAgentLog(
           "InventoryAgent (In-Store)",
@@ -730,7 +735,7 @@ export default function MessengerChatbot({ onClose }) {
           "System",
           "Generating session details for store handoff"
         );
-      }, 1000);
+      }, delay(0.8));
       setTimeout(() => {
         addAgentLog(
           "System",
@@ -787,7 +792,7 @@ export default function MessengerChatbot({ onClose }) {
             timestamp: new Date().toISOString(),
           })
         );
-      }, 1800);
+      }, delay(1.4));
     } else if (reply === "City Centre Salt Lake") {
       addAgentLog(
         "User",
@@ -806,7 +811,7 @@ export default function MessengerChatbot({ onClose }) {
           "Stock confirmed: Size 40 available with Manager Rahul"
         );
         setIsTyping(true);
-      }, 400);
+      }, delay(0.3));
       setTimeout(() => {
         addAgentLog(
           "InventoryAgent (In-Store)",
@@ -818,7 +823,7 @@ export default function MessengerChatbot({ onClose }) {
           "System",
           "Generating session details for store handoff"
         );
-      }, 1000);
+      }, delay(0.8));
       setTimeout(() => {
         addAgentLog(
           "System",
@@ -875,7 +880,7 @@ export default function MessengerChatbot({ onClose }) {
             timestamp: new Date().toISOString(),
           })
         );
-      }, 1800);
+      }, delay(1.4));
     } else if (reply === "Quest Mall") {
       addAgentLog(
         "User",
@@ -894,7 +899,7 @@ export default function MessengerChatbot({ onClose }) {
           "Stock status: Limited availability with Manager Priya"
         );
         setIsTyping(true);
-      }, 400);
+      }, delay(0.3));
       setTimeout(() => {
         addAgentLog(
           "InventoryAgent (In-Store)",
@@ -906,7 +911,7 @@ export default function MessengerChatbot({ onClose }) {
           "System",
           "Generating session details for store handoff"
         );
-      }, 1000);
+      }, delay(0.8));
       setTimeout(() => {
         addAgentLog(
           "System",
@@ -964,7 +969,7 @@ export default function MessengerChatbot({ onClose }) {
             timestamp: new Date().toISOString(),
           })
         );
-      }, 1800);
+      }, delay(1.4));
     } else if (reply === "South City Mall") {
       addAgentLog(
         "User",
@@ -983,7 +988,7 @@ export default function MessengerChatbot({ onClose }) {
           "Stock confirmed: Size 40 available with Manager Neha"
         );
         setIsTyping(true);
-      }, 400);
+      }, delay(0.3));
       setTimeout(() => {
         addAgentLog(
           "InventoryAgent (In-Store)",
@@ -995,7 +1000,7 @@ export default function MessengerChatbot({ onClose }) {
           "System",
           "Generating session details for store handoff"
         );
-      }, 1000);
+      }, delay(0.8));
       setTimeout(() => {
         addAgentLog(
           "System",
@@ -1052,7 +1057,7 @@ export default function MessengerChatbot({ onClose }) {
             timestamp: new Date().toISOString(),
           })
         );
-      }, 1800);
+      }, delay(1.4));
     } else if (reply === "Continue Shopping" || reply === "Done") {
       addAgentLog("User", "SalesAgent", `Selected: ${reply}`);
       setTimeout(() => {
@@ -1062,7 +1067,7 @@ export default function MessengerChatbot({ onClose }) {
           ["Browse More Products", "Check My Orders", "Contact Support"],
           { title: "Sales Agent", id: "sales_agent" }
         );
-      }, 800);
+      }, delay(0.6));
     } else if (reply === "Credit/Debit Card" || reply === "Card") {
       addAgentLog("User", "PaymentAgent", `Selected payment: Card`);
       setTimeout(() => {
@@ -1084,7 +1089,7 @@ export default function MessengerChatbot({ onClose }) {
         } else {
           setSelectedPaymentMethod("Debit Card");
         }
-      }, 1000);
+      }, delay(0.8));
     } else if (reply === "Cash on Delivery") {
       addAgentLog("User", "PaymentAgent", `Selected payment: COD`);
       setTimeout(() => {
@@ -1099,7 +1104,7 @@ export default function MessengerChatbot({ onClose }) {
           ["Track Order", "View Order Details", "Done"],
           { title: "Fulfillment Agent", id: "fulfillment_agent" }
         );
-      }, 1000);
+      }, delay(0.8));
     } else if (reply.includes("₹")) {
       addAgentLog("User", "SalesAgent", `Product selected: ${reply}`);
       setTimeout(() => {
@@ -1115,7 +1120,7 @@ export default function MessengerChatbot({ onClose }) {
           ["Add to Cart", "Buy Now", "View Details"],
           { title: "Payment Agent", id: "payment_agent" }
         );
-      }, 1200);
+      }, delay(0.9));
     } else {
       // Handle unrecognized replies silently or log for debugging
       setIsTyping(false);
@@ -1130,37 +1135,39 @@ export default function MessengerChatbot({ onClose }) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-gradient-to-br from-orange-100 via-yellow-100 to-amber-100">
+    <div className="fixed inset-0 z-50 bg-gradient-to-br from-orange-100 via-yellow-100 to-amber-100 font-sans text-[1.4vw] leading-relaxed tracking-wide">
       <div className="h-screen flex">
         {/* LEFT - Agent Timeline */}
         <div className="w-1/3 bg-white border-r border-orange-300 flex flex-col shadow-lg">
-          <header className="min-h-[20%] max-h-[20%] p-6 border-b border-orange-300 bg-gradient-to-r from-orange-500 via-amber-500 to-yellow-500 shadow-lg flex flex-col justify-center">
-            <div className="flex justify-between items-start">
+          <header className="min-h-[20%] max-h-[20%] p-5 border-b border-orange-300 bg-gradient-to-r from-orange-500 via-amber-500 to-yellow-500 shadow-lg flex flex-col justify-center">
+            <div className="flex justify-between items-center">
               <div>
-                <h1 className="text-[2vw] font-bold text-white drop-shadow-md flex items-center gap-2">
-                  <span className="text-[2.2vw]">⚡</span> Agent Timeline
+                <h1 className="text-[2vw] font-extrabold text-white drop-shadow-lg flex items-center gap-3 tracking-tight">
+                  <span className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-gradient-to-br from-orange-100 via-amber-200 to-yellow-300 text-orange-600 shadow-md">
+                    ⚡
+                  </span>
+                  Agent Timeline
                 </h1>
-                <p className="text-[1vw] text-orange-100 mt-1 font-medium tracking-wide">
+                <p className="text-[1vw] text-orange-50/95 mt-2 font-medium tracking-wide">
                   Live Orchestration Log
                 </p>
               </div>
               <button
                 onClick={onClose}
-                className="text-white hover:bg-white/20 rounded-full p-2 transition-all"
+                className="flex items-center gap-3 px-5 py-3 rounded-2xl bg-gradient-to-r from-rose-600 via-orange-500 to-amber-500 text-white text-[0.95vw] font-semibold shadow-lg border border-white/30 transition-transform hover:scale-[1.02]"
               >
-                <svg
-                  className="w-6 h-6"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
+                <span className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-white/15 text-white">
+                  <svg
+                    className="w-4 h-4"
+                    fill="none"
+                    stroke="currentColor"
                     strokeWidth={2}
-                    d="M6 18L18 6M6 6l12 12"
-                  />
-                </svg>
+                    viewBox="0 0 24 24"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+                  </svg>
+                </span>
+                Back
               </button>
             </div>
           </header>
@@ -1174,18 +1181,18 @@ export default function MessengerChatbot({ onClose }) {
               )}
 
               {/* Sales Agent - Master Agent */}
-              <div className="relative pl-8">
+                <div className="relative pl-8">
                 <div className="absolute left-0 top-1 h-3 w-3 bg-orange-500 rounded-full shadow-md"></div>
                 <div className="p-3 bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50 rounded-lg border border-orange-300 shadow-sm hover:shadow-md transition-shadow">
                   <div className="flex justify-between items-center mb-2">
-                    <p className="font-bold text-[1.3vw] text-gray-900">
+                    <p className="font-bold text-[1.25vw] text-gray-900">
                       Sales Agent
                     </p>
                     <span className="text-[0.8vw] bg-orange-500 text-white px-2 py-1 rounded-md font-semibold shadow-sm">
                       sales_agent
                     </span>
                   </div>
-                  <p className="text-[0.85vw] text-gray-600 mb-2">
+                  <p className="text-[0.85vw] text-gray-600 mb-2 font-medium">
                     Master Orchestrator
                   </p>
 
@@ -1242,7 +1249,7 @@ export default function MessengerChatbot({ onClose }) {
                   <div className="absolute left-0 top-1 h-3 w-3 bg-amber-500 rounded-full shadow-md"></div>
                   <div className="p-3 bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50 rounded-lg border border-orange-300 shadow-sm hover:shadow-md transition-shadow">
                     <div className="flex justify-between items-center mb-2">
-                      <p className="font-bold text-[1.3vw] text-gray-900">
+                      <p className="font-bold text-[1.25vw] text-gray-900">
                         Recommendation Agent
                       </p>
                       <span className="text-[0.8vw] bg-amber-500 text-white px-2 py-1 rounded-md font-semibold shadow-sm">
@@ -1286,7 +1293,7 @@ export default function MessengerChatbot({ onClose }) {
                   <div className="absolute left-0 top-1 h-3 w-3 bg-green-500 rounded-full shadow-md"></div>
                   <div className="p-3 bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50 rounded-lg border border-orange-300 shadow-sm hover:shadow-md transition-shadow">
                     <div className="flex justify-between items-center mb-2">
-                      <p className="font-bold text-[1.3vw] text-gray-900">
+                      <p className="font-bold text-[1.25vw] text-gray-900">
                         Inventory Agent
                       </p>
                       <span className="text-[0.8vw] bg-green-500 text-white px-2 py-1 rounded-md font-semibold shadow-sm">
@@ -1335,7 +1342,7 @@ export default function MessengerChatbot({ onClose }) {
                   <div className="absolute left-0 top-1 h-3 w-3 bg-red-500 rounded-full shadow-md"></div>
                   <div className="p-3 bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50 rounded-lg border border-orange-300 shadow-sm hover:shadow-md transition-shadow">
                     <div className="flex justify-between items-center mb-2">
-                      <p className="font-bold text-[1.3vw] text-gray-900">
+                      <p className="font-bold text-[1.25vw] text-gray-900">
                         Payment Agent
                       </p>
                       <span className="text-[0.8vw] bg-red-500 text-white px-2 py-1 rounded-md font-semibold shadow-sm">
@@ -1386,7 +1393,7 @@ export default function MessengerChatbot({ onClose }) {
                   <div className="absolute left-0 top-1 h-3 w-3 bg-green-500 rounded-full shadow-md"></div>
                   <div className="p-3 bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 rounded-lg border border-green-300 shadow-sm hover:shadow-md transition-shadow">
                     <div className="flex justify-between items-center mb-2">
-                      <p className="font-bold text-[1.3vw] text-gray-900">
+                      <p className="font-bold text-[1.25vw] text-gray-900">
                         Payment Agent 2
                       </p>
                       <span className="text-[0.8vw] bg-green-500 text-white px-2 py-1 rounded-md font-semibold shadow-sm">
@@ -1435,7 +1442,7 @@ export default function MessengerChatbot({ onClose }) {
                   <div className="absolute left-0 top-1 h-3 w-3 bg-blue-500 rounded-full shadow-md"></div>
                   <div className="p-3 bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50 rounded-lg border border-orange-300 shadow-sm hover:shadow-md transition-shadow">
                     <div className="flex justify-between items-center mb-2">
-                      <p className="font-bold text-[1.3vw] text-gray-900">
+                      <p className="font-bold text-[1.25vw] text-gray-900">
                         Fulfillment Agent
                       </p>
                       <span className="text-[0.8vw] bg-blue-500 text-white px-2 py-1 rounded-md font-semibold shadow-sm">
@@ -1479,7 +1486,7 @@ export default function MessengerChatbot({ onClose }) {
                   <div className="absolute left-0 top-1 h-3 w-3 bg-purple-500 rounded-full shadow-md"></div>
                   <div className="p-3 bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50 rounded-lg border border-orange-300 shadow-sm hover:shadow-md transition-shadow">
                     <div className="flex justify-between items-center mb-2">
-                      <p className="font-bold text-[1.3vw] text-gray-900">
+                      <p className="font-bold text-[1.25vw] text-gray-900">
                         Loyalty Agent
                       </p>
                       <span className="text-[0.8vw] bg-purple-500 text-white px-2 py-1 rounded-md font-semibold shadow-sm">
@@ -1526,7 +1533,7 @@ export default function MessengerChatbot({ onClose }) {
                   <div className="absolute left-0 top-1 h-3 w-3 bg-indigo-500 rounded-full shadow-md"></div>
                   <div className="p-3 bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50 rounded-lg border border-orange-300 shadow-sm hover:shadow-md transition-shadow">
                     <div className="flex justify-between items-center mb-2">
-                      <p className="font-bold text-[1.3vw] text-gray-900">
+                      <p className="font-bold text-[1.25vw] text-gray-900">
                         Post Purchase Agent
                       </p>
                       <span className="text-[0.8vw] bg-indigo-500 text-white px-2 py-1 rounded-md font-semibold shadow-sm">
@@ -1573,7 +1580,7 @@ export default function MessengerChatbot({ onClose }) {
                   <div className="absolute left-0 top-1 h-3 w-3 bg-purple-500 rounded-full shadow-md"></div>
                   <div className="p-3 bg-gradient-to-br from-purple-50 via-indigo-50 to-blue-50 rounded-lg border border-purple-300 shadow-sm hover:shadow-md transition-shadow">
                     <div className="flex justify-between items-center mb-2">
-                      <p className="font-bold text-[1.3vw] text-gray-900">
+                      <p className="font-bold text-[1.25vw] text-gray-900">
                         Post Purchase Agent 2
                       </p>
                       <span className="text-[0.8vw] bg-purple-500 text-white px-2 py-1 rounded-md font-semibold shadow-sm">
@@ -1636,7 +1643,7 @@ export default function MessengerChatbot({ onClose }) {
         {/* RIGHT - Messenger Chat */}
         <div className="w-2/3 flex flex-col bg-white">
           {/* Header */}
-          <header className="min-h-[20%] max-h-[20%] p-4 border-b border-orange-300 bg-gradient-to-r from-orange-500 via-amber-500 to-yellow-500 flex items-center justify-between shadow-lg">
+          <header className="min-h-[20%] max-h-[20%] p-5 border-b border-orange-300 bg-gradient-to-r from-orange-500 via-amber-500 to-yellow-500 flex items-center justify-between shadow-lg">
             <div className="flex items-center gap-4">
               <div className="relative">
                 <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-md">
@@ -1645,27 +1652,33 @@ export default function MessengerChatbot({ onClose }) {
                 <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-400 rounded-full border-2 border-white"></div>
               </div>
               <div>
-                <h1 className="text-[2vw] font-bold text-white drop-shadow-md flex items-center">
+                <h1 className="text-[2vw] font-extrabold text-white drop-shadow-lg flex items-center tracking-tight">
                   AI Orchestrator
                 </h1>
-                <div className="flex items-center gap-3 text-[1vw] text-orange-100 mt-1">
-                  <div className="flex items-center gap-1">
-                    <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
-                    <span>Active</span>
-                  </div>
-                  <span>•</span>
-                  <div className="flex items-center gap-1">
-                    {React.createElement(
-                      channels.find((c) => c.value === channel)?.icon || Globe,
-                      { size: 14 }
-                    )}
-                    <span>
-                      Channel:{" "}
-                      {channels.find((c) => c.value === channel)?.label}
-                    </span>
-                  </div>
-                </div>
+                <p className="text-[0.95vw] text-orange-100/95 mt-1 font-medium tracking-wide">
+                  In-store multi-agent automation
+                </p>
               </div>
+            </div>
+            <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2 px-4 py-2 bg-white text-orange-600 rounded-2xl border border-white/70 shadow-md">
+                {React.createElement(
+                  channels.find((c) => c.value === channel)?.icon || Globe,
+                  { size: 18, color: "#DD5A08" }
+                )}
+                <span className="text-[0.95vw] font-semibold tracking-wide">
+                  {channels.find((c) => c.value === channel)?.label || "Web"}
+                </span>
+              </div>
+              <div className="px-4 py-2 rounded-2xl bg-gradient-to-r from-amber-400 to-yellow-400 text-white text-[0.95vw] font-semibold shadow-md border border-white/40">
+                Status: <span className="font-extrabold">Active</span>
+              </div>
+              <button
+                onClick={onClose}
+                className="flex items-center justify-center w-10 h-10 rounded-full bg-white/15 text-white border border-white/30 shadow-md transition-transform hover:scale-105"
+              >
+                <X size={18} strokeWidth={2.5} />
+              </button>
             </div>
           </header>
 
@@ -1678,7 +1691,7 @@ export default function MessengerChatbot({ onClose }) {
                   <div className="flex justify-end">
                     <div className="max-w-[70%]">
                       <div className="bg-gradient-to-br from-orange-500 to-amber-500 text-white rounded-2xl rounded-tr-sm px-5 py-3 shadow-md">
-                        <p className="text-[1vw]">{msg.text}</p>
+                        <p className="text-[1vw] font-medium leading-relaxed whitespace-pre-wrap">{msg.text}</p>
                       </div>
                       <p className="text-[0.8vw] text-gray-400 mt-1 text-right">
                         {msg.timestamp.toLocaleTimeString([], {
@@ -1694,13 +1707,13 @@ export default function MessengerChatbot({ onClose }) {
                     <div className="max-w-[95%] w-full">
                       <div className="bg-white border border-orange-200 rounded-2xl rounded-tl-sm p-5 shadow-md">
                         {/* Agent header */}
-                        <div className="text-[0.75vw] text-gray-500 mb-3 font-medium">
+                        <div className="text-[0.85vw] text-orange-600 mb-3 font-semibold tracking-wide">
                           {msg.agentInfo?.title || "Payment Agent"} •{" "}
                           {msg.agentInfo?.id || "payment_agent"}
                         </div>
 
                         {/* Payment Message */}
-                        <div className="text-gray-800 mb-3 text-[0.85vw] leading-relaxed">
+                        <div className="text-[0.95vw] text-gray-900 mb-3 font-medium leading-relaxed tracking-tight">
                           Great! Proceeding with home delivery from our online
                           warehouse.
                           <br />
@@ -1717,7 +1730,7 @@ export default function MessengerChatbot({ onClose }) {
                         {!selectedPaymentMethod ? (
                           /* Payment Method Selection */
                           <div className="bg-gray-50 rounded-lg p-3 border border-gray-200">
-                            <h3 className="font-bold text-[0.9vw] text-gray-800 mb-2">
+                            <h3 className="font-extrabold text-[0.9vw] text-gray-800 tracking-tight mb-2">
                               Choose Payment Method
                             </h3>
 
@@ -1786,7 +1799,7 @@ export default function MessengerChatbot({ onClose }) {
                             >
                               ← Back to payment methods
                             </button>
-                            <h3 className="font-bold text-[0.9vw] text-gray-800 mb-3">
+                            <h3 className="font-extrabold text-[0.9vw] text-gray-800 tracking-tight mb-3">
                               Enter your UPI ID to complete payment
                             </h3>
 
@@ -1820,7 +1833,7 @@ export default function MessengerChatbot({ onClose }) {
                             >
                               ← Back to payment methods
                             </button>
-                            <h3 className="font-bold text-[0.9vw] text-gray-800 mb-3">
+                            <h3 className="font-extrabold text-[0.9vw] text-gray-800 tracking-tight mb-3">
                               💳 Complete UPI Payment - Second Attempt
                             </h3>
 
@@ -1855,7 +1868,7 @@ export default function MessengerChatbot({ onClose }) {
                             >
                               ← Back to payment methods
                             </button>
-                            <h3 className="font-bold text-[0.9vw] text-gray-800 mb-3">
+                            <h3 className="font-extrabold text-[0.9vw] text-gray-800 tracking-tight mb-3">
                               Enter Credit Card Details
                             </h3>
 
@@ -1916,7 +1929,7 @@ export default function MessengerChatbot({ onClose }) {
                             >
                               ← Back to payment methods
                             </button>
-                            <h3 className="font-bold text-[0.9vw] text-gray-800 mb-3">
+                            <h3 className="font-extrabold text-[0.9vw] text-gray-800 tracking-tight mb-3">
                               Enter Debit Card Details
                             </h3>
 
@@ -1970,7 +1983,7 @@ export default function MessengerChatbot({ onClose }) {
                             >
                               ← Back to payment methods
                             </button>
-                            <h3 className="font-bold text-[0.9vw] text-gray-800 mb-3">
+                            <h3 className="font-extrabold text-[0.9vw] text-gray-800 tracking-tight mb-3">
                               Cash on Delivery Selected
                             </h3>
 
@@ -2014,7 +2027,7 @@ export default function MessengerChatbot({ onClose }) {
                     <div className="max-w-[95%] w-full">
                       <div className="bg-white border border-orange-200 rounded-2xl rounded-tl-sm p-5 shadow-md">
                         {/* Agent header */}
-                        <div className="text-[0.75vw] text-gray-500 mb-3 font-medium">
+                        <div className="text-[0.85vw] text-orange-600 mb-3 font-semibold tracking-wide">
                           {msg.agentInfo?.title || "Fulfillment Agent"} •{" "}
                           {msg.agentInfo?.id || "fulfillment_agent"}
                         </div>
@@ -2099,7 +2112,7 @@ export default function MessengerChatbot({ onClose }) {
                     <div className="max-w-[95%] w-full">
                       <div className="bg-white border border-orange-200 rounded-2xl rounded-tl-sm p-5 shadow-md">
                         {/* Agent header */}
-                        <div className="text-[0.75vw] text-gray-500 mb-3 font-medium">
+                        <div className="text-[0.85vw] text-orange-600 mb-3 font-semibold tracking-wide">
                           {msg.agentInfo?.title || "Loyalty Agent"} •{" "}
                           {msg.agentInfo?.id || "loyalty_agent"}
                         </div>
@@ -2193,7 +2206,7 @@ export default function MessengerChatbot({ onClose }) {
                     <div className="max-w-[95%] w-full">
                       <div className="bg-white border border-orange-200 rounded-2xl rounded-tl-sm p-5 shadow-md">
                         {/* Agent header */}
-                        <div className="text-[0.75vw] text-gray-500 mb-3 font-medium">
+                        <div className="text-[0.85vw] text-orange-600 mb-3 font-semibold tracking-wide">
                           {msg.agentInfo?.title || "Post Purchase Agent"} •{" "}
                           {msg.agentInfo?.id || "post_purchase_agent"}
                         </div>
@@ -2368,7 +2381,7 @@ export default function MessengerChatbot({ onClose }) {
                     <div className="max-w-[95%] w-full">
                       <div className="bg-white border border-orange-200 rounded-2xl rounded-tl-sm p-5 shadow-md">
                         {/* Agent header */}
-                        <div className="text-[0.75vw] text-gray-500 mb-3 font-medium">
+                        <div className="text-[0.85vw] text-orange-600 mb-3 font-semibold tracking-wide">
                           {msg.agentInfo?.title || "Post Purchase Agent"} •{" "}
                           {msg.agentInfo?.id || "post_purchase_agent"}
                         </div>
@@ -2543,14 +2556,14 @@ export default function MessengerChatbot({ onClose }) {
                     <div className="max-w-[95%] w-full">
                       <div className="bg-white border border-orange-200 rounded-2xl rounded-tl-sm p-5 shadow-md">
                         {/* Agent header */}
-                        <div className="text-[0.75vw] text-gray-500 mb-3 font-medium">
+                        <div className="text-[0.85vw] text-orange-600 mb-3 font-semibold tracking-wide">
                           {msg.agentInfo?.title || "Inventory Agent"} •{" "}
                           {msg.agentInfo?.id || "inventory_agent"}
                         </div>
 
                         {/* Inventory Message */}
                         <div className="mb-3">
-                          <p className="text-[0.9vw] text-gray-700 mb-4">
+                          <p className="text-[0.95vw] text-gray-900 mb-4 font-semibold leading-relaxed tracking-tight">
                             Inventory checked! Choose Buy Online or nearest
                             store.
                           </p>
@@ -2559,7 +2572,7 @@ export default function MessengerChatbot({ onClose }) {
                           <div className="bg-gray-50 rounded-xl p-4 border border-gray-200">
                             <div className="flex items-center gap-2 mb-4">
                               <span className="text-2xl">📦</span>
-                              <h3 className="font-bold text-[1.1vw] text-gray-800">
+                              <h3 className="font-extrabold text-[1.1vw] text-gray-800 tracking-tight">
                                 Choose Purchase Method
                               </h3>
                             </div>
@@ -2618,13 +2631,13 @@ export default function MessengerChatbot({ onClose }) {
                     <div className="max-w-[95%] w-full">
                       <div className="bg-white border border-orange-200 rounded-2xl rounded-tl-sm p-5 shadow-md">
                         {/* Agent header */}
-                        <div className="text-[0.75vw] text-gray-500 mb-3 font-medium">
+                        <div className="text-[0.85vw] text-orange-600 mb-3 font-semibold tracking-wide">
                           {msg.agentInfo?.title || "Inventory Agent"} •{" "}
                           {msg.agentInfo?.id || "inventory_agent"}
                         </div>
 
                         <div className="mb-4">
-                          <p className="text-[0.9vw] text-gray-700 mb-4">
+                          <p className="text-[0.95vw] text-gray-900 mb-4 font-semibold leading-relaxed tracking-tight">
                             Inventory checked! Choose Buy Online or nearest
                             store.
                           </p>
@@ -2633,7 +2646,7 @@ export default function MessengerChatbot({ onClose }) {
                           <div className="mb-4">
                             <div className="flex items-center gap-2 mb-3">
                               <span className="text-[0.9vw]">🏪</span>
-                              <h4 className="text-[0.9vw] font-bold text-gray-800">
+                              <h4 className="text-[0.95vw] font-semibold text-gray-900 tracking-tight">
                                 Select Store for Pickup
                               </h4>
                             </div>
@@ -2647,7 +2660,7 @@ export default function MessengerChatbot({ onClose }) {
                                 className="flex items-center justify-between p-3 border-2 border-orange-200 rounded-lg hover:border-orange-300 cursor-pointer transition-all hover:shadow-md bg-white"
                               >
                                 <div>
-                                  <h5 className="text-[0.85vw] font-semibold text-gray-800">
+                                  <h5 className="text-[0.9vw] font-medium text-gray-900 tracking-tight">
                                     ABFRL Store South City
                                   </h5>
                                   <p className="text-[0.7vw] text-gray-600">
@@ -2667,7 +2680,7 @@ export default function MessengerChatbot({ onClose }) {
                                 className="flex items-center justify-between p-3 border-2 border-orange-200 rounded-lg hover:border-orange-300 cursor-pointer transition-all hover:shadow-md bg-white"
                               >
                                 <div>
-                                  <h5 className="text-[0.85vw] font-semibold text-gray-800">
+                                  <h5 className="text-[0.9vw] font-medium text-gray-900 tracking-tight">
                                     City Centre Salt Lake, First Floor
                                   </h5>
                                   <p className="text-[0.7vw] text-gray-600">
@@ -2685,7 +2698,7 @@ export default function MessengerChatbot({ onClose }) {
                                 className="flex items-center justify-between p-3 border-2 border-orange-200 rounded-lg hover:border-orange-300 cursor-pointer transition-all hover:shadow-md bg-white"
                               >
                                 <div>
-                                  <h5 className="text-[0.85vw] font-semibold text-gray-800">
+                                  <h5 className="text-[0.9vw] font-medium text-gray-900 tracking-tight">
                                     Quest Mall, Second Floor
                                   </h5>
                                   <p className="text-[0.7vw] text-gray-600">
@@ -2705,7 +2718,7 @@ export default function MessengerChatbot({ onClose }) {
                                 className="flex items-center justify-between p-3 border-2 border-orange-200 rounded-lg hover:border-orange-300 cursor-pointer transition-all hover:shadow-md bg-white"
                               >
                                 <div>
-                                  <h5 className="text-[0.85vw] font-semibold text-gray-800">
+                                  <h5 className="text-[0.9vw] font-medium text-gray-900 tracking-tight">
                                     South City Mall, Third Floor
                                   </h5>
                                   <p className="text-[0.7vw] text-gray-600">
@@ -2974,13 +2987,13 @@ export default function MessengerChatbot({ onClose }) {
                     <div className="max-w-[95%] w-full">
                       <div className="bg-white border border-orange-200 rounded-2xl rounded-tl-sm p-5 shadow-md">
                         {/* Agent header */}
-                        <div className="text-[0.75vw] text-gray-500 mb-3 font-medium">
+                        <div className="text-[0.85vw] text-orange-600 mb-3 font-semibold tracking-wide">
                           {msg.agentInfo?.title || "Recommendation Agent"} •{" "}
                           {msg.agentInfo?.id || "recommendation_agent"}
                         </div>
 
                         {/* Conversational message */}
-                        <div className="text-gray-800 mb-4 text-[1vw] leading-relaxed">
+                        <div className="text-[0.95vw] text-gray-900 mb-4 font-semibold leading-relaxed tracking-tight">
                           {msg.round === 1
                             ? "I recommend these shirts based on your past buys (Raymond last month). Raymond Shirt is ₹1,789 and trending — want me to check size 40 availability?"
                             : "Here are more great options for you! These are also popular choices in your preferred price range."}
@@ -3035,7 +3048,7 @@ export default function MessengerChatbot({ onClose }) {
                                 alt={product.name}
                                 className="w-full h-36 object-cover rounded-lg mb-2"
                               />
-                              <div className="text-[0.9vw] font-semibold text-gray-800 mb-1">
+                              <div className="text-[0.95vw] font-semibold text-gray-900 tracking-tight mb-1 tracking-tight">
                                 {product.name}
                                 {product.trending && (
                                   <span className="ml-1.5 text-[0.7vw] bg-orange-500 text-white px-2 py-0.5 rounded-full">
@@ -3043,7 +3056,7 @@ export default function MessengerChatbot({ onClose }) {
                                   </span>
                                 )}
                               </div>
-                              <div className="text-[1vw] font-bold text-orange-600 mb-3">
+                              <div className="text-[1vw] font-extrabold text-orange-600 mb-3 tracking-tight">
                                 {product.price}
                               </div>
 
@@ -3073,7 +3086,7 @@ export default function MessengerChatbot({ onClose }) {
                   <div className="flex justify-start">
                     <div className="max-w-[70%]">
                       <div className="bg-white border border-orange-200 rounded-2xl rounded-tl-sm px-5 py-3 shadow-md">
-                        <p className="text-[1vw] text-gray-800">{msg.text}</p>
+                        <p className="text-[1vw] text-gray-800 font-medium leading-relaxed whitespace-pre-wrap">{msg.text}</p>
                       </div>
                       <p className="text-[0.8vw] text-gray-400 mt-1">
                         {msg.timestamp.toLocaleTimeString([], {
