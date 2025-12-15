@@ -59,7 +59,7 @@ export default function MessengerChatbot({ onClose }) {
       hasInitialized.current = true;
       addAgentLog("System", "SalesAgent", "Session initiated");
       addAgentMessage(
-        "Hi Arjun! I'm your Sales Agent. What kind of product are you looking for today?",
+        "Hi Arjun! I’m your Sales Agent.With winter setting in and Christmas around the corner 🎄, I can help you explore our winter collection or find the perfect festive outfit. What are you looking for today?",
         [], // No quick replies - user will type manually
         { title: "Sales Agent", id: "sales_agent" }
       );
