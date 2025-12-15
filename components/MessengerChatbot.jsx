@@ -22,8 +22,30 @@ export default function MessengerChatbot({ onClose }) {
   const messagesEndRef = useRef(null);
   const timelineEndRef = useRef(null);
   const hasInitialized = useRef(false);
-  const STEP_DELAY = 1300;
-  const delay = (step = 1) => step * STEP_DELAY;
+  const MIN_AGENT_DELAY = 2000;
+  const MAX_AGENT_DELAY = 5000;
+
+  const getRandomAgentDelay = (min = MIN_AGENT_DELAY, max = MAX_AGENT_DELAY) =>
+    Math.floor(Math.random() * (max - min + 1)) + min;
+
+  let agentTimelineOffset = 0;
+  let agentTimelineAnchor = Date.now();
+
+  const resetAgentDelay = () => {
+    agentTimelineOffset = 0;
+    agentTimelineAnchor = Date.now();
+  };
+
+  const delay = (step = 1) => {
+    const increments = Math.max(1, Math.round(step));
+    for (let i = 0; i < increments; i += 1) {
+      agentTimelineOffset += getRandomAgentDelay();
+    }
+    const targetTime = agentTimelineAnchor + agentTimelineOffset;
+    const now = Date.now();
+    const relativeDelay = targetTime - now;
+    return relativeDelay > 0 ? relativeDelay : MIN_AGENT_DELAY;
+  };
 
   const channels = [
     { value: "web", label: "Web", icon: Globe },
@@ -90,6 +112,7 @@ export default function MessengerChatbot({ onClose }) {
 
       // Simulate agent response
       setIsTyping(true);
+      resetAgentDelay();
       setTimeout(() => {
         setIsTyping(false);
         handleAgentResponse(inputValue);
@@ -98,6 +121,7 @@ export default function MessengerChatbot({ onClose }) {
   };
 
   const handleAgentResponse = (userMessage) => {
+    resetAgentDelay();
     const lowerMsg = userMessage.toLowerCase();
 
     if (
@@ -191,6 +215,13 @@ export default function MessengerChatbot({ onClose }) {
             },
           },
         ]);
+        setTimeout(() => {
+          addAgentMessage(
+            "Customers who bought this shirt also liked a Titan belt. Would u like to see the product?",
+            ["Yes, show the Titan belt", "No, maybe later"],
+            { title: "Recommendation Agent", id: "recommendation_agent" }
+          );
+        }, delay(0.2));
       }, delay(0.7));
     } else if (lowerMsg.includes("price") || lowerMsg.includes("cost")) {
       addAgentLog(
@@ -221,6 +252,7 @@ export default function MessengerChatbot({ onClose }) {
   };
 
   const handleQuickReply = (reply) => {
+    resetAgentDelay();
     addUserMessage(reply);
     setIsTyping(true);
 
@@ -322,6 +354,38 @@ export default function MessengerChatbot({ onClose }) {
           "store-selection"
         );
       }, delay(2));
+    } else if (reply === "Yes, show the Titan belt") {
+      addAgentLog("User", "SalesAgent", "Interested in Titan belt upsell");
+      setTimeout(() => {
+        addAgentLog(
+          "SalesAgent",
+          "RecommendationAgent",
+          "Prepare Titan belt highlight"
+        );
+      }, delay(0.6));
+      setTimeout(() => {
+        addAgentLog(
+          "RecommendationAgent",
+          "SalesAgent",
+          "Titan belt highlight ready"
+        );
+        setIsTyping(false);
+        addAgentMessage(
+          "The Titan belt pairs perfectly with your shirt. Want me to add it to your cart?",
+          ["Add Belt to Cart", "Maybe Later"],
+          { title: "Recommendation Agent", id: "recommendation_agent" }
+        );
+      }, delay(1.3));
+    } else if (reply === "No, maybe later") {
+      addAgentLog("User", "SalesAgent", "Declined Titan belt upsell");
+      setTimeout(() => {
+        setIsTyping(false);
+        addAgentMessage(
+          "No problem! I'll keep the Titan belt noted if you want it later.",
+          ["Proceed with Shirts", "Browse Accessories"],
+          { title: "Sales Agent", id: "sales_agent" }
+        );
+      }, delay(0.9));
     } else if (reply === "South City Mall (3 pcs)") {
       addAgentLog("User", "SalesAgent", `Selected: South City Mall`);
       setTimeout(() => {
@@ -1115,6 +1179,214 @@ export default function MessengerChatbot({ onClose }) {
           { title: "Fulfillment Agent", id: "fulfillment_agent" }
         );
       }, delay(0.8));
+    } else if (reply === "Add Belt to Cart") {
+      addAgentLog("User", "SalesAgent", "Selected Titan belt add to cart");
+      setTimeout(() => {
+        addAgentLog(
+          "SalesAgent",
+          "PaymentAgent",
+          "Add Titan Belt SKU TB-201 to cart"
+        );
+        addAgentLog(
+          "PaymentAgent",
+          "CartDB",
+          "Update cart with Titan Belt"
+        );
+        setIsTyping(false);
+        addAgentMessage(
+          "✅ Titan Belt added to cart! It pairs perfectly with your shirt selection.",
+          ["Checkout Now", "Continue Shopping", "View Cart"],
+          { title: "Payment Agent", id: "payment_agent" }
+        );
+      }, delay(1));
+    } else if (reply === "Maybe Later") {
+      addAgentLog("User", "InventoryAgent", "Declined Titan belt add-to-cart");
+      setTimeout(() => {
+        setIsTyping(false);
+        addAgentMessage(
+          "No worries! The Titan belt will stay bookmarked if you change your mind.",
+          ["Proceed with Shirts", "Browse Accessories"],
+          { title: "Sales Agent", id: "sales_agent" }
+        );
+      }, delay(0.8));
+    } else if (reply === "Proceed with Shirts") {
+      addAgentLog("User", "SalesAgent", "Resume shirt journey after belt prompt");
+      setTimeout(() => {
+        setIsTyping(false);
+        addAgentMessage(
+          "Great! Just let me know which shirt you'd like to move forward with or if you'd like another recommendation.",
+          ["Add to Cart", "Show More", "Need Assistance"],
+          { title: "Sales Agent", id: "sales_agent" }
+        );
+      }, delay(0.8));
+    } else if (reply === "Show More") {
+      setTimeout(() => {
+        setIsTyping(false);
+        handleAgentResponse("show more");
+      }, delay(0.8));
+    } else if (reply === "Need Assistance") {
+      addAgentLog("User", "SalesAgent", "Requested assistance after belt prompt");
+      setTimeout(() => {
+        setIsTyping(false);
+        addAgentMessage(
+          "I'm here to help! Tell me if you want size checks, more colors, or outfit suggestions.",
+          ["Check Availability", "Suggest Colors", "Talk to Support"],
+          { title: "Sales Agent", id: "sales_agent" }
+        );
+      }, delay(0.7));
+    } else if (reply === "Browse Accessories") {
+      addAgentLog("User", "InventoryAgent", "Requested more accessories");
+      setTimeout(() => {
+        addAgentLog(
+          "InventoryAgent",
+          "StoreDB",
+          "Fetch complementary accessories"
+        );
+      }, delay(0.4));
+      setTimeout(() => {
+        addAgentLog(
+          "StoreDB",
+          "InventoryAgent",
+          "Accessory list ready: Titan Belt, Leather Wallet, Classic Tie"
+        );
+        setIsTyping(false);
+        addAgentMessage(
+          "Here are a few accessories customers love: Titan Belt, Leather Wallet, Classic Tie.",
+          ["Add Belt to Cart", "Add Wallet", "Back"],
+          { title: "Inventory Agent", id: "inventory_agent" }
+        );
+      }, delay(1.1));
+    } else if (reply === "Add Wallet") {
+      addAgentLog("User", "SalesAgent", "Selected leather wallet accessory");
+      setTimeout(() => {
+        addAgentLog(
+          "SalesAgent",
+          "PaymentAgent",
+          "Add Leather Wallet SKU LW-112 to cart"
+        );
+        addAgentLog(
+          "PaymentAgent",
+          "CartDB",
+          "Update cart with Leather Wallet"
+        );
+        setIsTyping(false);
+        addAgentMessage(
+          "✅ Leather Wallet added to cart alongside your selections.",
+          ["Checkout Now", "Continue Shopping"],
+          { title: "Payment Agent", id: "payment_agent" }
+        );
+      }, delay(1));
+    } else if (reply === "Back") {
+      addAgentLog("User", "SalesAgent", "Returned from accessories list");
+      setTimeout(() => {
+        setIsTyping(false);
+        addAgentMessage(
+          "All set. Let me know if you'd like to move ahead with your shirts or revisit accessories anytime.",
+          ["Proceed with Shirts", "Browse Accessories"],
+          { title: "Sales Agent", id: "sales_agent" }
+        );
+      }, delay(0.7));
+    } else if (reply === "Suggest Colors") {
+      addAgentLog("User", "RecommendationAgent", "Requested color suggestions");
+      setTimeout(() => {
+        addAgentLog(
+          "RecommendationAgent",
+          "Database",
+          "Fetch complementary color variants for selected shirts"
+        );
+      }, delay(0.4));
+      setTimeout(() => {
+        addAgentLog(
+          "Database",
+          "RecommendationAgent",
+          "Color options ready: Navy, Sky Blue, Charcoal"
+        );
+        setIsTyping(false);
+        addAgentMessage(
+          "Here are trending colors that match your preferences: Navy, Sky Blue, and Charcoal.",
+          ["Show Navy", "Show Sky Blue", "Show Charcoal"],
+          { title: "Recommendation Agent", id: "recommendation_agent" }
+        );
+      }, delay(1.1));
+    } else if (reply === "Talk to Support") {
+      addAgentLog("User", "SalesAgent", "Escalating to support team");
+      setTimeout(() => {
+        addAgentLog(
+          "SalesAgent",
+          "SupportAgent",
+          "Connect user for live assistance"
+        );
+      }, delay(0.3));
+      setTimeout(() => {
+        addAgentLog(
+          "SupportAgent",
+          "User",
+          "Support agent ready to assist"
+        );
+        setIsTyping(false);
+        addAgentMessage(
+          "Connecting you with a support specialist now. They can help with sizing, delivery, or anything else.",
+          ["Thanks", "Contact Later"],
+          { title: "Support Agent", id: "support_agent" }
+        );
+      }, delay(0.9));
+    } else if (
+      reply === "Show Navy" ||
+      reply === "Show Sky Blue" ||
+      reply === "Show Charcoal"
+    ) {
+      const color = reply.replace("Show ", "");
+      addAgentLog("User", "RecommendationAgent", `Requested ${color} variants`);
+      setTimeout(() => {
+        addAgentLog(
+          "RecommendationAgent",
+          "Database",
+          `Fetch ${color} shirts availability`
+        );
+      }, delay(0.4));
+      setTimeout(() => {
+        addAgentLog(
+          "Database",
+          "RecommendationAgent",
+          `${color} variants ready with latest stock`
+        );
+        setIsTyping(false);
+        addAgentMessage(
+          `${color} options are available in sizes 38-44. Want me to check store availability?`,
+          ["Check Availability", "Add to Cart", "Maybe Later"],
+          { title: "Recommendation Agent", id: "recommendation_agent" }
+        );
+      }, delay(1));
+    } else if (reply === "Thanks") {
+      addAgentLog("User", "SupportAgent", "Acknowledged support connection");
+      setTimeout(() => {
+        setIsTyping(false);
+        addAgentMessage(
+          "Happy to help! I'll stay here in case you need anything else.",
+          ["Proceed with Shirts", "End Chat"],
+          { title: "Support Agent", id: "support_agent" }
+        );
+      }, delay(0.6));
+    } else if (reply === "Contact Later") {
+      addAgentLog("User", "SupportAgent", "Requested later contact");
+      setTimeout(() => {
+        setIsTyping(false);
+        addAgentMessage(
+          "Sure thing! We'll keep the chat window active if you decide to reach out again.",
+          ["Proceed with Shirts", "End Chat"],
+          { title: "Support Agent", id: "support_agent" }
+        );
+      }, delay(0.6));
+    } else if (reply === "End Chat") {
+      addAgentLog("User", "SupportAgent", "Ended chat session");
+      setTimeout(() => {
+        setIsTyping(false);
+        addAgentMessage(
+          "Thanks for spending time with us today. You can reopen the assistant whenever you're ready.",
+          [],
+          { title: "Support Agent", id: "support_agent" }
+        );
+      }, delay(0.6));
     } else if (reply.includes("₹")) {
       addAgentLog("User", "SalesAgent", `Product selected: ${reply}`);
       setTimeout(() => {
@@ -1125,6 +1397,11 @@ export default function MessengerChatbot({ onClose }) {
           "Payment options ready: UPI, Cards, COD"
         );
         setIsTyping(false);
+        addAgentMessage(
+          "Customers who bought this shirt also liked a Titan belt.",
+          [],
+          { title: "Recommendation Agent", id: "recommendation_agent" }
+        );
         addAgentMessage(
           "Great choice! How would you like to proceed?",
           ["Add to Cart", "Buy Now", "View Details"],

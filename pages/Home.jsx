@@ -36,28 +36,29 @@ export default function Home() {
             Welcome to ABFRL Agentic Dashboard
           </h1>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-            Navigate through different user journeys to explore and analyze your
-            data insights with powerful analytics and reporting tools
+            Navigate through different Agentic journeys for different persona-based user groups
+          
           </p>
         </div>
 
         {/* Navigation Cards */}
         <div className="grid md:grid-cols-3 gap-8">
-          {/* User Journey Card */}
+          {/* Customer Journey Card */}
           <div className="group bg-white rounded-3xl shadow-xl border-2 border-gray-200 overflow-hidden hover:shadow-2xl transition-all duration-500 hover:-translate-y-3 hover:border-amber-300 flex flex-col h-full">
             <div className="bg-gradient-to-br from-red-800 to-amber-600 p-8">
               <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
                 <User className="w-8 h-8 text-white" />
               </div>
               <h3 className="text-2xl font-bold text-white mb-2">
-                User Journey
+                Customer Journey
               </h3>
               <div className="w-16 h-1 bg-white/30 rounded-full"></div>
             </div>
             <div className="p-8 flex-1 flex flex-col justify-between">
               <p className="text-gray-600 mb-6 leading-relaxed text-base">
-                Track and analyze user interactions, behavior patterns, purchase
-                history, and loyalty points in one comprehensive dashboard
+                Different AI agents to interact with customers in real time to
+                fulfill purchase orders from product selection through
+                post-purchase support
               </p>
 
               {/* Action Buttons */}
@@ -136,7 +137,7 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Admin Panel Card */}
+          {/* Operations-Revenue Command Center Card */}
           <div
             onClick={() => nav("/admin")}
             className="group cursor-pointer bg-white rounded-3xl shadow-xl border-2 border-gray-200 overflow-hidden hover:shadow-2xl transition-all duration-500 hover:-translate-y-3 hover:border-red-300 flex flex-col h-full"
@@ -146,21 +147,21 @@ export default function Home() {
                 <Settings className="w-8 h-8 text-white" />
               </div>
               <h3 className="text-2xl font-bold text-white mb-2">
-                Admin Panel
+                Operations-Revenue Command Center
               </h3>
               <div className="w-16 h-1 bg-white/30 rounded-full"></div>
             </div>
             <div className="p-8 flex-1 flex flex-col justify-between">
               <p className="text-gray-600 mb-6 leading-relaxed text-base">
-                Get insights into last month's revenue, transactions, customer
-                growth, and store overview instantly in one dashboard
+                To be used by regional or zonal leaders to monitor performance
+                and revenue across retail stores through agentic insights
               </p>
               <div className="flex gap-3 justify-start">
                 <button
                   onClick={() => nav("/admin")}
                   className="bg-transparent border-2 border-red-400 text-red-700 font-semibold py-2 px-4 rounded-lg transition-all duration-300 hover:bg-red-50 hover:border-red-500 hover:scale-105 flex items-center gap-2 text-sm"
                 >
-                  <span>Open Admin</span>
+                  <span>Open Command Center</span>
                   <svg
                     className="w-5 h-5 ml-0 transition-transform"
                     fill="none"

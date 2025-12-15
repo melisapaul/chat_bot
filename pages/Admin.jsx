@@ -455,7 +455,7 @@ export default function Admin() {
           </div>
           <div>
             <h1 className="text-4xl font-bold bg-gradient-to-r from-red-800 to-amber-600 bg-clip-text text-transparent">
-              Admin Dashboard
+              Operations-Revenue Dashboard
             </h1>
             <p className="text-gray-600 mt-1">Complete analytics and performance metrics</p>
           </div>
