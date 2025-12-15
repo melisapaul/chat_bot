@@ -55,9 +55,9 @@ export default function StoreDetailsTable({ storeId }) {
         if (!existingOrder) {
           // Create a transaction-like object for the pending order
           const pendingTransaction = {
-            id: orderId,
-            date: order.date || new Date().toISOString().split("T")[0],
-            userId: order.userId,
+            id: "00001",
+            // date: order.date || new Date().toISOString().split("T")[0],
+            userId: "00001",
             productId: order.product?.id,
             qty: order.qty || 1,
             mode: order.mode || "Offline",
@@ -129,7 +129,7 @@ export default function StoreDetailsTable({ storeId }) {
     // Show hardcoded demo transaction only when the chatbot sets the flag
     const showDemo = sessionStorage.getItem("showDemoTransaction") === "true";
     const demoTransaction = {
-      id: "PENDING_2025-12-14T14:22:46.238Z",
+      id: "00001",
       date: "2025-12-14T14:22:46.238Z",
       userId: "#0001",
       userName: "Arjun Bose",
