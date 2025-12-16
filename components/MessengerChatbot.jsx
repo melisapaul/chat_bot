@@ -23,8 +23,14 @@ export default function MessengerChatbot({ onClose }) {
   const timelineEndRef = useRef(null);
   const hasInitialized = useRef(false);
   const upsellFromBuyOnline = useRef(false);
-  const MIN_AGENT_DELAY = 2000;
-  const MAX_AGENT_DELAY = 5000;
+  // Speed tuning: scale existing setTimeout delays by SPEED_FACTOR
+  const SPEED_FACTOR = 0.5; // 0.5 => ~2x faster
+  const __origSetTimeout = globalThis.setTimeout.bind(globalThis);
+  const setTimeout = (fn, ms) =>
+    __origSetTimeout(fn, Math.max(25, Math.round(ms * SPEED_FACTOR)));
+
+  const MIN_AGENT_DELAY = 900;
+  const MAX_AGENT_DELAY = 1100;
 
   const getRandomAgentDelay = (min = MIN_AGENT_DELAY, max = MAX_AGENT_DELAY) =>
     Math.floor(Math.random() * (max - min + 1)) + min;

@@ -28,6 +28,12 @@ export default function InStoreChatbot({ onClose }) {
   const fulfillmentMessageShownRef = useRef(false);
   const loyaltyMessageShownRef = useRef(false);
 
+  // Speed tuning: scale all setTimeout delays in this file by SPEED_FACTOR
+  const SPEED_FACTOR = 0.5; // 0.5 => roughly 2x faster
+  const __origSetTimeout = globalThis.setTimeout.bind(globalThis);
+  const setTimeout = (fn, ms) =>
+    __origSetTimeout(fn, Math.max(25, Math.round(ms * SPEED_FACTOR)));
+
   const clearPaymentTimeouts = () => {
     for (const timeoutId of paymentTimeoutsRef.current) {
       clearTimeout(timeoutId);
