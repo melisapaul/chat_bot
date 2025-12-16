@@ -1,9 +1,10 @@
 Ey-Techathon — Conversational ABFRL Retail Prototype
 
-This repository contains a front-end prototype demonstrating a multi-agent conversational retail experience. It is intended as a demonstration of UI, interaction patterns, and agent orchestration. Backend integrations (APIs, persistent storage and orchestration) are planned using FastAPI and LangGraph.
+This repository contains a front-end prototype demonstrating a multi-agent **conversational chatbot** retail experience. It is intended as a demonstration of UI, interaction patterns, and agent orchestration. Backend integrations (APIs, persistent storage and orchestration) are planned using FastAPI and LangGraph.
 
 Key features
 
+- **Efficient channel switching** and **omni-channel** session continuity between Web Messenger and In-Store kiosk.
 - Multi-agent conversational flows (Recommendation, Inventory, Payment, Fulfillment) with a synchronized activity timeline.
 - Two chat modes: Web Messenger (browser) and In-Store kiosk (local session), each showing agent messages and timeline logs.
 - Contextual upsell and payment flows, with simulated retry behavior for payment attempts.
