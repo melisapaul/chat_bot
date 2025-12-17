@@ -1,6 +1,6 @@
 Ey-Techathon — Conversational ABFRL Retail Prototype
 
-This repository contains a front-end prototype demonstrating a multi-agent **conversational chatbot** retail experience. It is intended as a demonstration of UI, interaction patterns, and agent orchestration. Backend integrations (APIs, persistent storage and orchestration) are planned using FastAPI and LangGraph.
+This repository contains a working design prototype showcasing the fundamentals and agentic journeys across different personas (customers, shop keepers, management) through the agentic chatbot, dashboards, and wireframes. It demonstrates multi-agent conversational flows, efficient channel switching, and orchestrated agent messaging. Rigorous development efforts will be put in place during the creation of a production-ready demo, including backend integrations with FastAPI and LangGraph.
 
 Key features
 
@@ -12,10 +12,11 @@ Key features
 
 What the prototype demonstrates
 
+- Agentic journeys across different personas (customers, shop keepers, management) through the chatbot, dashboards, and wireframes.
 - Orchestrated agent messaging with left-side timeline entries and message bubbles synchronized to user actions.
 - Conditional upsell presentation triggered from the inventory flow and contextual routing to payment.
 - Session handoff from web to in-store flows and a transient demo transaction insertion using sessionStorage.
-- Use of static demo data (`data/admin.json`) to populate users, products, stores and transactions for UI evaluation.
+- Use of static demo data (`data/admin.json`) to populate users, products, stores and transactions for comprehensive evaluation.
 
 Primary files
 
@@ -54,12 +55,9 @@ Future work (production roadmap)
    - Implement REST endpoints for sessions, transactions, inventory and payments and replace static demo JSON with a Postgres-backed API.
 2. Orchestration with LangGraph
    - Implement LLM-driven agents and define the orchestration graph for multi-agent workflows, retries, and long-running tasks.
+   - Integrate RAG pipeline with vector database for enhanced retrieval and generation capabilities.
 3. Security, observability and CI/CD
    - Add authentication (OAuth2/JWT), observability (metrics/logging), payment integrations, containerization and automated pipelines for build and deployment.
-
-Limitations
-
-- This is a front-end prototype using simulated agent logic and mock data. Sensitive integrations are not implemented and are simulated for demonstration purposes.
 
 Contact
 
